@@ -1,0 +1,131 @@
+<div class="notification-container" *ngIf="openNotificationPanel">
+    <div class="left" (click)="toggleNotification()">
+    </div>
+  
+    <div class="right">
+      <div class="header">
+        <div>Notifications (<span>100</span>)</div>
+          <mat-icon color="accent" (click)="toggleNotification()">close</mat-icon>
+      </div>
+      <mat-divider></mat-divider>
+  
+      <div class="notification-list">
+        <div class="notification">
+          <mat-icon color="primary">notifications</mat-icon>
+          <div class="notificaiton-info">
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, corrupti.</p>
+          <div class="date">
+            <p>16/05/2022 | 6:10PM</p>
+          </div>
+          </div>
+        </div>
+  
+        <mat-divider></mat-divider>
+  
+        <div class="notification">
+          <mat-icon color="primary">notifications</mat-icon>
+          <div class="notificaiton-info">
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, corrupti.</p>
+          <div class="date">
+            <p>16/05/2022 | 6:10PM</p>
+          </div>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  
+  
+  <mat-toolbar class="mat-toolbar main-toolbar mat-elevation-z2">
+    <button
+      type="button"
+      aria-label="Toggle sidenav"
+      mat-icon-button
+      (click)="drawer.toggle()"
+    >
+      <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+    </button>
+    <!-- <span routerLink="/quiz" class="brand">Brand name</span> -->
+    <span class="nav-spacer"></span>
+  
+    <div class="nav-button-list">
+      <div class="nav-icon-box" matRipple [matMenuTriggerFor]="dashboard">
+        <button mat-icon-button disableRipple>
+          <mat-icon class="material-icons-outlined">dashboard</mat-icon>
+        </button>
+      </div>
+      <mat-menu #dashboard="matMenu">
+        <div class="dashboard-list">
+          <div class="dashboard-box">
+            <button mat-menu-item>
+              <mat-icon>dialpad</mat-icon>
+              <span>Redial</span>
+            </button>
+          </div>
+  
+          <div class="dashboard-box">
+            <button mat-menu-item>
+              <mat-icon>dialpad</mat-icon>
+              <span>Redial</span>
+            </button>
+          </div>
+  
+          <div class="dashboard-box">
+            <button mat-menu-item>
+              <mat-icon>dialpad</mat-icon>
+              <span>Redial</span>
+            </button>
+          </div>
+        </div>
+      </mat-menu>
+      <div class="nav-icon-box" matRipple (click)="toggleNotification()">
+        <button mat-icon-button disableRipple>
+          <mat-icon matBadge="2" matBadgeColor="warn">notifications</mat-icon>
+        </button>
+      </div>
+      <div matRipple class="nav-icon-box" [matMenuTriggerFor]="account">
+        <img
+          class="profile-avatar"
+          src="assets/images/logo/profile_avatar.png"
+          alt=""
+        />
+      </div>
+  
+      <mat-menu #account="matMenu">
+        <button mat-menu-item>
+          <mat-icon>account_circle</mat-icon>
+          <span>My account</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </div>
+  </mat-toolbar>
+  
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="isLoading"
+    class="progressbar"
+  ></mat-progress-bar>
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav
+      #drawer
+      class="sidenav"
+      fixedInViewport
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'push' : 'side'"
+    >
+      <mat-nav-list>
+        <a mat-list-item routerLink="#">Nav1</a>
+        <a mat-list-item routerLink="#">Nav2</a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div class="page-content">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
