@@ -1,0 +1,123 @@
+@import "../../../../styles/themes/theme-color.scss";
+
+.notification-container {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 200;
+  display: flex;
+  transition: opacity 0.5s ease;
+
+  .left {
+    width: calc(100% - 280px);
+    background: rgba(0, 0, 0, 0.409);
+  }
+
+  .right {
+    width: 280px;
+    background: white;
+    flex: 3;
+
+    .header{
+      padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 16px;
+      color: $text-N800;
+
+      .mat-icon{
+        cursor: pointer;
+      }
+    }
+
+    .notification-list{
+      .notification{
+        padding: 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 16px;
+        font-size: 14px;
+        color: $text-N800;
+      }
+    }
+  }
+}
+
+.main-toolbar {
+  background: white;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.sidenav-container {
+  height: calc(100% - 60px);
+}
+
+.sidenav {
+  position: absolute;
+  width: 200px;
+  background: #dbdbdb;
+}
+
+.brand {
+  cursor: pointer;
+}
+
+.page-content {
+  padding: 20px;
+}
+
+.nav-spacer {
+  flex: 1 1 auto;
+}
+
+.profile-avatar {
+  height: 32px;
+  width: 32px;
+}
+
+.nav-button-list {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .nav-icon-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    width: 80px;
+    cursor: pointer;
+
+    button {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .nav-icon-box:hover {
+    background-color: #f5f5f5;
+  }
+
+  .mat-icon {
+    color: rgba(0, 0, 0, 0.54);
+  }
+}
+
+.dashboard-list {
+  max-width: 400px;
+  min-height: 200px;
+  display: flex;
+
+  button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  
+}
