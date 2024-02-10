@@ -42,9 +42,10 @@
       type="button"
       aria-label="Toggle sidenav"
       mat-icon-button
-      (click)="drawer.toggle()"
+      routerLink="/home"
+      
     >
-      <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      <mat-icon aria-label="Side nav toggle icon">home</mat-icon>
     </button>
     <!-- <span routerLink="/quiz" class="brand">Brand name</span> -->
     <span class="nav-spacer"></span>
@@ -124,7 +125,7 @@
       </mat-nav-list>
     </mat-sidenav>
     <mat-sidenav-content>
-      <div class="page-content">
+      <div>
         <router-outlet></router-outlet>
       </div>
     </mat-sidenav-content>

@@ -1,33 +1,98 @@
-<div class="sign-in-container">
-    <div class="left">
-      <div class="welcome">
-        <h1 class="welcome-text">Welcome to My Brand</h1>
-        <p class="welcome-msg">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Excepturi quo
-          ad adipisci repudiandae beatae aspernatur
-        </p>
-      </div>
-    </div>
-    <div class="right">
-      <div class="logo">My brand</div>
-      <p class="login-text">Become a member</p>
-  
-      <form action="" class="login-form">
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput placeholder="Email" />
-        </mat-form-field>
-  
-        <mat-form-field appearance="outline">
-          <mat-label>Password</mat-label>
-          <input matInput placeholder="Password" />
-        </mat-form-field>
-  
-        <button>Submit</button>
-      </form>
-  
-      <a href="" class="already-msg">Already a member? <span class="click-here">Click here</span> to Login</a>
-      <!-- <button routerLink="/login">Login</button> -->
-    </div>
-  </div>
-  
+<div class="register-container">
+	<mat-card class="register-card">
+		<mat-card-content>
+			<h1 style="text-align: center">ডোনার রেজিস্ট্রেশন ফর্ম</h1>
+			<form>
+				<div class="register-inputs">
+					<mat-form-field
+						class="input"
+						appearance="outline"
+					>
+						<mat-label>ডোনারের নাম</mat-label>
+						<input
+							matInput
+							placeholder="ডোনারের নাম"
+						/>
+					</mat-form-field>
+
+					<mat-form-field
+						class="input"
+						appearance="outline"
+					>
+						<mat-label>ঠিকানা</mat-label>
+						<input
+							matInput
+							placeholder="ঠিকানা"
+						/>
+					</mat-form-field>
+
+					<mat-form-field
+						class="input"
+						appearance="outline"
+					>
+						<mat-label>ব্লাড গ্রুপ</mat-label>
+						<mat-select>
+							<mat-option
+								*ngFor="let bg of bloodGroups"
+								value="valid"
+								>{{ bg }}</mat-option
+							>
+						</mat-select>
+					</mat-form-field>
+
+					<mat-form-field
+						class="input"
+						appearance="outline"
+					>
+						<mat-label>মোবাইল নাম্বার</mat-label>
+						<input
+							matInput
+							placeholder="Email"
+						/>
+					</mat-form-field>
+
+					<mat-form-field
+						class="input"
+						appearance="outline"
+					>
+						<mat-label>সর্বশেষ ডোনেশন ডেট</mat-label>
+						<input
+							matInput
+							placeholder="সর্বশেষ ডোনেশন ডেট"
+						/>
+					</mat-form-field>
+
+					<mat-form-field
+						class="input"
+						appearance="outline"
+					>
+						<mat-label>ডোনেট সংখ্যা</mat-label>
+						<input
+							matInput
+							type="number"
+							placeholder="ডোনেট সংখ্যা"
+						/>
+					</mat-form-field>
+
+					<mat-form-field
+						class="input"
+						appearance="outline"
+					>
+						<mat-label>ছবি</mat-label>
+						<input
+							matInput
+							placeholder="Password"
+						/>
+					</mat-form-field>
+
+					<button
+						color="warn"
+						mat-raised-button
+					>
+						সাবমিট
+					</button>
+				</div>
+			</form>
+		</mat-card-content>
+	</mat-card>
+</div>

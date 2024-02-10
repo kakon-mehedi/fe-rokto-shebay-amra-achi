@@ -1,85 +1,31 @@
-@import "../../../../styles/themes/theme-color.scss";
+@import '../../../../styles/themes/theme-color.scss';
 
-.sign-in-container {
-  height: 100%;
-  width: 100%;
-  background: linear-gradient(to bottom, rgba(0,0,0,0), black), url("../../../../../src/assets/images/backgrounds/login.jpg")
-    center/cover no-repeat;
+.register-container {
   display: flex;
+  justify-content: center;
+  background: rgb(255, 202, 202);
+  padding: 16px 0;
+}
+.register-card {
+	padding: 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  width: 60%;
 }
 
-.left {
-  height: 100%;
-  width: calc(100% - 450px);
-
-  .welcome{
-    position: absolute;
-    bottom: 20px;
-    padding: 36px;
-    width: 600px;
-  }
-  .welcome-text{
-    color: $text-N300;
-    font-size: 2.5rem;
-    font-weight: 700;
-  }
-
-  .welcome-msg{
-    color: $text-N300;
-    font-size: 1rem;
-    letter-spacing: 1px;
-  }
+.register-inputs {
+	width: 60vw;
+	display: flex;
+	flex-direction: column;
 }
 
-.right {
-  width: 450px;
-  background: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  .logo{
-    margin-top: 100px;
-  }
-
-  .login-text {
-    color: $primary-500;
+:host::ng-deep {
+	.mat-form-field-appearance-outline .mat-form-field-flex {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 80px;
     font-size: 1rem;
-  }
-
-  .login-text{
-    margin-top: 20px;
-    font-size: 1.5rem;
-    font-weight: 700;
-  }
-
-  .login-form{
-    display: flex;
-    flex-direction: column;
-    width: 80%;
-  }
-
-  .already-msg{
-    font-size: 1rem;
-    text-decoration: none;
-    padding: 24px 0;
-    color: $text-N700;
-
-    .click-here{
-        color: $primary-500;
-        font-weight: 700;
-    }
-  }
-}
-
-button {
-  background: $btn-default;
-  color: white;
-  padding: 14px;
-  border: 0;
-  outline: none;
-  cursor: pointer;
-  font-size: 1rem;
-  border-radius: 4px;
-  
+	}
 }
