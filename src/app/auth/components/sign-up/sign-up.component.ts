@@ -12,4 +12,5 @@ export class SignUpComponent implements OnInit {
 	ngOnInit(): void {}
 
 	bloodGroups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
+  today = new Date();
 }
