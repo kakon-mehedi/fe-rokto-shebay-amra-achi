@@ -52,14 +52,27 @@
 					</mat-form-field>
 
 					<mat-form-field
-						class="input"
+						color="accent"
 						appearance="outline"
 					>
-						<mat-label>সর্বশেষ ডোনেশন ডেট</mat-label>
-						<input
-							matInput
-							placeholder="সর্বশেষ ডোনেশন ডেট"
-						/>
+						<div
+							style="
+								display: flex;
+								justify-content: space-between;
+								align-items: center;
+							"
+						>
+							<input
+								placeholder="সর্বশেষ ডোনেশন ডেট"
+								matInput
+								[matDatepicker]="picker1"
+							/>
+							<mat-datepicker-toggle
+								matIconSuffix
+								[for]="picker1"
+							></mat-datepicker-toggle>
+						</div>
+						<mat-datepicker #picker1></mat-datepicker>
 					</mat-form-field>
 
 					<mat-form-field
@@ -74,16 +87,19 @@
 						/>
 					</mat-form-field>
 
-					<mat-form-field
-						class="input"
-						appearance="outline"
+					<input
+						style="display: none"
+						#dpInput
+						type="file"
+					/>
+
+					<div
+						class="upload-photo"
+						(click)="dpInput.click()"
 					>
-						<mat-label>ছবি</mat-label>
-						<input
-							matInput
-							placeholder="Password"
-						/>
-					</mat-form-field>
+						<mat-icon>cloud</mat-icon>
+						<p>Upload Photo</p>
+					</div>
 
 					<button
 						color="warn"
