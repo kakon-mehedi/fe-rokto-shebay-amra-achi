@@ -1,1 +1,10 @@
-<p>home works!</p>
+<div class="module-list">
+	<ng-container *ngFor="let module of modules">
+		<mat-card
+			routerLink="{{ module.url }}"
+			class="module"
+		>
+			<mat-card-content>{{ module.title }}</mat-card-content>
+		</mat-card>
+	</ng-container>
+</div>

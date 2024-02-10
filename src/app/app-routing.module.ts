@@ -8,7 +8,7 @@ const routes: Routes = [
 			import('./home/home.module').then((m) => m.HomeModule),
 	},
 	{
-		path: 'login',
+		path: 'users',
 		loadChildren: () =>
 			import('./auth/auth.module').then((m) => m.AuthModule),
 		//canActivate: [],
