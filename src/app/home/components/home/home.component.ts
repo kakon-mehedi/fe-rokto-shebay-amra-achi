@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
 
     {
       title: 'ইমারজেন্সি যোগাযোগ',
-      url: '/emaergency',
+      url: '/dashboard',
       icon: 'register'
     }
   ]
