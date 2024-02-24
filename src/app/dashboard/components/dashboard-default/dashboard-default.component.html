@@ -1,8 +1,9 @@
-<mat-card class="search-container">
+<mat-card class="filter-container">
 	<div class="donor-filters">
-		<mat-form-field appearance="outline">
+		<mat-form-field appearance="outline" [floatLabel]="'never'">
 			<mat-label>Search Donor</mat-label>
 			<input
+				[formControl]="searchDonorControl"
 				matInput
 				(keyup)="applyFilter($event)"
 				placeholder="Search Donor"
@@ -12,7 +13,11 @@
 
 		<mat-form-field appearance="outline">
 			<mat-label>Blood Group</mat-label>
-			<mat-select name="bloodGroup" (selectionChange)="filterUserByBloodGroup($event)">
+			<mat-select
+				name="bloodGroup"
+				[formControl]="filterDonorControl"
+				(selectionChange)="filterUserByBloodGroup($event)"
+			>
 				<mat-option
 					*ngFor="let bg of bloodGroups"
 					[value]="bg"
@@ -22,9 +27,15 @@
 		</mat-form-field>
 	</div>
 
-    <div class="reset-section">
-        <button mat-raised-button (click)="reset()">Reset</button>
-    </div>
+	<div class="reset-section">
+		<button
+			mat-raised-button
+			(click)="reset()"
+			color="warn"
+		>
+			Reset Filter
+		</button>
+	</div>
 </mat-card>
 
 <div class="mat-elevation-z8">
@@ -101,7 +112,7 @@
 			</td>
 		</ng-container>
 
-        <ng-container matColumnDef="lastDonationDate">
+		<ng-container matColumnDef="lastDonationDate">
 			<th
 				mat-header-cell
 				*matHeaderCellDef
@@ -117,7 +128,7 @@
 			</td>
 		</ng-container>
 
-        <ng-container matColumnDef="totalDonations">
+		<ng-container matColumnDef="totalDonations">
 			<th
 				mat-header-cell
 				*matHeaderCellDef

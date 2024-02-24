@@ -4,6 +4,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { donors } from '../../dashboard.constant';
+import { FormControl } from '@angular/forms';
 
 const users = donors;
 
@@ -28,13 +29,15 @@ export class DashboardDefaultComponent implements OnInit {
 	@ViewChild(MatPaginator) paginator!: MatPaginator;
 	@ViewChild(MatSort) sort!: MatSort;
 
+	searchDonorControl: FormControl = new FormControl();
+	filterDonorControl: FormControl = new FormControl();
+
 	constructor() {
 		this.dataSource = new MatTableDataSource(users);
 	}
 
 	ngAfterViewInit() {
-		this.dataSource.paginator = this.paginator;
-		this.dataSource.sort = this.sort;
+		this.setPaginators();
 	}
 
 	applyFilter(event: Event) {
@@ -47,13 +50,24 @@ export class DashboardDefaultComponent implements OnInit {
 	}
 
 	filterUserByBloodGroup(event: MatSelectChange) {
-		const userList = users.filter((user) => user.bloodGroup === event.value);
-    this.dataSource = new MatTableDataSource(userList);
+		const userList = users.filter(
+			(user) => user.bloodGroup === event.value
+		);
+		this.dataSource = new MatTableDataSource(userList);
 	}
 
 	ngOnInit(): void {}
 
-  reset() {
-    this.dataSource = new MatTableDataSource(users);
-  }
+	reset() {
+		this.dataSource = new MatTableDataSource(users);
+		this.setPaginators();
+
+		this.searchDonorControl.reset();
+		this.filterDonorControl.reset();
+	}
+
+	setPaginators() {
+		this.dataSource.paginator = this.paginator;
+		this.dataSource.sort = this.sort;
+	}
 }

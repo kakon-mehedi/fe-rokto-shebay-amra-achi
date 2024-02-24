@@ -29,7 +29,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatRippleModule,
     FlexLayoutModule,
     NavigationComponent,
-    FooterComponent
+    FooterComponent,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class SharedModule { }
