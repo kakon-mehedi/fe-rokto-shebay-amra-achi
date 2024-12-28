@@ -20,7 +20,7 @@ const routes: Routes = [
   },
 
   {
-    path: "sign-up",
+    path: "register",
     pathMatch: "full",
     component: SignUpComponent,
     data: {},
