@@ -2,7 +2,7 @@
 	<mat-card class="register-card">
 		<mat-card-content>
 			<h1 style="text-align: center">ডোনার রেজিস্ট্রেশন ফর্ম</h1>
-			<form [formGroup]="newDonorRegistrationForm">
+			<form [formGroup]="donorRegistrationForm">
 				<div class="register-inputs">
 					<mat-form-field
 						class="input"
@@ -24,7 +24,7 @@
 						<input
 							matInput
 							placeholder="ঠিকানা"
-							formControlName="addressLine"
+							formControlName="address"
 						/>
 					</mat-form-field>
 
@@ -40,18 +40,6 @@
 								>{{ bg }}</mat-option
 							>
 						</mat-select>
-					</mat-form-field>
-
-					<mat-form-field
-						class="input"
-						appearance="outline"
-					>
-						<mat-label>ইমেইল</mat-label>
-						<input
-							matInput
-							placeholder="Email"
-							formControlName="email"
-						/>
 					</mat-form-field>
 
 					<mat-form-field

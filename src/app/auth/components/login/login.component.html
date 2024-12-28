@@ -1,0 +1,42 @@
+<div class="register-container">
+	<mat-card class="register-card">
+		<mat-card-content>
+			<h1 style="text-align: center">ডোনার রেজিস্ট্রেশন ফর্ম</h1>
+			<form [formGroup]="loginForm">
+				<div class="register-inputs">
+					<mat-form-field
+						class="input"
+						appearance="outline"
+					>
+						<mat-label>Email</mat-label>
+						<input
+							matInput
+							placeholder="Email"
+							formControlName="email"
+						/>
+					</mat-form-field>
+
+					<mat-form-field
+						class="input"
+						appearance="outline"
+					>
+						<mat-label>Password</mat-label>
+						<input
+							matInput
+							type="password"
+							placeholder="Password"
+							formControlName="password"
+						/>
+					</mat-form-field>
+					<button
+						color="warn"
+						mat-raised-button
+						(click)="onSubmit()"
+					>
+						সাবমিট
+					</button>
+				</div>
+			</form>
+		</mat-card-content>
+	</mat-card>
+</div>

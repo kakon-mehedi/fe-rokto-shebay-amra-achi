@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
 	modules: IModule[] = [
 		{
 			title: 'নতুন ডোনার ফর্ম ফিল আপ',
-			url: '/users/register',
+			url: '/donors',
 			icon: 'register',
 		},
 
@@ -28,6 +28,6 @@ export class HomeComponent implements OnInit {
 			title: 'ডোনার লিস্ট ',
 			url: '/dashboard',
 			icon: 'register',
-		},
+		}
 	];
 }

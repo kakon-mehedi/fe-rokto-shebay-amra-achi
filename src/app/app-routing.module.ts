@@ -16,6 +16,14 @@ const routes: Routes = [
 	},
 
 	{
+		path: 'donors',
+		loadChildren: () =>
+			import('./donors/donors.module').then((m) => m.DonorsModule),
+		//canActivate: [],
+		data: {},
+	},
+
+	{
 		path: 'dashboard',
 		loadChildren: () =>
 			import('./dashboard/dashboard.module').then(
