@@ -1,0 +1,47 @@
+/* Container */
+.donor-details-container {
+    padding: 16px;
+    margin: 16px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Back Button */
+  button[mat-icon-button] {
+    margin-bottom: 16px;
+  }
+  
+  /* Donor Info */
+  .donor-info h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 500;
+    color: #3f51b5;
+  }
+  
+  /* List Items */
+  mat-list-item {
+    margin-bottom: 8px;
+  }
+  
+  mat-icon[mat-list-icon] {
+    color: #3f51b5;
+  }
+  
+  .secondary-text {
+    color: #666666;
+    font-size: 14px;
+  }
+  
+  /* Action Buttons */
+  .action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+  }
+  
+  button[mat-raised-button] {
+    flex: 1;
+    margin: 0 8px;
+  }

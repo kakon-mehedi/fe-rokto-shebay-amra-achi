@@ -1,0 +1,61 @@
+<mat-card class="donor-details-container">
+    <!-- Back Button -->
+    <button mat-icon-button color="primary" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  
+    <!-- Donor Details -->
+    <div class="donor-info">
+      <h2>{{ donor?.name }}</h2>
+      <mat-divider></mat-divider>
+  
+      <mat-list>
+        <!-- Blood Group -->
+        <mat-list-item>
+          <mat-icon mat-list-icon>bloodtype</mat-icon>
+          <div mat-line>Blood Group</div>
+          <div mat-line class="secondary-text">{{ donor?.bloodGroup }}</div>
+        </mat-list-item>
+  
+        <!-- Mobile Number -->
+        <mat-list-item>
+          <mat-icon mat-list-icon>phone</mat-icon>
+          <div mat-line>Mobile Number</div>
+          <div mat-line class="secondary-text">{{ donor?.mobileNumber }}</div>
+        </mat-list-item>
+  
+        <!-- Address -->
+        <mat-list-item>
+          <mat-icon mat-list-icon>location_on</mat-icon>
+          <div mat-line>Address</div>
+          <div mat-line class="secondary-text">{{ donor?.address }}</div>
+        </mat-list-item>
+  
+        <!-- Last Donation Date -->
+        <mat-list-item>
+          <mat-icon mat-list-icon>event</mat-icon>
+          <div mat-line>Last Donation Date</div>
+          <div mat-line class="secondary-text">{{ donor?.lastDonationDate }}</div>
+        </mat-list-item>
+  
+        <!-- Total Donations -->
+        <mat-list-item>
+          <mat-icon mat-list-icon>favorite</mat-icon>
+          <div mat-line>Total Donations</div>
+          <div mat-line class="secondary-text">{{ donor?.totalDonations }}</div>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" (click)="contactDonor()">
+        <mat-icon>call</mat-icon>
+        Contact Donor
+      </button>
+      <button mat-raised-button color="accent" (click)="requestDonation()">
+        <mat-icon>favorite</mat-icon>
+        Request Donation
+      </button>
+    </div>
+  </mat-card>

@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
 
     {
       title: 'ডোনার লিস্ট ',
-      url: '/dashboard',
+      url: '/donors',
       icon: 'register'
     },
     {

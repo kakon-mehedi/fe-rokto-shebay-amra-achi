@@ -16,7 +16,7 @@ const routes: Routes = [
 	},
 
 	{
-		path: 'dashboard',
+		path: 'donors',
 		loadChildren: () =>
 			import('./dashboard/dashboard.module').then(
 				(m) => m.DashboardModule
