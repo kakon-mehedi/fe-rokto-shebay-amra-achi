@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DonorService } from '../../services/donor-service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-donor-details',
@@ -13,7 +14,8 @@ export class DonorDetailsComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly donorService: DonorService
+    private readonly donorService: DonorService,
+    private readonly location: Location
   ) {}
 
   ngOnInit(): void {
@@ -24,7 +26,7 @@ export class DonorDetailsComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/']);
+   this.location.back();
   }
 
   contactDonor(): void {

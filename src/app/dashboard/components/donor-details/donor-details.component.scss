@@ -2,36 +2,56 @@
 .donor-details-container {
     padding: 16px;
     margin: 16px;
-    border-radius: 8px;
+    border-radius: 12px;
     background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
-  /* Back Button */
-  button[mat-icon-button] {
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
     margin-bottom: 16px;
   }
   
-  /* Donor Info */
-  .donor-info h2 {
+  .header h2.donor-name {
     margin: 0;
     font-size: 24px;
     font-weight: 500;
     color: #3f51b5;
+    margin-left: 16px;
   }
   
-  /* List Items */
-  mat-list-item {
-    margin-bottom: 8px;
+  /* Donor Info */
+  .donor-info {
+    margin-top: 16px;
   }
   
-  mat-icon[mat-list-icon] {
+  .detail-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .detail-icon {
     color: #3f51b5;
+    margin-right: 16px;
   }
   
-  .secondary-text {
-    color: #666666;
+  .detail-content {
+    flex: 1;
+  }
+  
+  .detail-label {
     font-size: 14px;
+    color: #666666;
+    margin-bottom: 4px;
+  }
+  
+  .detail-value {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333333;
   }
   
   /* Action Buttons */
@@ -41,7 +61,17 @@
     margin-top: 24px;
   }
   
-  button[mat-raised-button] {
+  .action-button {
     flex: 1;
     margin: 0 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .action-button mat-icon {
+    margin-right: 8px;
   }
