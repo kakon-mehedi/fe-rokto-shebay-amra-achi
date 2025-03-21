@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DonorService } from '../../services/donor-service';
 import { Location } from '@angular/common';
@@ -15,7 +15,8 @@ export class DonorDetailsComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly donorService: DonorService,
-    private readonly location: Location
+    private readonly location: Location,
+    private readonly cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -27,6 +28,7 @@ export class DonorDetailsComponent implements OnInit {
 
   goBack(): void {
    this.location.back();
+   this.cdr.detectChanges();
   }
 
   contactDonor(): void {

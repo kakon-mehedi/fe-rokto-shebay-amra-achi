@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -7,6 +7,7 @@ import { Location } from '@angular/common';
 import { Donor } from '../../interfaces/donor.interface';
 import { differenceInMonths, parseISO } from 'date-fns';
 import { Router } from '@angular/router';
+import { DonorService } from '../../services/donor-service';
 
 @Component({
 	selector: 'app-dashboard-default',
@@ -23,37 +24,9 @@ export class DashboardDefaultComponent implements OnInit {
 		'totalDonations',
 	];
 
-	donors: Donor[] = [
-		{
-			name: 'John Doe',
-			address: 'Dhaka',
-			bloodGroup: 'A+',
-			mobileNumber: '0123456789',
-			lastDonationDate: '2024-01-15',
-			totalDonations: 5,
-			isAvailable: true,
-		},
-		{
-			name: 'Jane Smith',
-			address: 'Chittagong',
-			bloodGroup: 'B-',
-			mobileNumber: '0987654321',
-			lastDonationDate: '2024-03-05',
-			totalDonations: 3,
-			isAvailable: true,
-		},
-		{
-			name: 'Alex Johnson',
-			address: 'Sylhet',
-			bloodGroup: 'O+',
-			mobileNumber: '01712345678',
-			lastDonationDate: '2023-12-10',
-			totalDonations: 10,
-			isAvailable: true,
-		},
-	];
+	donors: Donor[] = [];
 
-	dataSource = new MatTableDataSource<Donor>(this.donors);
+	dataSource = new MatTableDataSource<Donor>();
 
 	searchDonorControl = new FormControl('');
 	bloodGroupControl = new FormControl('');
@@ -64,10 +37,15 @@ export class DashboardDefaultComponent implements OnInit {
 
 	constructor(
 		private readonly _location: Location,
-		private readonly _router: Router
+		private readonly _router: Router,
+
+		private readonly _donorService: DonorService,
+		private  readonly _cdr: ChangeDetectorRef
 	) {}
 
 	ngOnInit() {
+		this.getDonors();
+
 		this.dataSource.paginator = this.paginator;
 		this.dataSource.sort = this.sort;
 
@@ -78,6 +56,11 @@ export class DashboardDefaultComponent implements OnInit {
 		this.availableDonorControl.valueChanges.subscribe(() =>
 			this.applyFilter()
 		);
+	}
+	getDonors() {
+		const donorList = this._donorService.getDonors();
+		this.donors = donorList;
+		this.dataSource.data = donorList;
 	}
 
 	applyFilter() {
@@ -112,6 +95,7 @@ export class DashboardDefaultComponent implements OnInit {
 
 	goBack() {
 		this._location.back();
+		this._cdr.detectChanges();
 	}
 
 	onRowClick(donor: Donor) {
