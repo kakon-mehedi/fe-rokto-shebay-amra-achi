@@ -27,6 +27,11 @@ export class HomeComponent implements OnInit {
     },
 
     {
+      title: 'ডোনার লিস্ট ',
+      url: '/dashboard',
+      icon: 'register'
+    },
+    {
       title: 'ইমারজেন্সি যোগাযোগ',
       url: '/dashboard',
       icon: 'register'

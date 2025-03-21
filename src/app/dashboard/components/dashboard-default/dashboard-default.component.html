@@ -1,6 +1,18 @@
 <mat-card class="filter-container">
+	<button
+		mat-icon-button
+		style="color: white"
+		aria-label="Example icon-button with a heart icon"
+		(click)="goBack()"
+	>
+		<mat-icon>arrow_back</mat-icon>
+	</button>
+
 	<div class="donor-filters">
-		<mat-form-field appearance="outline" [floatLabel]="'never'">
+		<mat-form-field
+			appearance="outline"
+			[floatLabel]="'never'"
+		>
 			<mat-label>Search Donor</mat-label>
 			<input
 				[formControl]="searchDonorControl"

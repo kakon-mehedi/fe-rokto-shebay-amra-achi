@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { donors } from '../../dashboard.constant';
 import { FormControl } from '@angular/forms';
+import { Location } from '@angular/common';
 
 const users = donors;
 
@@ -32,7 +33,7 @@ export class DashboardDefaultComponent implements OnInit {
 	searchDonorControl: FormControl = new FormControl();
 	filterDonorControl: FormControl = new FormControl();
 
-	constructor() {
+	constructor(private readonly _location: Location) {
 		this.dataSource = new MatTableDataSource(users);
 	}
 
@@ -69,5 +70,9 @@ export class DashboardDefaultComponent implements OnInit {
 	setPaginators() {
 		this.dataSource.paginator = this.paginator;
 		this.dataSource.sort = this.sort;
+	}
+
+	goBack() {
+		this._location.back();
 	}
 }
