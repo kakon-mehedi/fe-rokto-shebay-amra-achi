@@ -20,5 +20,6 @@ export class SignUpComponent implements OnInit {
 	goBack() {
 		this._location.back();
 		this._cdr.detectChanges();
+		
 	}
 }
