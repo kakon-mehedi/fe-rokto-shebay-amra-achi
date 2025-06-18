@@ -1,0 +1,420 @@
+<div class="guide-container">
+  <!-- Header Section -->
+  <div class="guide-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">favorite</mat-icon>
+      <h1>রক্তদান গাইড</h1>
+      <p class="header-subtitle">
+        রক্তদানের সম্পূর্ণ নির্দেশিকা - একটি জীবন বাঁচান, নিজেও সুস্থ থাকুন
+      </p>
+    </div>
+  </div>
+
+  <!-- Navigation Menu -->
+  <div class="nav-menu">
+    <div class="menu-container">
+      <button mat-button (click)="scrollToSection('rules')" class="nav-item">
+        <mat-icon>rule</mat-icon>
+        <span>নিয়ম ও শর্তাবলী</span>
+      </button>
+      <button mat-button (click)="scrollToSection('benefits')" class="nav-item">
+        <mat-icon>health_and_safety</mat-icon>
+        <span>উপকারিতা</span>
+      </button>
+      <button mat-button (click)="scrollToSection('process')" class="nav-item">
+        <mat-icon>timeline</mat-icon>
+        <span>প্রক্রিয়া</span>
+      </button>
+      <button
+        mat-button
+        (click)="scrollToSection('aftercare')"
+        class="nav-item"
+      >
+        <mat-icon>medical_services</mat-icon>
+        <span>পরবর্তী যত্ন</span>
+      </button>
+      <button mat-button (click)="scrollToSection('diet')" class="nav-item">
+        <mat-icon>restaurant</mat-icon>
+        <span>খাদ্য তালিকা</span>
+      </button>
+      <button mat-button (click)="scrollToSection('health')" class="nav-item">
+        <mat-icon>local_hospital</mat-icon>
+        <span>স্বাস্থ্য টিপস</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Sections -->
+  <div class="guide-content">
+    <!-- রক্তদানের নিয়ম ও শর্তাবলী -->
+    <section id="rules" class="guide-section">
+      <div class="section-header">
+        <mat-icon>rule</mat-icon>
+        <h2>রক্তদানের নিয়ম ও শর্তাবলী</h2>
+      </div>
+
+      <div class="content-grid">
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>person</mat-icon>
+            <mat-card-title>বয়স সীমা</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <ul>
+              <li>১৮ থেকে ৬৫ বছর বয়সী ব্যক্তিরা রক্তদান করতে পারবেন</li>
+              <li>প্রথমবার রক্তদানের জন্য সর্বোচ্চ বয়স ৬০ বছর</li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>monitor_weight</mat-icon>
+            <mat-card-title>ওজন</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <ul>
+              <li>সর্বনিম্ন ওজন ৪৫ কেজি (পুরুষ)</li>
+              <li>সর্বনিম্ন ওজন ৪৫ কেজি (মহিলা)</li>
+              <li>BMI ১৮.৫ থেকে ২৫ এর মধ্যে থাকা বাঞ্ছনীয়</li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>schedule</mat-icon>
+            <mat-card-title>রক্তদানের ব্যবধান</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <ul>
+              <li>পুরুষ: প্রতি ৩ মাস পর পর</li>
+              <li>মহিলা: প্রতি ৪ মাস পর পর</li>
+              <li>একবারে সর্বোচ্চ ৪৫০ মিলি রক্ত দেওয়া যায়</li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>block</mat-icon>
+            <mat-card-title>যারা রক্ত দিতে পারবেন না</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <ul>
+              <li>গর্ভবতী ও স্তন্যদানকারী মা</li>
+              <li>ডায়াবেটিস, হৃদরোগ, উচ্চ রক্তচাপের রোগী</li>
+              <li>হেপাটাইটিস বি/সি, এইচআইভি আক্রান্ত</li>
+              <li>মাদকাসক্ত ব্যক্তি</li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </section>
+
+    <!-- রক্তদানের উপকারিতা -->
+    <section id="benefits" class="guide-section">
+      <div class="section-header">
+        <mat-icon>health_and_safety</mat-icon>
+        <h2>রক্তদানের উপকারিতা</h2>
+      </div>
+
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <mat-icon class="benefit-icon">favorite_border</mat-icon>
+          <h3>হৃদযন্ত্রের জন্য ভালো</h3>
+          <p>নিয়মিত রক্তদান হৃদরোগের ঝুঁকি কমায় এবং রক্ত চলাচল বৃদ্ধি করে।</p>
+        </div>
+
+        <div class="benefit-card">
+          <mat-icon class="benefit-icon">autorenew</mat-icon>
+          <h3>নতুন রক্ত কোষ তৈরি</h3>
+          <p>রক্তদানের পর শরীর নতুন ও সুস্থ রক্ত কোষ তৈরি করে।</p>
+        </div>
+
+        <div class="benefit-card">
+          <mat-icon class="benefit-icon">psychology</mat-icon>
+          <h3>মানসিক প্রশান্তি</h3>
+          <p>অন্যের জীবন বাঁচানোর মাধ্যমে মানসিক তৃপ্তি ও আনন্দ পাওয়া যায়।</p>
+        </div>
+
+        <div class="benefit-card">
+          <mat-icon class="benefit-icon">medical_services</mat-icon>
+          <h3>স্বাস্থ্য পরীক্ষা</h3>
+          <p>
+            বিনামূল্যে স্বাস্থ্য পরীক্ষা এবং রক্তের বিভিন্ন রোগ সম্পর্কে জানা
+            যায়।
+          </p>
+        </div>
+
+        <div class="benefit-card">
+          <mat-icon class="benefit-icon">fitness_center</mat-icon>
+          <h3>ওজন নিয়ন্ত্রণ</h3>
+          <p>রক্তদান ক্যালোরি খরচ করে এবং ওজন নিয়ন্ত্রণে সাহায্য করে।</p>
+        </div>
+
+        <div class="benefit-card">
+          <mat-icon class="benefit-icon">group</mat-icon>
+          <h3>সামাজিক সেবা</h3>
+          <p>মানবতার সেবা করে সমাজে ইতিবাচক অবদান রাখা যায়।</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- রক্তদান প্রক্রিয়া -->
+    <section id="process" class="guide-section">
+      <div class="section-header">
+        <mat-icon>timeline</mat-icon>
+        <h2>রক্তদান প্রক্রিয়া</h2>
+      </div>
+
+      <div class="process-timeline">
+        <div class="timeline-item">
+          <div class="timeline-marker">1</div>
+          <div class="timeline-content">
+            <h3>নিবন্ধন</h3>
+            <p>ব্যক্তিগত তথ্য প্রদান এবং স্বাস্থ্য প্রশ্নাবলী পূরণ</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker">2</div>
+          <div class="timeline-content">
+            <h3>প্রাথমিক পরীক্ষা</h3>
+            <p>হিমোগ্লোবিন, রক্তচাপ, তাপমাত্রা এবং পালস পরীক্ষা</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker">3</div>
+          <div class="timeline-content">
+            <h3>রক্তদান</h3>
+            <p>একটি নিরাপদ ও স্টেরাইল পরিবেশে ১০-১৫ মিনিটে রক্তদান সম্পন্ন</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker">4</div>
+          <div class="timeline-content">
+            <h3>বিশ্রাম</h3>
+            <p>রক্তদানের পর ১০-১৫ মিনিট বিশ্রাম এবং জলীয় খাবার গ্রহণ</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- রক্তদানের পরবর্তী যত্ন -->
+    <section id="aftercare" class="guide-section">
+      <div class="section-header">
+        <mat-icon>medical_services</mat-icon>
+        <h2>রক্তদানের পরবর্তী যত্ন</h2>
+      </div>
+
+      <div class="aftercare-grid">
+        <mat-card class="care-card immediate">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>schedule</mat-icon>
+            <mat-card-title>তাৎক্ষণিক যত্ন (০-২ ঘন্টা)</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <ul>
+              <li>ব্যান্ডেজ ২ ঘন্টা পর্যন্ত রাখুন</li>
+              <li>হাত উপরে তুলে রাখুন ১০ মিনিট</li>
+              <li>প্রচুর পানি ও তরল খাবার পান করুন</li>
+              <li>ভারী কাজ এড়িয়ে চলুন</li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="care-card short-term">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>today</mat-icon>
+            <mat-card-title>স্বল্পমেয়াদী যত্ন (২৪ ঘন্টা)</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <ul>
+              <li>পুষ্টিকর খাবার গ্রহণ করুন</li>
+              <li>পর্যাপ্ত বিশ্রাম নিন</li>
+              <li>ধূমপান ও মদ্যপান এড়িয়ে চলুন</li>
+              <li>দ্রুত দৌড়ানো বা ব্যায়াম করবেন না</li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="care-card long-term">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>date_range</mat-icon>
+            <mat-card-title>দীর্ঘমেয়াদী যত্ন (১ সপ্তাহ)</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <ul>
+              <li>আয়রন সমৃদ্ধ খাবার খান</li>
+              <li>নিয়মিত ব্যায়াম শুরু করুন</li>
+              <li>প্রয়োজনে ভিটামিন সাপ্লিমেন্ট নিন</li>
+              <li>পরবর্তী রক্তদানের তারিখ মনে রাখুন</li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </section>
+
+    <!-- খাদ্য তালিকা -->
+    <section id="diet" class="guide-section">
+      <div class="section-header">
+        <mat-icon>restaurant</mat-icon>
+        <h2>রক্তদানের আগে ও পরে খাদ্য তালিকা</h2>
+      </div>
+
+      <div class="diet-container">
+        <div class="diet-section">
+          <h3>রক্তদানের আগে (২৪ ঘন্টা)</h3>
+          <div class="food-grid">
+            <div class="food-item recommended">
+              <mat-icon>check_circle</mat-icon>
+              <span>আয়রন সমৃদ্ধ খাবার</span>
+              <small>পালং শাক, কাঁচকলা, খেজুর</small>
+            </div>
+            <div class="food-item recommended">
+              <mat-icon>check_circle</mat-icon>
+              <span>প্রোটিন জাতীয় খাবার</span>
+              <small>মাছ, মাংস, ডিম, দুধ</small>
+            </div>
+            <div class="food-item recommended">
+              <mat-icon>check_circle</mat-icon>
+              <span>ভিটামিন সি যুক্ত ফল</span>
+              <small>কমলা, লেবু, আমলকী</small>
+            </div>
+            <div class="food-item avoid">
+              <mat-icon>cancel</mat-icon>
+              <span>চা ও কফি</span>
+              <small>আয়রন শোষণে বাধা দেয়</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="diet-section">
+          <h3>রক্তদানের পরে (৪৮ ঘন্টা)</h3>
+          <div class="food-grid">
+            <div class="food-item recommended">
+              <mat-icon>check_circle</mat-icon>
+              <span>প্রচুর পানি</span>
+              <small>৮-১০ গ্লাস পানি পান করুন</small>
+            </div>
+            <div class="food-item recommended">
+              <mat-icon>check_circle</mat-icon>
+              <span>ফলের রস</span>
+              <small>কমলা, ডালিমের রস</small>
+            </div>
+            <div class="food-item recommended">
+              <mat-icon>check_circle</mat-icon>
+              <span>সবুজ শাকসবজি</span>
+              <small>পালং শাক, ব্রকলি</small>
+            </div>
+            <div class="food-item recommended">
+              <mat-icon>check_circle</mat-icon>
+              <span>শুকনো ফল</span>
+              <small>কিশমিশ, আখরোট, বাদাম</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- স্বাস্থ্য টিপস -->
+    <section id="health" class="guide-section">
+      <div class="section-header">
+        <mat-icon>local_hospital</mat-icon>
+        <h2>রক্ত সুস্থ রাখার উপায়</h2>
+      </div>
+
+      <div class="health-tips">
+        <div class="tips-section good-habits">
+          <h3>ভালো অভ্যাস</h3>
+          <div class="habits-list">
+            <div class="habit-item">
+              <mat-icon class="good">thumb_up</mat-icon>
+              <div class="habit-content">
+                <h4>নিয়মিত ব্যায়াম</h4>
+                <p>সপ্তাহে কমপক্ষে ৩০ মিনিট হাঁটাহাঁটি বা হালকা ব্যায়াম</p>
+              </div>
+            </div>
+            <div class="habit-item">
+              <mat-icon class="good">thumb_up</mat-icon>
+              <div class="habit-content">
+                <h4>পর্যাপ্ত ঘুম</h4>
+                <p>দৈনিক ৭-৮ ঘন্টা গভীর ঘুম</p>
+              </div>
+            </div>
+            <div class="habit-item">
+              <mat-icon class="good">thumb_up</mat-icon>
+              <div class="habit-content">
+                <h4>স্ট্রেস কমানো</h4>
+                <p>মেডিটেশন, যোগব্যায়াম বা শ্বাসের ব্যায়াম</p>
+              </div>
+            </div>
+            <div class="habit-item">
+              <mat-icon class="good">thumb_up</mat-icon>
+              <div class="habit-content">
+                <h4>হাইড্রেটেড থাকা</h4>
+                <p>দৈনিক ২-৩ লিটার পানি পান</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tips-section bad-habits">
+          <h3>এড়িয়ে চলুন</h3>
+          <div class="habits-list">
+            <div class="habit-item">
+              <mat-icon class="bad">thumb_down</mat-icon>
+              <div class="habit-content">
+                <h4>ধূমপান</h4>
+                <p>রক্তে অক্সিজেন কমায় এবং রক্ত চলাচলে বাধা দেয়</p>
+              </div>
+            </div>
+            <div class="habit-item">
+              <mat-icon class="bad">thumb_down</mat-icon>
+              <div class="habit-content">
+                <h4>অতিরিক্ত মদ্যপান</h4>
+                <p>রক্তে বিষাক্ত পদার্থ বৃদ্ধি করে</p>
+              </div>
+            </div>
+            <div class="habit-item">
+              <mat-icon class="bad">thumb_down</mat-icon>
+              <div class="habit-content">
+                <h4>অতিরিক্ত লবণ ও চিনি</h4>
+                <p>রক্তচাপ বৃদ্ধি এবং ডায়াবেটিসের ঝুঁকি</p>
+              </div>
+            </div>
+            <div class="habit-item">
+              <mat-icon class="bad">thumb_down</mat-icon>
+              <div class="habit-content">
+                <h4>দীর্ঘক্ষণ বসে থাকা</h4>
+                <p>রক্ত চলাচল কমে যায় এবং জমাট বাঁধার ঝুঁকি</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Emergency Contact -->
+    <section class="emergency-section">
+      <mat-card class="emergency-card">
+        <mat-card-content>
+          <div class="emergency-content">
+            <mat-icon class="emergency-icon">local_hospital</mat-icon>
+            <div class="emergency-text">
+              <h3>জরুরি সাহায্যের জন্য</h3>
+              <p>২৪/৭ হটলাইন: <strong>০৯৬৬৬৭৭৮৮৯৯</strong></p>
+              <p>
+                রক্ত প্রয়োজন হলে বা রক্তদান সম্পর্কিত যেকোনো প্রশ্নের জন্য
+                যোগাযোগ করুন
+              </p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </section>
+  </div>
+</div>

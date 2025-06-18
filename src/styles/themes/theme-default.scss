@@ -114,6 +114,26 @@ $KakonDark-primary: mat.define-palette(mat.$deep-purple-palette);
 $KakonDark-accent: mat.define-palette(mat.$green-palette, A200, A100, A400);
 $KakonDark-warn: mat.define-palette(mat.$red-palette);
 
+// Custom Typography Configuration with Bengali Fonts
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap');
+
+$custom-typography: mat.define-typography-config(
+  $font-family: '"Hind Siliguri", "Noto Sans Bengali", "Roboto", sans-serif',
+  $display-4: mat.define-typography-level(112px, 112px, 300, '"Hind Siliguri", "Noto Sans Bengali", sans-serif'),
+  $display-3: mat.define-typography-level(56px, 56px, 400, '"Hind Siliguri", "Noto Sans Bengali", sans-serif'),
+  $display-2: mat.define-typography-level(45px, 48px, 400, '"Hind Siliguri", "Noto Sans Bengali", sans-serif'),
+  $display-1: mat.define-typography-level(34px, 40px, 400, '"Hind Siliguri", "Noto Sans Bengali", sans-serif'),
+  $headline: mat.define-typography-level(24px, 32px, 400, '"Hind Siliguri", "Noto Sans Bengali", sans-serif'),
+  $title: mat.define-typography-level(20px, 32px, 500, '"Hind Siliguri", "Noto Sans Bengali", sans-serif'),
+  $subheading-2: mat.define-typography-level(16px, 28px, 400, '"Hind Siliguri", "Noto Sans Bengali", sans-serif'),
+  $subheading-1: mat.define-typography-level(15px, 24px, 400, '"Hind Siliguri", "Noto Sans Bengali", sans-serif'),
+  $body-2: mat.define-typography-level(14px, 24px, 500, '"Hind Siliguri", "Noto Sans Bengali", sans-serif'),
+  $body-1: mat.define-typography-level(14px, 20px, 400, '"Hind Siliguri", "Noto Sans Bengali", sans-serif'),
+  $caption: mat.define-typography-level(12px, 20px, 400, '"Hind Siliguri", "Noto Sans Bengali", sans-serif'),
+  $button: mat.define-typography-level(14px, 14px, 500, '"Hind Siliguri", "Noto Sans Bengali", sans-serif'),
+  $input: mat.define-typography-level(inherit, 1.125, 400, '"Hind Siliguri", "Noto Sans Bengali", sans-serif')
+);
+
 // Creating the theme.
 
 $KakonLight-theme: mat.define-light-theme(
@@ -123,7 +143,7 @@ $KakonLight-theme: mat.define-light-theme(
       accent: $KakonLight-accent,
       warn: $KakonLight-warn,
     ),
-    typography: mat.define-typography-config(),
+    typography: $custom-typography,
     density: 0,
   )
 );
@@ -137,7 +157,7 @@ $KakonDark-theme: mat.define-dark-theme(
       accent: $KakonDark-accent,
       warn: $KakonDark-warn,
     ),
-    typography: mat.define-typography-config(),
+    typography: $custom-typography,
     density: 0,
   )
 );
@@ -147,6 +167,7 @@ $KakonDark-theme: mat.define-dark-theme(
 // that you are using.
 @include mat.all-component-themes($KakonLight-theme);
 
+// Dark mode theme separated to avoid duplication
 .darkMode {
-  @include mat.all-component-themes($KakonDark-theme);
+  @include mat.all-component-colors($KakonDark-theme);
 }

@@ -1,0 +1,12 @@
+/* Global App Styles with Hind Siliguri Font */
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap');
+
+/* Apply Hind Siliguri globally to all components */
+:host {
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', 'Roboto', sans-serif;
+}
+
+/* Ensure all child components inherit the font */
+* {
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', 'Roboto', sans-serif !important;
+}

@@ -1,0 +1,300 @@
+<div class="emergency-container">
+  <!-- Hero Section with Emergency Header -->
+  <div class="hero-section">
+    <div class="hero-background">
+      <div class="animated-bg"></div>
+    </div>
+    <div class="container">
+      <button mat-icon-button routerLink="/" class="back-btn">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="hero-content">
+        <div class="emergency-icon">
+          <mat-icon>emergency</mat-icon>
+        </div>
+        <h1 class="hero-title">জরুরি রক্তের প্রয়োজন?</h1>
+        <p class="hero-subtitle">আমরা ২৪/৭ এখানে আছি আপনার সেবায়</p>
+        <div class="hero-actions">
+          <button mat-raised-button color="warn" class="emergency-hotline">
+            <mat-icon>phone</mat-icon>
+            ৯৯৯ (জাতীয় জরুরি সেবা)
+          </button>
+          <button mat-stroked-button class="blood-request-btn">
+            <mat-icon>add</mat-icon>
+            রক্তের অনুরোধ করুন
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Blood Availability Dashboard -->
+  <div class="blood-dashboard">
+    <div class="container">
+      <div class="dashboard-header">
+        <h2 class="section-title">
+          <mat-icon>opacity</mat-icon>
+          বর্তমান রক্তের প্রাপ্যতা
+        </h2>
+        <p class="section-subtitle">রিয়েল-টাইম আপডেট</p>
+      </div>
+
+      <div class="blood-grid">
+        <div
+          *ngFor="let blood of bloodGroups"
+          class="blood-card"
+          [ngClass]="{
+            available: blood.available,
+            unavailable: !blood.available,
+            high: blood.donors > 50,
+            medium: blood.donors > 20 && blood.donors <= 50,
+            low: blood.donors > 0 && blood.donors <= 20
+          }"
+        >
+          <div class="blood-group">{{ blood.group }}</div>
+          <div class="availability-indicator">
+            <div class="pulse-dot" *ngIf="blood.available"></div>
+            <span class="status-text">{{
+              blood.available ? "উপলব্ধ" : "অনুপলব্ধ"
+            }}</span>
+          </div>
+          <div class="donor-info">
+            <span class="donor-count">{{ blood.donors }}</span>
+            <span class="donor-label">জন ডোনার</span>
+          </div>
+          <button mat-button class="contact-btn" *ngIf="blood.available">
+            <mat-icon>phone</mat-icon>
+            যোগাযোগ
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Emergency Contacts Section -->
+  <div class="contacts-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">
+          <mat-icon>local_hospital</mat-icon>
+          জরুরি যোগাযোগ কেন্দ্র
+        </h2>
+        <p class="section-subtitle">বিশ্বস্ত হাসপাতাল ও ব্লাড ব্যাংক</p>
+      </div>
+
+      <div class="contact-grid">
+        <mat-card
+          *ngFor="let contact of emergencyContacts"
+          class="contact-card"
+          [ngClass]="contact.type"
+        >
+          <div class="card-header">
+            <div class="hospital-info">
+              <h3 class="hospital-name">{{ contact.title }}</h3>
+              <mat-chip class="type-chip" [ngClass]="contact.type">
+                <mat-icon>{{ getTypeIcon(contact.type) }}</mat-icon>
+                {{ contact.type }}
+              </mat-chip>
+            </div>
+            <div class="status-indicator">
+              <div class="status-dot active"></div>
+              <span>২৪/৭ খোলা</span>
+            </div>
+          </div>
+
+          <mat-card-content class="card-content">
+            <div class="contact-details">
+              <div class="detail-item">
+                <mat-icon class="detail-icon">location_on</mat-icon>
+                <div class="detail-text">
+                  <span class="label">ঠিকানা</span>
+                  <span class="value">{{ contact.address }}</span>
+                </div>
+              </div>
+
+              <div class="detail-item">
+                <mat-icon class="detail-icon">phone</mat-icon>
+                <div class="detail-text">
+                  <span class="label">ফোন</span>
+                  <span class="value">{{ contact.phone }}</span>
+                </div>
+              </div>
+
+              <div class="detail-item blood-bank-info">
+                <mat-icon class="detail-icon">opacity</mat-icon>
+                <div class="detail-text">
+                  <span class="label">ব্লাড ব্যাংক</span>
+                  <span class="value">{{ contact.bloodBank }}</span>
+                </div>
+              </div>
+
+              <div class="services-list">
+                <span class="services-label">সেবাসমূহ:</span>
+                <div class="service-tags">
+                  <mat-chip class="service-tag">জরুরি সেবা</mat-chip>
+                  <mat-chip class="service-tag">ব্লাড ব্যাংক</mat-chip>
+                  <mat-chip class="service-tag">২৪/৭</mat-chip>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions class="card-actions">
+            <div class="action-buttons">
+              <button
+                mat-raised-button
+                color="primary"
+                class="primary-action"
+                (click)="callNumber(contact.phone)"
+              >
+                <mat-icon>call</mat-icon>
+                এখনই কল করুন
+              </button>
+              <button
+                mat-stroked-button
+                class="secondary-action"
+                (click)="callNumber(contact.bloodBank)"
+              >
+                <mat-icon>opacity</mat-icon>
+                ব্লাড ব্যাংক
+              </button>
+              <button
+                mat-icon-button
+                color="accent"
+                class="direction-btn"
+                (click)="getDirections(contact.address)"
+                matTooltip="দিক নির্দেশনা"
+              >
+                <mat-icon>directions</mat-icon>
+              </button>
+            </div>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  <!-- Quick Actions & Emergency Info -->
+  <div class="emergency-actions">
+    <div class="container">
+      <div class="actions-wrapper">
+        <!-- Quick Actions -->
+        <div class="quick-actions-card">
+          <h3 class="card-title">
+            <mat-icon>flash_on</mat-icon>
+            জরুরি কার্যক্রম
+          </h3>
+          <div class="action-grid">
+            <button
+              mat-raised-button
+              color="warn"
+              class="emergency-action emergency-call"
+              (click)="callEmergency()"
+            >
+              <div class="action-icon">
+                <mat-icon>emergency</mat-icon>
+              </div>
+              <div class="action-text">
+                <span class="primary-text">৯৯৯</span>
+                <span class="secondary-text">জাতীয় জরুরি সেবা</span>
+              </div>
+            </button>
+
+            <button
+              mat-raised-button
+              color="primary"
+              class="emergency-action"
+              routerLink="/donors"
+            >
+              <div class="action-icon">
+                <mat-icon>search</mat-icon>
+              </div>
+              <div class="action-text">
+                <span class="primary-text">ডোনার খুঁজুন</span>
+                <span class="secondary-text">দ্রুত খোঁজ</span>
+              </div>
+            </button>
+
+            <button
+              mat-raised-button
+              color="accent"
+              class="emergency-action"
+              routerLink="/donors/add"
+            >
+              <div class="action-icon">
+                <mat-icon>volunteer_activism</mat-icon>
+              </div>
+              <div class="action-text">
+                <span class="primary-text">ডোনার হন</span>
+                <span class="secondary-text">জীবন বাঁচান</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Emergency Guidelines -->
+        <div class="guidelines-card">
+          <h3 class="card-title">
+            <mat-icon>info_outline</mat-icon>
+            জরুরি নির্দেশনা
+          </h3>
+          <div class="guidelines-content">
+            <div class="guideline-item">
+              <div class="step-number">১</div>
+              <div class="step-content">
+                <h4>শান্ত থাকুন</h4>
+                <p>আতঙ্কিত না হয়ে শান্তভাবে পরিস্থিতি মূল্যায়ন করুন</p>
+              </div>
+            </div>
+            <div class="guideline-item">
+              <div class="step-number">২</div>
+              <div class="step-content">
+                <h4>রক্তের গ্রুপ নিশ্চিত করুন</h4>
+                <p>রোগীর রক্তের গ্রুপ সঠিকভাবে জেনে নিন</p>
+              </div>
+            </div>
+            <div class="guideline-item">
+              <div class="step-number">৩</div>
+              <div class="step-content">
+                <h4>নিকটস্থ হাসপাতালে যোগাযোগ</h4>
+                <p>উপরের তালিকা থেকে নিকটস্থ হাসপাতালে কল করুন</p>
+              </div>
+            </div>
+            <div class="guideline-item">
+              <div class="step-number">৪</div>
+              <div class="step-content">
+                <h4>প্রয়োজনীয় কাগজপত্র</h4>
+                <p>রোগীর পরিচয়পত্র ও মেডিকেল রেকর্ড সাথে নিন</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help & Support Section -->
+  <div class="help-section">
+    <div class="container">
+      <div class="help-card">
+        <div class="help-content">
+          <div class="help-text">
+            <h3>আরো সাহায্য দরকার?</h3>
+            <p>
+              আমাদের ২৪/৭ হেল্পলাইনে যোগাযোগ করুন অথবা আমাদের এপ ডাউনলোড করুন
+              দ্রুত সেবার জন্য
+            </p>
+          </div>
+          <div class="help-actions">
+            <button mat-raised-button color="primary" class="help-btn">
+              <mat-icon>support_agent</mat-icon>
+              হেল্পলাইন: ১৬২৬৩
+            </button>
+            <button mat-stroked-button class="help-btn">
+              <mat-icon>get_app</mat-icon>
+              এপ ডাউনলোড
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

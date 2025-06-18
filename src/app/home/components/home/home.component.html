@@ -1,10 +1,100 @@
-<div class="module-list">
-	<ng-container *ngFor="let module of modules">
-		<mat-card
-			routerLink="{{ module.url }}"
-			class="module"
-		>
-			<mat-card-content>{{ module.title }}</mat-card-content>
-		</mat-card>
-	</ng-container>
+<div class="home-container">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="hero-content">
+      <!-- Logo -->
+      <div class="logo-container">
+        <img
+          src="assets/images/roktosebajpg.jpg"
+          alt="রক্তসেবা লোগো"
+          class="logo"
+        />
+      </div>
+
+      <!-- Main Title -->
+      <h1 class="main-title">রক্তসেবায় আমরা আছি</h1>
+
+      <!-- Slogans -->
+      <div class="slogans">
+        <p class="slogan primary">একটি জীবন বাঁচান, রক্তদান করুন</p>
+        <p class="slogan secondary">আপনার একটি দান হতে পারে কারো নতুন জীবন</p>
+        <p class="slogan accent">রক্তদান মহাদান - সেবায় থাকুন সর্বক্ষণ</p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button
+          mat-raised-button
+          color="primary"
+          class="action-btn admin-btn"
+          routerLink="/users/login"
+        >
+          <mat-icon>admin_panel_settings</mat-icon>
+          <span>এডমিন লগইন</span>
+        </button>
+
+        <button
+          mat-raised-button
+          color="accent"
+          class="action-btn donor-btn"
+          routerLink="/donors"
+        >
+          <mat-icon>people</mat-icon>
+          <span>ডোনার লিস্ট</span>
+        </button>
+
+        <button
+          mat-raised-button
+          color="warn"
+          class="action-btn emergency-btn"
+          routerLink="/emergency"
+        >
+          <mat-icon>emergency</mat-icon>
+          <span>ইমারজেন্সি যোগাযোগ</span>
+        </button>
+
+        <button
+          mat-stroked-button
+          color="primary"
+          class="action-btn guide-btn"
+          routerLink="/blood-donation-guide"
+        >
+          <mat-icon>menu_book</mat-icon>
+          <span>রক্তদান গাইড</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Background Animation -->
+    <div class="hero-background">
+      <div class="floating-element element-1"></div>
+      <div class="floating-element element-2"></div>
+      <div class="floating-element element-3"></div>
+    </div>
+  </div>
+
+  <!-- Info Section -->
+  <div class="info-section">
+    <div class="container">
+      <div class="info-cards">
+        <div class="info-card">
+          <mat-icon class="info-icon">favorite</mat-icon>
+          <h3>জীবন রক্ষা</h3>
+          <p>প্রতিটি রক্তদান ৩টি পর্যন্ত জীবন বাঁচাতে পারে</p>
+        </div>
+
+        <div class="info-card">
+          <mat-icon class="info-icon">schedule</mat-icon>
+          <h3>তাৎক্ষণিক সেবা</h3>
+          <p>২৪/৭ জরুরি প্রয়োজনে রক্তের ব্যবস্থা</p>
+        </div>
+
+        <div class="info-card">
+          <mat-icon class="info-icon">security</mat-icon>
+          <h3>নিরাপদ ও নির্ভরযোগ্য</h3>
+          <p>সম্পূর্ণ স্বাস্থ্যবিধি মেনে রক্তদান প্রক্রিয়া</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

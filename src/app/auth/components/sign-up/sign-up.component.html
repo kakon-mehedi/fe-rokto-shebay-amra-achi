@@ -1,137 +1,275 @@
 <div class="register-container">
-	<button
-		mat-icon-button
-		style="color: white"
-		aria-label="Example icon-button with a heart icon"
-		(click)="goBack()"
-	>
-		<mat-icon>arrow_back</mat-icon>
-	</button>
-	<mat-card class="register-card">
-		<mat-card-content>
-			<h1 style="text-align: center">ডোনার রেজিস্ট্রেশন ফর্ম</h1>
-			<form>
-				<div class="register-inputs">
-					<mat-form-field
-						class="input"
-						appearance="outline"
-					>
-						<mat-label>ডোনারের নাম</mat-label>
-						<input
-							matInput
-							placeholder="ডোনারের নাম"
-						/>
-					</mat-form-field>
+  <!-- Background decorative elements -->
+  <div class="bg-decoration"></div>
 
-					<mat-form-field
-						class="input"
-						appearance="outline"
-					>
-						<mat-label>ঠিকানা</mat-label>
-						<input
-							matInput
-							placeholder="ঠিকানা"
-						/>
-					</mat-form-field>
+  <!-- Back button -->
+  <button
+    mat-icon-button
+    class="back-button"
+    (click)="goBack()"
+    aria-label="ফিরে যান"
+  >
+    <mat-icon>arrow_back</mat-icon>
+  </button>
 
-					<mat-form-field
-						class="input"
-						appearance="outline"
-					>
-						<mat-label>ব্লাড গ্রুপ</mat-label>
-						<mat-select>
-							<mat-option
-								*ngFor="let bg of bloodGroups"
-								value="valid"
-								>{{ bg }}</mat-option
-							>
-						</mat-select>
-					</mat-form-field>
+  <!-- Left panel - Branding -->
+  <div class="register-branding">
+    <div class="brand-content">
+      <div class="logo-section">
+        <img src="assets/images/roktosebajpg.jpg" alt="লোগো" class="logo" />
+        <h1 class="brand-title">রক্তসেবায় আমরা আছি</h1>
+        <p class="brand-subtitle">নতুন ডোনার হিসেবে যোগ দিন</p>
+      </div>
 
-					<mat-form-field
-						class="input"
-						appearance="outline"
-					>
-						<mat-label>মোবাইল নাম্বার</mat-label>
-						<input
-							matInput
-							placeholder="Email"
-						/>
-					</mat-form-field>
+      <div class="features-list">
+        <div class="feature-item">
+          <mat-icon>bloodtype</mat-icon>
+          <span>রক্তদানের মাধ্যমে জীবন বাঁচান</span>
+        </div>
+        <div class="feature-item">
+          <mat-icon>location_on</mat-icon>
+          <span>আপনার এলাকার ডোনার খুঁজুন</span>
+        </div>
+        <div class="feature-item">
+          <mat-icon>notification_important</mat-icon>
+          <span>জরুরি প্রয়োজনে তাৎক্ষণিক সহায়তা</span>
+        </div>
+        <div class="feature-item">
+          <mat-icon>verified_user</mat-icon>
+          <span>নিরাপদ ও বিশ্বস্ত প্ল্যাটফর্ম</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-					<mat-form-field
-						color="accent"
-						appearance="outline"
-					>
-						<div
-							style="
-								display: flex;
-								justify-content: space-between;
-								align-items: center;
-							"
-						>
-							<input
-								placeholder="সর্বশেষ ডোনেশন ডেট"
-								matInput
-								[matDatepicker]="picker1"
-                [max]="today"
-							/>
-							<mat-datepicker-toggle
-								matIconSuffix
-								[for]="picker1"
-							></mat-datepicker-toggle>
-						</div>
-						<mat-datepicker #picker1></mat-datepicker>
-					</mat-form-field>
+  <!-- Right panel - Registration form -->
+  <div class="register-form-panel">
+    <div class="form-container">
+      <div class="form-header">
+        <h2>নতুন অ্যাকাউন্ট তৈরি করুন</h2>
+        <p>রক্তদানের মহৎ কাজে অংশ নিন</p>
+      </div>
 
-					<mat-form-field
-						class="input"
-						appearance="outline"
-					>
-						<mat-label>ডোনেট সংখ্যা</mat-label>
-						<input
-							matInput
-							type="number"
-							placeholder="ডোনেট সংখ্যা"
-						/>
-					</mat-form-field>
+      <form
+        [formGroup]="registerForm"
+        (ngSubmit)="onSubmit()"
+        class="register-form"
+      >
+        <!-- Personal Information Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <mat-icon>person</mat-icon>
+            ব্যক্তিগত তথ্য
+          </h3>
 
-					<mat-form-field
-						class="input"
-						appearance="outline"
-					>
-						<mat-label>আপলোড ফটো</mat-label>
-						<input
-							matInput
-							type="number"
-							placeholder="ডোনেট সংখ্যা"
-							(click)="dpInput.click()"
-						/>
-					</mat-form-field>
+          <div class="form-grid">
+            <!-- Full Name -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>পূর্ণ নাম *</mat-label>
+              <input
+                matInput
+                formControlName="name"
+                placeholder="আপনার পূর্ণ নাম লিখুন"
+              />
+              <mat-icon matSuffix>person</mat-icon>
+              <mat-error>{{ getErrorMessage("name") }}</mat-error>
+            </mat-form-field>
 
-					<input
-						style="display: none"
-						#dpInput
-						type="file"
-					/>
-					
+            <!-- Mobile Number -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>মোবাইল নম্বর *</mat-label>
+              <input
+                matInput
+                formControlName="mobileNumber"
+                placeholder="০১৭xxxxxxxx"
+                maxlength="11"
+              />
+              <mat-icon matSuffix>phone</mat-icon>
+              <mat-error>{{ getErrorMessage("mobileNumber") }}</mat-error>
+            </mat-form-field>
 
-					<!-- <div
-						class="upload-photo"
-						(click)="dpInput.click()"
-					>
-						<mat-icon>cloud</mat-icon>
-						<p>Upload Photo</p>
-					</div> -->
+            <!-- Blood Group -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>রক্তের গ্রুপ *</mat-label>
+              <mat-select formControlName="bloodGroup">
+                <mat-option *ngFor="let bg of bloodGroups" [value]="bg">
+                  {{ bg }}
+                </mat-option>
+              </mat-select>
+              <mat-icon matSuffix>bloodtype</mat-icon>
+              <mat-error>{{ getErrorMessage("bloodGroup") }}</mat-error>
+            </mat-form-field>
 
-					<button
-						color="warn"
-						mat-raised-button
-					>
-						সাবমিট
-					</button>
-				</div>
-			</form>
-		</mat-card-content>
-	</mat-card>
+            <!-- Email (Optional) -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>ইমেইল (ঐচ্ছিক)</mat-label>
+              <input
+                matInput
+                type="email"
+                formControlName="email"
+                placeholder="your@email.com"
+              />
+              <mat-icon matSuffix>email</mat-icon>
+              <mat-error>{{ getErrorMessage("email") }}</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Address Information Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <mat-icon>location_on</mat-icon>
+            ঠিকানা
+          </h3>
+
+          <!-- Address -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>সম্পূর্ণ ঠিকানা *</mat-label>
+            <textarea
+              matInput
+              formControlName="addressLine"
+              placeholder="বাসা/রোড, এলাকা, জেলা"
+              rows="3"
+            ></textarea>
+            <mat-icon matSuffix>home</mat-icon>
+            <mat-error>{{ getErrorMessage("addressLine") }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Security Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <mat-icon>security</mat-icon>
+            নিরাপত্তা (ঐচ্ছিক)
+          </h3>
+
+          <div class="form-grid">
+            <!-- Password -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>পাসওয়ার্ড (ঐচ্ছিক)</mat-label>
+              <input
+                matInput
+                [type]="hidePassword ? 'password' : 'text'"
+                formControlName="password"
+                placeholder="কমপক্ষে ৬ অক্ষর"
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="togglePasswordVisibility()"
+                type="button"
+                aria-label="পাসওয়ার্ড দেখান/লুকান"
+              >
+                <mat-icon>{{
+                  hidePassword ? "visibility_off" : "visibility"
+                }}</mat-icon>
+              </button>
+              <mat-error>{{ getErrorMessage("password") }}</mat-error>
+            </mat-form-field>
+
+            <!-- Confirm Password -->
+            <mat-form-field
+              appearance="outline"
+              class="full-width"
+              *ngIf="registerForm.get('password')?.value"
+            >
+              <mat-label>পাসওয়ার্ড নিশ্চিত করুন</mat-label>
+              <input
+                matInput
+                [type]="hideConfirmPassword ? 'password' : 'text'"
+                formControlName="confirmPassword"
+                placeholder="পাসওয়ার্ড আবার লিখুন"
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="toggleConfirmPasswordVisibility()"
+                type="button"
+                aria-label="পাসওয়ার্ড দেখান/লুকান"
+              >
+                <mat-icon>{{
+                  hideConfirmPassword ? "visibility_off" : "visibility"
+                }}</mat-icon>
+              </button>
+              <mat-error>{{ getErrorMessage("confirmPassword") }}</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Profile Photo Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <mat-icon>photo_camera</mat-icon>
+            প্রোফাইল ছবি (ঐচ্ছিক)
+          </h3>
+
+          <div class="photo-upload-container">
+            <input
+              type="file"
+              accept="image/*"
+              (change)="onFileSelected($event)"
+              #fileInput
+              class="hidden-file-input"
+              aria-label="প্রোফাইল ছবি নির্বাচন করুন"
+            />
+
+            <div class="upload-area" (click)="fileInput.click()">
+              <div class="upload-content" *ngIf="!selectedFile">
+                <mat-icon class="upload-icon">cloud_upload</mat-icon>
+                <p>ছবি আপলোড করতে ক্লিক করুন</p>
+                <span class="upload-hint">JPG, PNG (সর্বোচ্চ ২MB)</span>
+              </div>
+
+              <div class="uploaded-file" *ngIf="selectedFile">
+                <mat-icon class="file-icon">check_circle</mat-icon>
+                <span class="file-name">{{ selectedFile.name }}</span>
+                <button
+                  mat-icon-button
+                  (click)="removeFile($event)"
+                  class="remove-file"
+                  type="button"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="terms-section">
+          <mat-checkbox formControlName="agreeToTerms" class="terms-checkbox">
+            আমি
+            <a href="#" class="terms-link">শর্তাবলী ও গোপনীয়তা নীতি</a> গ্রহণ
+            করছি
+          </mat-checkbox>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button
+            mat-raised-button
+            color="primary"
+            class="register-btn"
+            type="submit"
+            [disabled]="registerForm.invalid || isLoading"
+          >
+            <mat-spinner
+              diameter="20"
+              *ngIf="isLoading"
+              class="spinner"
+            ></mat-spinner>
+            <mat-icon *ngIf="!isLoading">person_add</mat-icon>
+            <span *ngIf="!isLoading">নিবন্ধন করুন</span>
+            <span *ngIf="isLoading">নিবন্ধন হচ্ছে...</span>
+          </button>
+
+          <div class="login-link">
+            <span>ইতিমধ্যে অ্যাকাউন্ট আছে?</span>
+            <a routerLink="/users/login" class="link">লগইন করুন</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

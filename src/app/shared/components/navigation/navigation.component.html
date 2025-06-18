@@ -1,132 +1,287 @@
-<div class="notification-container" *ngIf="openNotificationPanel">
-    <div class="left" (click)="toggleNotification()">
-    </div>
-  
-    <div class="right">
-      <div class="header">
-        <div>Notifications (<span>100</span>)</div>
-          <mat-icon color="accent" (click)="toggleNotification()">close</mat-icon>
-      </div>
-      <mat-divider></mat-divider>
-  
-      <div class="notification-list">
-        <div class="notification">
-          <mat-icon color="primary">notifications</mat-icon>
-          <div class="notificaiton-info">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, corrupti.</p>
-          <div class="date">
-            <p>16/05/2022 | 6:10PM</p>
-          </div>
-          </div>
-        </div>
-  
-        <mat-divider></mat-divider>
-  
-        <div class="notification">
-          <mat-icon color="primary">notifications</mat-icon>
-          <div class="notificaiton-info">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, corrupti.</p>
-          <div class="date">
-            <p>16/05/2022 | 6:10PM</p>
-          </div>
-          </div>
-        </div>
-  
-      </div>
+<!-- Enhanced Navigation Bar -->
+<mat-toolbar class="enhanced-toolbar mat-elevation-z4">
+  <!-- Left Section: Logo and Brand -->
+  <div class="nav-left">
+    <button mat-icon-button routerLink="/" class="home-btn">
+      <img
+        src="assets/images/roktosebajpg.jpg"
+        alt="রক্তসেবা"
+        class="nav-logo"
+      />
+    </button>
+    <span class="brand-text" routerLink="/">রক্তসেবায় আমরা আছি</span>
+  </div>
+
+  <!-- Center Section: Navigation Links -->
+  <div class="nav-center" *ngIf="!isHandset">
+    <button
+      mat-button
+      routerLink="/"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <mat-icon>home</mat-icon>
+      <span>হোম</span>
+    </button>
+
+    <button mat-button routerLink="/donors" routerLinkActive="active-link">
+      <mat-icon>people</mat-icon>
+      <span>ডোনার তালিকা</span>
+    </button>
+
+    <button mat-button routerLink="/emergency" routerLinkActive="active-link">
+      <mat-icon>emergency</mat-icon>
+      <span>জরুরি যোগাযোগ</span>
+    </button>
+
+    <button
+      mat-button
+      routerLink="/blood-donation-guide"
+      routerLinkActive="active-link"
+    >
+      <mat-icon>menu_book</mat-icon>
+      <span>রক্তদান গাইড</span>
+    </button>
+
+    <button
+      mat-button
+      *ngIf="isLoggedIn"
+      routerLink="/donors/add"
+      routerLinkActive="active-link"
+    >
+      <mat-icon>person_add</mat-icon>
+      <span>নতুন ডোনার</span>
+    </button>
+  </div>
+
+  <!-- Right Section: Actions and Profile -->
+  <div class="nav-right">
+    <!-- Emergency Blood Request Button -->
+    <button
+      mat-raised-button
+      color="warn"
+      class="emergency-btn"
+      *ngIf="!isHandset"
+    >
+      <mat-icon>local_hospital</mat-icon>
+      <span>রক্তের প্রয়োজন</span>
+    </button>
+
+    <!-- Notifications -->
+    <button
+      mat-icon-button
+      *ngIf="isLoggedIn"
+      (click)="toggleNotification()"
+      class="notification-btn"
+    >
+      <mat-icon matBadge="3" matBadgeColor="warn" matBadgeSize="small"
+        >notifications</mat-icon
+      >
+    </button>
+
+    <!-- Profile Menu -->
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="profileMenu"
+      class="profile-btn"
+    >
+      <img
+        *ngIf="isLoggedIn"
+        src="assets/images/logo/profile_avatar.png"
+        alt="প্রোফাইল"
+        class="profile-avatar"
+      />
+      <mat-icon *ngIf="!isLoggedIn" class="profile-icon"
+        >account_circle</mat-icon
+      >
+    </button>
+
+    <!-- Mobile Menu -->
+    <button
+      mat-icon-button
+      *ngIf="isHandset"
+      (click)="toggleSidenav()"
+      class="mobile-menu-btn"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+
+<!-- Profile Menu -->
+<mat-menu #profileMenu="matMenu" class="profile-menu">
+  <div class="menu-header" *ngIf="isLoggedIn">
+    <img
+      src="assets/images/logo/profile_avatar.png"
+      alt="প্রোফাইল"
+      class="menu-avatar"
+    />
+    <div class="user-info">
+      <p class="user-name">এডমিন ইউজার</p>
+      <p class="user-role">সিস্টেম এডমিনিস্ট্রেটর</p>
     </div>
   </div>
-  
-  
-  <mat-toolbar class="mat-toolbar main-toolbar mat-elevation-z2">
-    <button
-      type="button"
-      aria-label="Toggle sidenav"
-      mat-icon-button
-      routerLink="/home"
-      
-    >
-      <mat-icon aria-label="Side nav toggle icon">home</mat-icon>
-    </button>
-    <!-- <span routerLink="/quiz" class="brand">Brand name</span> -->
-    <span class="nav-spacer"></span>
-  
-    <div class="nav-button-list">
-      <div class="nav-icon-box" matRipple [matMenuTriggerFor]="dashboard">
-        <button mat-icon-button disableRipple>
-          <mat-icon class="material-icons-outlined">dashboard</mat-icon>
-        </button>
-      </div>
-      <mat-menu #dashboard="matMenu">
-        <div class="dashboard-list">
-          <div class="dashboard-box">
-            <button mat-menu-item>
-              <mat-icon>dialpad</mat-icon>
-              <span>Redial</span>
-            </button>
-          </div>
-  
-          <div class="dashboard-box">
-            <button mat-menu-item>
-              <mat-icon>dialpad</mat-icon>
-              <span>Redial</span>
-            </button>
-          </div>
-  
-          <div class="dashboard-box">
-            <button mat-menu-item>
-              <mat-icon>dialpad</mat-icon>
-              <span>Redial</span>
-            </button>
-          </div>
-        </div>
-      </mat-menu>
-      <div class="nav-icon-box" matRipple (click)="toggleNotification()">
-        <button mat-icon-button disableRipple>
-          <mat-icon matBadge="2" matBadgeColor="warn">notifications</mat-icon>
-        </button>
-      </div>
-      <div matRipple class="nav-icon-box" [matMenuTriggerFor]="account">
-        <img
-          class="profile-avatar"
-          src="assets/images/logo/profile_avatar.png"
-          alt=""
-        />
-      </div>
-  
-      <mat-menu #account="matMenu">
-        <button mat-menu-item>
-          <mat-icon>account_circle</mat-icon>
-          <span>My account</span>
-        </button>
-        <button mat-menu-item>
-          <mat-icon>logout</mat-icon>
-          <span>Logout</span>
-        </button>
-      </mat-menu>
+  <mat-divider *ngIf="isLoggedIn"></mat-divider>
+
+  <button mat-menu-item *ngIf="isLoggedIn" routerLink="/profile">
+    <mat-icon>account_circle</mat-icon>
+    <span>আমার প্রোফাইল</span>
+  </button>
+
+  <button mat-menu-item *ngIf="isLoggedIn" routerLink="/donors">
+    <mat-icon>people</mat-icon>
+    <span>ডোনার ম্যানেজমেন্ট</span>
+  </button>
+
+  <button mat-menu-item *ngIf="isLoggedIn" routerLink="/reports">
+    <mat-icon>analytics</mat-icon>
+    <span>রিপোর্ট ও পরিসংখ্যান</span>
+  </button>
+
+  <button mat-menu-item *ngIf="isLoggedIn">
+    <mat-icon>settings</mat-icon>
+    <span>সেটিংস</span>
+  </button>
+
+  <mat-divider></mat-divider>
+
+  <button
+    mat-menu-item
+    *ngIf="isLoggedIn"
+    (click)="onSignOut()"
+    class="logout-btn"
+  >
+    <mat-icon>logout</mat-icon>
+    <span>লগআউট</span>
+  </button>
+
+  <button
+    mat-menu-item
+    *ngIf="!isLoggedIn"
+    (click)="onLogin()"
+    class="login-btn"
+  >
+    <mat-icon>login</mat-icon>
+    <span>এডমিন লগইন</span>
+  </button>
+</mat-menu>
+
+<!-- Enhanced Notification Panel -->
+<div
+  class="notification-overlay"
+  *ngIf="openNotificationPanel"
+  (click)="toggleNotification()"
+>
+  <div class="notification-panel" (click)="$event.stopPropagation()">
+    <div class="notification-header">
+      <h3>বিজ্ঞপ্তি</h3>
+      <button mat-icon-button (click)="toggleNotification()">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
-  </mat-toolbar>
-  
-  <mat-progress-bar
-    mode="indeterminate"
-    *ngIf="isLoading"
-    class="progressbar"
-  ></mat-progress-bar>
-  <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav
-      #drawer
-      class="sidenav"
-      fixedInViewport
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'push' : 'side'"
-    >
-      <mat-nav-list>
-        <a mat-list-item routerLink="#">Nav1</a>
-        <a mat-list-item routerLink="#">Nav2</a>
-      </mat-nav-list>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <div>
-        <router-outlet></router-outlet>
+
+    <mat-divider></mat-divider>
+
+    <div class="notification-list">
+      <div class="notification-item" *ngFor="let notification of notifications">
+        <div class="notification-icon">
+          <mat-icon [color]="notification.type">{{
+            notification.icon
+          }}</mat-icon>
+        </div>
+        <div class="notification-content">
+          <p class="notification-title">{{ notification.title }}</p>
+          <p class="notification-message">{{ notification.message }}</p>
+          <span class="notification-time">{{ notification.time }}</span>
+        </div>
       </div>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+
+      <div class="no-notifications" *ngIf="notifications.length === 0">
+        <mat-icon>notifications_none</mat-icon>
+        <p>কোনো নতুন বিজ্ঞপ্তি নেই</p>
+      </div>
+    </div>
+
+    <div class="notification-footer">
+      <button mat-button color="primary">সব দেখুন</button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Progress Bar -->
+<mat-progress-bar
+  mode="indeterminate"
+  *ngIf="isLoading"
+  class="loading-bar"
+></mat-progress-bar>
+
+<!-- Mobile Sidenav -->
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="mobile-sidenav"
+    mode="over"
+    [(opened)]="sidenavOpened"
+  >
+    <div class="sidenav-header">
+      <img
+        src="assets/images/roktosebajpg.jpg"
+        alt="রক্তসেবা"
+        class="sidenav-logo"
+      />
+      <h3>রক্তসেবায় আমরা আছি</h3>
+    </div>
+
+    <mat-nav-list>
+      <a mat-list-item routerLink="/" (click)="closeSidenav()">
+        <mat-icon matListIcon>home</mat-icon>
+        <span>হোম</span>
+      </a>
+
+      <a mat-list-item routerLink="/donors" (click)="closeSidenav()">
+        <mat-icon matListIcon>people</mat-icon>
+        <span>ডোনার তালিকা</span>
+      </a>
+
+      <a mat-list-item routerLink="/emergency" (click)="closeSidenav()">
+        <mat-icon matListIcon>emergency</mat-icon>
+        <span>জরুরি যোগাযোগ</span>
+      </a>
+
+      <a
+        mat-list-item
+        routerLink="/blood-donation-guide"
+        (click)="closeSidenav()"
+      >
+        <mat-icon matListIcon>menu_book</mat-icon>
+        <span>রক্তদান গাইড</span>
+      </a>
+
+      <a
+        mat-list-item
+        *ngIf="isLoggedIn"
+        routerLink="/donors/add"
+        (click)="closeSidenav()"
+      >
+        <mat-icon matListIcon>person_add</mat-icon>
+        <span>নতুন ডোনার</span>
+      </a>
+
+      <mat-divider></mat-divider>
+
+      <a mat-list-item *ngIf="!isLoggedIn" (click)="onLogin(); closeSidenav()">
+        <mat-icon matListIcon>login</mat-icon>
+        <span>এডমিন লগইন</span>
+      </a>
+
+      <a mat-list-item *ngIf="isLoggedIn" (click)="onSignOut(); closeSidenav()">
+        <mat-icon matListIcon>logout</mat-icon>
+        <span>লগআউট</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

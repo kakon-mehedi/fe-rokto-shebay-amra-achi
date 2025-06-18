@@ -1,4 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
+/* Import Google Fonts for Bengali */
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap');
+
+/* Import Angular Material Theme */
+@import './styles/themes/theme-default.scss';
+
 /* You can add global styles to this file, and also import other style files */
 html,
 body {
@@ -6,6 +11,150 @@ body {
 }
 body {
 	margin: 0;
-	font-family: Roboto, 'Helvetica Neue', sans-serif;
+	font-family: 'Hind Siliguri', 'Noto Sans Bengali', 'Roboto', 'Helvetica Neue', sans-serif;
+}
+
+/* Bengali Typography Utilities */
+.bengali-text {
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+}
+
+.bengali-title {
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.bengali-heading {
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.bengali-body {
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Enhanced Bengali text rendering */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Material Components Bengali Font Override */
+.mat-toolbar,
+.mat-button,
+.mat-raised-button,
+.mat-menu-item,
+.mat-form-field,
+.mat-input-element,
+.mat-select,
+.mat-option,
+.mat-card,
+.mat-dialog-container {
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', 'Roboto', sans-serif !important;
+}
+
+/* Global style overrides for profile avatars */
+.mat-icon-button img.profile-avatar {
+  width: 35px !important;
+  height: 35px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+}
+
+/* Profile Menu Styles */
+.profile-menu {
+  margin-top: 10px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+
+  .menu-header {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+    border-radius: 12px 12px 0 0;
+
+    .menu-avatar {
+      width: 50px !important;
+      height: 50px !important;
+      border-radius: 50% !important;
+      border: 3px solid #d32f2f;
+      object-fit: cover;
+      display: block;
+
+      img.menu-avatar {
+        width: 50px !important;
+        height: 50px !important;
+        border-radius: 50% !important;
+        border: 3px solid #d32f2f !important;
+        object-fit: cover !important;
+        display: block !important;
+        max-width: 50px !important;
+        max-height: 50px !important;
+      }
+    }
+
+    .user-info {
+      .user-name {
+        font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+        font-weight: 600;
+        margin: 0;
+        color: #333;
+        font-size: 1.1rem;
+      }
+
+      .user-role {
+        font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+        font-size: 0.9rem;
+        color: #666;
+        margin: 5px 0 0 0;
+      }
+    }
+  }
+
+  .mat-menu-item {
+    padding: 12px 20px;
+    transition: all 0.3s ease;
+    font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif !important;
+
+    &:hover {
+      background: rgba(211, 47, 47, 0.1);
+      transform: translateX(5px);
+    }
+
+    mat-icon {
+      margin-right: 15px;
+      color: #d32f2f;
+    }
+
+    span {
+      font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+    }
+
+    &.logout-btn:hover {
+      background: rgba(244, 67, 54, 0.1);
+      color: #f44336;
+    }
+
+    &.login-btn:hover {
+      background: rgba(76, 175, 80, 0.1);
+      color: #4caf50;
+    }
+  }
+}
+
+.mat-menu-panel img.menu-avatar {
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50% !important;
+  border: 3px solid #d32f2f;
+  object-fit: cover;
+  display: block;
 }
 

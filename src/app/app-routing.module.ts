@@ -24,6 +24,22 @@ const routes: Routes = [
 		//canActivate: [],
 		data: {},
 	},
+	{
+		path: 'emergency',
+		loadChildren: () =>
+			import('./emergency/emergency.module').then(
+				(m) => m.EmergencyModule
+			),
+		data: {},
+	},
+	{
+		path: 'blood-donation-guide',
+		loadChildren: () =>
+			import('./blood-donation-guide/blood-donation-guide.module').then(
+				(m) => m.BloodDonationGuideModule
+			),
+		data: {},
+	},
 ];
 
 @NgModule({
