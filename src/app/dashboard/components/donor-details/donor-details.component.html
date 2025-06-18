@@ -1,0 +1,71 @@
+<mat-card class="donor-details-container">
+    <!-- Back Button -->
+    <div class="header">
+      <button mat-icon-button color="primary" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2 class="donor-name">{{ donor?.name }}</h2>
+    </div>
+  
+    <!-- Donor Details -->
+    <div class="donor-info">
+      <mat-divider></mat-divider>
+  
+      <!-- Blood Group -->
+      <div class="detail-item">
+        <mat-icon class="detail-icon">bloodtype</mat-icon>
+        <div class="detail-content">
+          <div class="detail-label">Blood Group</div>
+          <div class="detail-value">{{ donor?.bloodGroup }}</div>
+        </div>
+      </div>
+  
+      <!-- Mobile Number -->
+      <div class="detail-item">
+        <mat-icon class="detail-icon">phone</mat-icon>
+        <div class="detail-content">
+          <div class="detail-label">Mobile Number</div>
+          <div class="detail-value">{{ donor?.mobileNumber }}</div>
+        </div>
+      </div>
+  
+      <!-- Address -->
+      <div class="detail-item">
+        <mat-icon class="detail-icon">location_on</mat-icon>
+        <div class="detail-content">
+          <div class="detail-label">Address</div>
+          <div class="detail-value">{{ donor?.address }}</div>
+        </div>
+      </div>
+  
+      <!-- Last Donation Date -->
+      <div class="detail-item">
+        <mat-icon class="detail-icon">event</mat-icon>
+        <div class="detail-content">
+          <div class="detail-label">Last Donation Date</div>
+          <div class="detail-value">{{ donor?.lastDonationDate }}</div>
+        </div>
+      </div>
+  
+      <!-- Total Donations -->
+      <div class="detail-item">
+        <mat-icon class="detail-icon">favorite</mat-icon>
+        <div class="detail-content">
+          <div class="detail-label">Total Donations</div>
+          <div class="detail-value">{{ donor?.totalDonations }}</div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" class="action-button" (click)="contactDonor()">
+        <mat-icon>call</mat-icon>
+        Contact Donor
+      </button>
+      <button mat-raised-button color="accent" class="action-button" (click)="requestDonation()">
+        <mat-icon>favorite</mat-icon>
+        Request Donation
+      </button>
+    </div>
+  </mat-card>

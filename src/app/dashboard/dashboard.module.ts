@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 import { DashboardDefaultComponent } from './components/dashboard-default/dashboard-default.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DonorDetailsComponent } from './components/donor-details/donor-details.component';
 
 const routes:Routes = [
   {
@@ -11,11 +12,17 @@ const routes:Routes = [
     pathMatch: 'full',
     component: DashboardDefaultComponent
 
+  },
+  {
+    path: 'details/:id',
+    pathMatch: 'full',
+    component: DonorDetailsComponent
+
   }
 ]
 
 @NgModule({
-  declarations: [DashboardDefaultComponent],
+  declarations: [DashboardDefaultComponent, DonorDetailsComponent],
   imports: [
     CommonModule,
     SharedModule,
