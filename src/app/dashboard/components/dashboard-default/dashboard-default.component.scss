@@ -315,6 +315,107 @@
   }
 }
 
+/* Color-coded donation date and status styles */
+.donation-date {
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  display: inline-block;
+
+  &.date-eligible {
+    color: #2e7d32;
+    background-color: #e8f5e8;
+    border: 1px solid #4caf50;
+    box-shadow: 0 1px 3px rgba(76, 175, 80, 0.2);
+  }
+
+  &.date-not-eligible {
+    color: #d32f2f;
+    background-color: #ffebee;
+    border: 1px solid #f44336;
+    box-shadow: 0 1px 3px rgba(244, 67, 54, 0.2);
+  }
+}
+
+/* Enhanced status chip styles */
+.status-chip {
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &.available {
+    color: white;
+    background: linear-gradient(135deg, #4caf50, #66bb6a);
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+
+    &:hover {
+      background: linear-gradient(135deg, #388e3c, #4caf50);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+    }
+  }
+
+  &.unavailable {
+    color: white;
+    background: linear-gradient(135deg, #f44336, #ef5350);
+    box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
+
+    &:hover {
+      background: linear-gradient(135deg, #d32f2f, #f44336);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
+    }
+  }
+}
+
+/* Table row highlighting based on donor status */
+.mat-mdc-row {
+  transition: all 0.3s ease;
+
+  &:hover {
+    .donation-date.date-eligible {
+      background-color: #c8e6c9;
+      transform: scale(1.02);
+    }
+
+    .donation-date.date-not-eligible {
+      background-color: #ffcdd2;
+      transform: scale(1.02);
+    }
+
+    .status-chip {
+      transform: translateY(-2px) scale(1.05);
+    }
+  }
+}
+
+/* Additional visual indicators */
+.donation-date::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.donation-date.date-eligible::before {
+  background: #4caf50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+}
+
+.donation-date.date-not-eligible::before {
+  background: #f44336;
+  box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.3);
+}
+
 /* Action Menu */
 .action-menu-button {
   color: #006478;

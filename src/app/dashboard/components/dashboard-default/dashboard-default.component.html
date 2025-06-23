@@ -138,9 +138,14 @@
             সর্বশেষ রক্তদান
           </th>
           <td mat-cell *matCellDef="let donor">
-            <span class="donation-date">{{
-              donor.lastDonationDate | date : "dd/MM/yyyy"
-            }}</span>
+            <span
+              class="donation-date"
+              [ngClass]="{
+                'date-eligible': isDonorAvailable(donor),
+                'date-not-eligible': !isDonorAvailable(donor)
+              }"
+              >{{ donor.lastDonationDate | date : "dd/MM/yyyy" }}</span
+            >
           </td>
         </ng-container>
 

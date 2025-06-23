@@ -40,6 +40,14 @@ const routes: Routes = [
 			),
 		data: {},
 	},
+	{
+		path: 'about',
+		loadChildren: () =>
+			import('./about/about.module').then(
+				(m) => m.AboutModule
+			),
+		data: {},
+	},
 ];
 
 @NgModule({

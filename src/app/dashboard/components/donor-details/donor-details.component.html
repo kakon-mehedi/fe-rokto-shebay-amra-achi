@@ -31,7 +31,14 @@
         </div>
       </div>
       <div class="availability-status">
-        <mat-chip [color]="isDonorAvailable() ? 'primary' : 'warn'" selected>
+        <mat-chip
+          [color]="isDonorAvailable() ? 'primary' : 'warn'"
+          selected
+          [ngClass]="{
+            'status-eligible': isDonorAvailable(),
+            'status-not-eligible': !isDonorAvailable()
+          }"
+        >
           {{ isDonorAvailable() ? "রক্তদানে সক্ষম" : "রক্তদানে অক্ষম" }}
         </mat-chip>
       </div>
@@ -82,7 +89,13 @@
           <mat-icon class="detail-icon">event</mat-icon>
           <div class="detail-content">
             <div class="detail-label">সর্বশেষ রক্তদান</div>
-            <div class="detail-value">
+            <div
+              class="detail-value last-donation"
+              [ngClass]="{
+                eligible: isDonorAvailable(),
+                'not-eligible': !isDonorAvailable()
+              }"
+            >
               {{
                 donor?.lastDonationDate | date : "dd MMMM yyyy" || "তথ্য নেই"
               }}

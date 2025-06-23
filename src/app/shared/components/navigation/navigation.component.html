@@ -43,6 +43,11 @@
       <span>রক্তদান গাইড</span>
     </button>
 
+    <button mat-button routerLink="/about" routerLinkActive="active-link">
+      <mat-icon>info</mat-icon>
+      <span>আমাদের সম্পর্কে</span>
+    </button>
+
     <button
       mat-button
       *ngIf="isLoggedIn"
@@ -255,6 +260,11 @@
       >
         <mat-icon matListIcon>menu_book</mat-icon>
         <span>রক্তদান গাইড</span>
+      </a>
+
+      <a mat-list-item routerLink="/about" (click)="closeSidenav()">
+        <mat-icon matListIcon>info</mat-icon>
+        <span>আমাদের সম্পর্কে</span>
       </a>
 
       <a
