@@ -1,5 +1,8 @@
 <!-- Enhanced Navigation Bar -->
-<mat-toolbar class="enhanced-toolbar mat-elevation-z4">
+<mat-toolbar
+  class="enhanced-toolbar mat-elevation-z4"
+  [style.display]="hidden ? 'none' : 'flex'"
+>
   <!-- Left Section: Logo and Brand -->
   <div class="nav-left">
     <button mat-icon-button routerLink="/" class="home-btn">
@@ -48,15 +51,15 @@
       <span>আমাদের সম্পর্কে</span>
     </button>
 
-    <button
+    <!-- <button
       mat-button
       *ngIf="isLoggedIn"
-      routerLink="/donors/add"
+      routerLink="/auth/donor-register"
       routerLinkActive="active-link"
     >
       <mat-icon>person_add</mat-icon>
       <span>নতুন ডোনার</span>
-    </button>
+    </button> -->
   </div>
 
   <!-- Right Section: Actions and Profile -->

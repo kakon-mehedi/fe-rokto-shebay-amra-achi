@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { 
   DonorRegisterRequest, 
   DonorLoginRequest, 
@@ -16,7 +17,7 @@ import {
   providedIn: 'root'
 })
 export class DonorService {
-  private readonly API_BASE_URL = 'http://localhost:8000/api/v1';
+  private readonly API_BASE_URL = environment.apiUrl;
   private currentDonorSubject = new BehaviorSubject<DonorResponse | null>(null);
   public currentDonor$ = this.currentDonorSubject.asObservable();
 
@@ -148,6 +149,89 @@ export class DonorService {
 
   getPublicDonorDetails(donorId: string): Observable<PublicDonorResponse> {
     return this.http.get<any>(`${this.API_BASE_URL}/donors/${donorId}`);
+  }
+
+  // ======================
+  // Admin API Methods
+  // ======================
+
+  // Get all donors for admin with pagination and filters
+  getAllDonorsForAdmin(params?: {
+    page?: number;
+    limit?: number;
+    bloodGroup?: string;
+    city?: string;
+    eligibilityStatus?: string;
+    accountStatus?: string;
+    search?: string;
+  }): Observable<any> {
+    let queryParams = '';
+    if (params) {
+      const searchParams = new URLSearchParams();
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          searchParams.append(key, value.toString());
+        }
+      });
+      queryParams = searchParams.toString() ? '?' + searchParams.toString() : '';
+    }
+
+    const token = localStorage.getItem('access_token'); // Admin token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get(`${this.API_BASE_URL}/donors/admin/all${queryParams}`, { headers });
+  }
+
+  // Get single donor details for admin
+  getDonorDetailsForAdmin(donorId: string): Observable<any> {
+    const token = localStorage.getItem('access_token'); // Admin token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get(`${this.API_BASE_URL}/donors/admin/${donorId}`, { headers });
+  }
+
+  // Update donor (admin only)
+  updateDonorAsAdmin(donorId: string, updateData: any): Observable<any> {
+    const token = localStorage.getItem('access_token'); // Admin token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.put(`${this.API_BASE_URL}/donors/admin/${donorId}`, updateData, { headers });
+  }
+
+  // Delete donor (admin only)
+  deleteDonorAsAdmin(donorId: string): Observable<any> {
+    const token = localStorage.getItem('access_token'); // Admin token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.delete(`${this.API_BASE_URL}/donors/admin/${donorId}`, { headers });
+  }
+
+  // Approve donor
+  approveDonor(donorId: string): Observable<any> {
+    const token = localStorage.getItem('access_token'); // Admin token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.put(`${this.API_BASE_URL}/donors/${donorId}/approve`, {}, { headers });
+  }
+
+  // Reject donor
+  rejectDonor(donorId: string): Observable<any> {
+    const token = localStorage.getItem('access_token'); // Admin token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.put(`${this.API_BASE_URL}/donors/${donorId}/reject`, {}, { headers });
   }
 
   // Helper Methods

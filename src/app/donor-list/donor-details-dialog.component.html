@@ -1,65 +1,107 @@
-<mat-dialog-content class="donor-details-dialog-content">
+<div class="donor-details-dialog-content">
+  <!-- Header with Avatar and Basic Info -->
   <div class="donor-details-header">
     <img
-      [src]="donor.profilePhoto || 'assets/images/default-avatar.png'"
-      [alt]="donor.name"
+      [src]="donor.profilePhoto || 'assets/images/logo/profile_avatar.png'"
+      alt="Donor profile photo"
       [title]="donor.name + ' এর প্রোফাইল ছবি'"
       class="donor-details-avatar"
     />
-    <div>
-      <h2>{{ donor.name }}</h2>
-      <span class="blood-group">{{ donor.bloodGroup }}</span>
+
+    <div class="donor-header-info">
+      <h2 class="donor-name">{{ donor.name }}</h2>
+      <div class="blood-group">{{ donor.bloodGroup }} রক্তদাতা</div>
       <div class="donor-location">
-        <mat-icon>location_on</mat-icon>
-        {{ donor.city }}, {{ donor.location }}, {{ donor.address }}
+        <mat-icon>place</mat-icon>
+        <span>{{ donor.city }}, {{ donor.location }}</span>
       </div>
     </div>
   </div>
+
+  <!-- Detailed Information -->
   <div class="donor-details-body">
     <div class="info-row">
-      <mat-icon>work</mat-icon>
-      <span>{{ donor.profession || "N/A" }}</span>
+      <mat-icon>person</mat-icon>
+      <span class="info-label">লিঙ্গ:</span>
+      <span class="info-value">{{ getGenderInBangla(donor.gender) }}</span>
     </div>
+
+    <div class="info-row">
+      <mat-icon>account_balance</mat-icon>
+      <span class="info-label">ধর্ম:</span>
+      <span class="info-value">{{ getReligionInBangla(donor.religion) }}</span>
+    </div>
+
+    <div class="info-row" *ngIf="donor.profession">
+      <mat-icon>work</mat-icon>
+      <span class="info-label">পেশা:</span>
+      <span class="info-value">{{ donor.profession }}</span>
+    </div>
+
     <div class="info-row">
       <mat-icon>favorite</mat-icon>
-      <span>মোট দান: {{ donor.totalDonations }}</span>
+      <span class="info-label">মোট দান:</span>
+      <span class="info-value">{{ donor.totalDonations || 0 }} বার</span>
     </div>
-    <div class="info-row" *ngIf="donor.lastDonationDate">
-      <mat-icon>event</mat-icon>
-      <span>শেষ দান: {{ donor.lastDonationDate | date : "mediumDate" }}</span>
+
+    <div class="info-row">
+      <mat-icon>schedule</mat-icon>
+      <span class="info-label">শেষ দান:</span>
+      <span class="info-value">{{ getLastDonationText() }}</span>
+    </div>
+
+    <div class="info-row">
+      <mat-icon>{{ getEligibilityIcon() }}</mat-icon>
+      <span class="info-label">অবস্থা:</span>
+      <span class="info-value" [style.color]="getEligibilityColor()">{{
+        getEligibilityTitle()
+      }}</span>
     </div>
   </div>
+
+  <!-- Privacy Warning -->
   <div class="donor-details-warning">
-    <mat-icon color="warn">info</mat-icon>
-    <span>
-      ব্যক্তিগত তথ্য দেখতে চাইলে অ্যাডমিন/মডারেটরের সাথে যোগাযোগ করুন।
-      <br />
-      অথবা নিচের সোশ্যাল/সাপোর্ট অপশনে যোগাযোগ করুন।
-    </span>
+    <mat-icon>privacy_tip</mat-icon>
+    <div class="warning-text">
+      <strong>গোপনীয়তা সুরক্ষা:</strong> রক্তদাতার ব্যক্তিগত যোগাযোগ তথ্য
+      গোপনীয়তার জন্য সুরক্ষিত রাখা হয়েছে। সরাসরি যোগাযোগের জন্য নিচের
+      বিকল্পগুলো ব্যবহার করুন।
+    </div>
   </div>
+
+  <!-- Contact Options -->
   <div class="donor-details-social">
     <a
       href="https://m.me/roktoseba"
       target="_blank"
+      rel="noopener"
       class="social-link messenger"
+      title="Messenger এ যোগাযোগ করুন"
     >
-      <mat-icon svgIcon="messenger"></mat-icon>
+      <mat-icon>message</mat-icon>
     </a>
     <a
       href="https://wa.me/8801234567890"
       target="_blank"
+      rel="noopener"
       class="social-link whatsapp"
+      title="WhatsApp এ যোগাযোগ করুন"
     >
-      <mat-icon svgIcon="whatsapp"></mat-icon>
+      <mat-icon>chat</mat-icon>
     </a>
-    <a href="tel:+8801234567890" class="social-link phone">
+    <a
+      href="tel:+8801234567890"
+      class="social-link phone"
+      title="হটলাইনে কল করুন"
+    >
       <mat-icon>call</mat-icon>
     </a>
   </div>
+
+  <!-- Support Information -->
   <div class="donor-details-support">
-    <span>সাপোর্ট: <a href="tel:+8801234567890">০১২৩৪৫৬৭৮৯০</a></span>
+    জরুরি প্রয়োজনে সরাসরি যোগাযোগ করুন
+    <a href="tel:+8801234567890">রক্তসেবা হটলাইন</a>
+    অথবা নিকটস্থ হাসপাতাল ও রক্তের ব্যাংকে যোগাযোগ করুন।
   </div>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button (click)="close()">বন্ধ করুন</button>
-</mat-dialog-actions>
+</div>

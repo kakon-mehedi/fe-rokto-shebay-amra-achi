@@ -29,9 +29,13 @@ export class LoginComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		// If already authenticated, redirect to dashboard
+		// If already authenticated, redirect to appropriate dashboard
 		if (this.authService.isAuthenticated()) {
-			this.router.navigate(['/donors']);
+			if (this.authService.isAdmin()) {
+				this.router.navigate(['/admin/dashboard']);
+			} else {
+				this.router.navigate(['/donors']);
+			}
 		}
 	}
 
@@ -48,8 +52,15 @@ export class LoginComponent implements OnInit {
 							duration: 3000,
 							panelClass: ['success-snackbar']
 						});
-						// Refresh the page to update navigation state
-						window.location.href = '/donors';
+						
+						// Wait a moment for user data to load, then redirect based on role
+						setTimeout(() => {
+							if (this.authService.isAdmin()) {
+								window.location.href = '/admin/dashboard';
+							} else {
+								window.location.href = '/donors';
+							}
+						}, 1000);
 					}
 				},
 				error: (error) => {

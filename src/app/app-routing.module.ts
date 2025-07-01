@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminGuard } from './shared/guards/admin.guard';
 
 const routes: Routes = [
 	{
@@ -65,6 +66,13 @@ const routes: Routes = [
 				(m) => m.AboutModule
 			),
 		data: { title: 'আমাদের সম্পর্কে' },
+	},
+	{
+		path: 'admin',
+		loadChildren: () =>
+			import('./admin/admin.module').then((m) => m.AdminModule),
+		data: { title: 'অ্যাডমিন প্যানেল' },
+		canActivate: [AdminGuard]
 	},
 	{
 		path: 'donor-list',

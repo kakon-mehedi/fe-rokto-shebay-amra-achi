@@ -1,0 +1,236 @@
+<mat-sidenav-container class="admin-container">
+  <!-- Sidebar -->
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
+    <!-- Sidebar Header -->
+    <div class="sidenav-header">
+      <div class="logo-container">
+        <img
+          src="assets/images/roktosebajpg.jpg"
+          alt="রক্তসেবা লোগো"
+          class="logo"
+        />
+        <div class="app-info">
+          <h3>রক্তসেবা</h3>
+          <p>অ্যাডমিন প্যানেল</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Info -->
+    <div class="user-info" *ngIf="currentUser">
+      <div class="user-avatar">
+        <img
+          [src]="
+            currentUser.profilePhoto || 'assets/images/logo/profile_avatar.png'
+          "
+          alt="User profile photo"
+          title="User profile"
+          class="avatar-image"
+        />
+      </div>
+      <div class="user-details">
+        <p class="user-name">{{ currentUser.name }}</p>
+        <p class="user-role">অ্যাডমিনিস্ট্রেটর</p>
+      </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <mat-nav-list class="nav-menu">
+      <a
+        mat-list-item
+        *ngFor="let item of menuItems"
+        [routerLink]="item.route"
+        routerLinkActive="active-link"
+        (click)="closeSidenavOnMobile()"
+      >
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        <span matListItemTitle>{{ item.label }}</span>
+        <span matListItemMeta *ngIf="item.badge" class="badge">{{
+          item.badge
+        }}</span>
+      </a>
+    </mat-nav-list>
+
+    <!-- Sidebar Footer -->
+    <div class="sidenav-footer">
+      <button
+        mat-stroked-button
+        color="warn"
+        (click)="logout()"
+        class="logout-btn"
+      >
+        <mat-icon>logout</mat-icon>
+        <span>লগআউট</span>
+      </button>
+    </div>
+  </mat-sidenav>
+
+  <!-- Main Content -->
+  <mat-sidenav-content>
+    <!-- Top Toolbar -->
+    <mat-toolbar color="primary" class="app-toolbar">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async"
+      >
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+
+      <span class="toolbar-spacer"></span>
+
+      <!-- Top Right Actions -->
+      <div class="toolbar-actions">
+        <!-- Notifications -->
+        <button
+          mat-icon-button
+          (click)="toggleNotification()"
+          class="notification-btn"
+        >
+          <mat-icon
+            [matBadge]="unreadNotificationCount"
+            [matBadgeHidden]="unreadNotificationCount === 0"
+            matBadgeColor="warn"
+            >notifications</mat-icon
+          >
+        </button>
+
+        <!-- User Menu -->
+        <button
+          mat-icon-button
+          (click)="toggleUserPanel()"
+          class="user-menu-btn"
+        >
+          <img
+            [src]="
+              currentUser?.profilePhoto ||
+              'assets/images/logo/profile_avatar.png'
+            "
+            [alt]="currentUser?.name"
+            class="toolbar-avatar"
+          />
+        </button>
+      </div>
+    </mat-toolbar>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<!-- Enhanced Notification Panel -->
+<div
+  class="notification-overlay"
+  *ngIf="openNotificationPanel"
+  (click)="toggleNotification()"
+>
+  <div class="notification-panel" (click)="$event.stopPropagation()">
+    <div class="notification-header">
+      <h3>বিজ্ঞপ্তি সমূহ</h3>
+      <button mat-icon-button (click)="toggleNotification()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="notification-list">
+      <div class="notification-item" *ngFor="let notification of notifications">
+        <div class="notification-icon" [ngClass]="notification.type">
+          <mat-icon>{{ getNotificationIcon(notification.type) }}</mat-icon>
+        </div>
+        <div class="notification-content">
+          <p class="notification-title">{{ notification.title }}</p>
+          <p class="notification-message">{{ notification.description }}</p>
+          <span class="notification-time">{{ notification.time }}</span>
+        </div>
+        <div class="notification-status" *ngIf="!notification.isRead">
+          <div class="unread-dot"></div>
+        </div>
+      </div>
+
+      <div class="no-notifications" *ngIf="notifications.length === 0">
+        <mat-icon>notifications_none</mat-icon>
+        <p>কোনো নতুন বিজ্ঞপ্তি নেই</p>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="notification-footer">
+      <button mat-button color="primary" (click)="viewAllNotifications()">
+        সব বিজ্ঞপ্তি দেখুন
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Enhanced User Panel -->
+<div class="user-overlay" *ngIf="openUserPanel" (click)="toggleUserPanel()">
+  <div class="user-panel" (click)="$event.stopPropagation()">
+    <div class="user-header">
+      <div class="user-info">
+        <img
+          [src]="
+            currentUser?.profilePhoto || 'assets/images/logo/profile_avatar.png'
+          "
+          [alt]="currentUser?.name || 'User Profile'"
+          class="user-avatar"
+        />
+        <div class="user-details">
+          <h4 class="user-name">
+            {{ currentUser?.name || "অ্যাডমিন ব্যবহারকারী" }}
+          </h4>
+          <p class="user-email">
+            {{ currentUser?.email || "admin@roktoseba.com" }}
+          </p>
+          <span class="user-role">অ্যাডমিনিস্ট্রেটর</span>
+        </div>
+      </div>
+      <button mat-icon-button (click)="toggleUserPanel()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="user-menu-list">
+      <button mat-menu-item class="user-menu-item">
+        <mat-icon>person</mat-icon>
+        <span>প্রোফাইল</span>
+      </button>
+
+      <button mat-menu-item class="user-menu-item">
+        <mat-icon>settings</mat-icon>
+        <span>সেটিংস</span>
+      </button>
+
+      <button mat-menu-item class="user-menu-item">
+        <mat-icon>help_outline</mat-icon>
+        <span>সাহায্য ও সহায়তা</span>
+      </button>
+
+      <mat-divider></mat-divider>
+
+      <button
+        mat-menu-item
+        class="user-menu-item logout-item"
+        (click)="logout()"
+      >
+        <mat-icon>logout</mat-icon>
+        <span>লগআউট</span>
+      </button>
+    </div>
+  </div>
+</div>

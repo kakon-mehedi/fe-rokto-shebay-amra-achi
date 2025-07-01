@@ -1,0 +1,328 @@
+<div class="admin-dashboard-container">
+  <!-- Dashboard Header -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="header-left">
+        <mat-icon class="header-icon">dashboard</mat-icon>
+        <div class="header-text">
+          <h1>অ্যাডমিন ড্যাশবোর্ড</h1>
+          <p>
+            রক্তসেবা ব্যবস্থাপনা প্যানেল - সকল কার্যক্রমের তথ্য এবং পরিসংখ্যান
+          </p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="navigateToSection('donors')"
+        >
+          <mat-icon>people</mat-icon>
+          রক্তদাতা ব্যবস্থাপনা
+        </button>
+        <button
+          mat-icon-button
+          (click)="refreshDashboard()"
+          matTooltip="রিফ্রেশ করুন"
+        >
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>ড্যাশবোর্ড তথ্য লোড হচ্ছে...</p>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div class="dashboard-content" *ngIf="!isLoading">
+    <!-- Main Statistics Cards -->
+    <div class="stats-grid">
+      <!-- Total Donors -->
+      <mat-card
+        class="stat-card total-donors"
+        (click)="navigateToSection('donors')"
+      >
+        <mat-card-content>
+          <div class="stat-content">
+            <div class="stat-icon">
+              <mat-icon>people</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.totalDonors }}</h3>
+              <p>মোট রক্তদাতা</p>
+              <span class="stat-subtitle">সব ধরনের রক্তদাতা</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Active Donors -->
+      <mat-card
+        class="stat-card active-donors"
+        (click)="navigateToSection('active-donors')"
+      >
+        <mat-card-content>
+          <div class="stat-content">
+            <div class="stat-icon">
+              <mat-icon>check_circle</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.activeDonors }}</h3>
+              <p>সক্রিয় রক্তদাতা</p>
+              <span class="stat-subtitle">রক্তদানের জন্য প্রস্তুত</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Pending Approvals -->
+      <mat-card
+        class="stat-card pending-donors"
+        (click)="navigateToSection('pending')"
+      >
+        <mat-card-content>
+          <div class="stat-content">
+            <div class="stat-icon">
+              <mat-icon>schedule</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.pendingDonors }}</h3>
+              <p>অপেক্ষমাণ অনুমোদন</p>
+              <span class="stat-subtitle">নতুন নিবন্ধন</span>
+            </div>
+          </div>
+          <mat-chip-list>
+            <mat-chip class="urgent-chip">জরুরি</mat-chip>
+          </mat-chip-list>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Total Donations -->
+      <mat-card class="stat-card total-donations">
+        <mat-card-content>
+          <div class="stat-content">
+            <div class="stat-icon">
+              <mat-icon>favorite</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.totalDonations }}</h3>
+              <p>মোট রক্তদান</p>
+              <span class="stat-subtitle">এ পর্যন্ত সম্পন্ন</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Secondary Stats Row -->
+    <div class="secondary-stats-grid">
+      <mat-card class="stat-card users">
+        <mat-card-content>
+          <div class="stat-content">
+            <div class="stat-icon">
+              <mat-icon>person</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.totalUsers }}</h3>
+              <p>নিবন্ধিত ব্যবহারকারী</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card monthly-donations">
+        <mat-card-content>
+          <div class="stat-content">
+            <div class="stat-icon">
+              <mat-icon>calendar_month</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.thisMonthDonations }}</h3>
+              <p>এই মাসের রক্তদান</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card emergency-requests">
+        <mat-card-content>
+          <div class="stat-content">
+            <div class="stat-icon">
+              <mat-icon>emergency</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.emergencyRequests }}</h3>
+              <p>জরুরি অনুরোধ</p>
+            </div>
+          </div>
+          <mat-chip-list *ngIf="stats.emergencyRequests > 0">
+            <mat-chip class="active-chip">সক্রিয়</mat-chip>
+          </mat-chip-list>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card suspended">
+        <mat-card-content>
+          <div class="stat-content">
+            <div class="stat-icon">
+              <mat-icon>block</mat-icon>
+            </div>
+            <div class="stat-info">
+              <h3>{{ stats.suspendedDonors }}</h3>
+              <p>স্থগিত অ্যাকাউন্ট</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="content-grid">
+      <!-- Recent Activities -->
+      <mat-card class="recent-activities-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>history</mat-icon>
+            সাম্প্রতিক কার্যক্রম
+          </mat-card-title>
+          <div class="header-actions">
+            <button
+              mat-button
+              color="primary"
+              (click)="navigateToSection('activities')"
+            >
+              সব দেখুন
+            </button>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="activities-list">
+            <div
+              class="activity-item"
+              *ngFor="let activity of recentActivities"
+              [ngClass]="getActivityClass(activity.type)"
+            >
+              <div class="activity-icon">
+                <mat-icon>{{ getActivityIcon(activity.type) }}</mat-icon>
+              </div>
+              <div class="activity-content">
+                <p class="activity-message">{{ activity.message }}</p>
+                <div class="activity-meta">
+                  <span class="activity-user" *ngIf="activity.user">{{
+                    activity.user
+                  }}</span>
+                  <span class="activity-time">{{ activity.time }}</span>
+                  <span
+                    class="activity-status"
+                    *ngIf="activity.status"
+                    [ngClass]="getStatusClass(activity.status!)"
+                  >
+                    {{ activity.status }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Blood Group Statistics -->
+      <mat-card class="blood-group-stats-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>pie_chart</mat-icon>
+            রক্তের গ্রুপ অনুযায়ী পরিসংখ্যান
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="blood-group-chart">
+            <div class="blood-group-item" *ngFor="let group of bloodGroupStats">
+              <div class="blood-group-header">
+                <span class="blood-group-name">{{ group.bloodGroup }}</span>
+                <span class="blood-group-count">{{ group.count }}</span>
+              </div>
+              <div class="blood-group-bar">
+                <div class="bar-fill" [style.width.%]="group.percentage"></div>
+              </div>
+              <span class="blood-group-percentage"
+                >{{ group.percentage }}%</span
+              >
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Quick Actions -->
+    <mat-card class="quick-actions-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>flash_on</mat-icon>
+          দ্রুত কার্যক্রম
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="quick-actions-grid">
+          <button
+            mat-raised-button
+            color="primary"
+            class="quick-action-btn"
+            (click)="navigateToSection('add-donor')"
+          >
+            <mat-icon>person_add</mat-icon>
+            <span>নতুন রক্তদাতা যোগ</span>
+          </button>
+
+          <button
+            mat-raised-button
+            class="quick-action-btn approve-btn"
+            (click)="navigateToSection('approve-donors')"
+          >
+            <mat-icon>check_circle</mat-icon>
+            <span>রক্তদাতা অনুমোদন</span>
+          </button>
+
+          <button
+            mat-raised-button
+            class="quick-action-btn emergency-btn"
+            (click)="navigateToSection('emergency')"
+          >
+            <mat-icon>emergency</mat-icon>
+            <span>জরুরি অনুরোধ</span>
+          </button>
+
+          <button
+            mat-raised-button
+            class="quick-action-btn report-btn"
+            (click)="navigateToSection('reports')"
+          >
+            <mat-icon>analytics</mat-icon>
+            <span>রিপোর্ট তৈরি</span>
+          </button>
+
+          <button
+            mat-raised-button
+            class="quick-action-btn settings-btn"
+            (click)="navigateToSection('settings')"
+          >
+            <mat-icon>settings</mat-icon>
+            <span>সিস্টেম সেটিংস</span>
+          </button>
+
+          <button
+            mat-raised-button
+            class="quick-action-btn backup-btn"
+            (click)="navigateToSection('backup')"
+          >
+            <mat-icon>backup</mat-icon>
+            <span>ডেটা ব্যাকআপ</span>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

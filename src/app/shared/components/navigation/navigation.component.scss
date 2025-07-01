@@ -434,6 +434,28 @@
 .sidenav-container {
   height: calc(92vh);
   // margin-top: 70px;
+
+  /* Custom scrollbar for navigation sidenav */
+  .mobile-sidenav {
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f8f9fa;
+      border-radius: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #d32f2f, #f44336);
+      border-radius: 6px;
+      border: 1px solid #f8f9fa;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #b71c1c, #d32f2f);
+    }
+  }
 }
 
 /* Animations */
@@ -504,5 +526,54 @@
 
   .loading-bar {
     top: 60px;
+  }
+}
+
+/* Enhanced notification panel scrollbar */
+.notification-panel {
+  .notification-list {
+    max-height: 400px;
+    overflow-y: auto;
+    
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(211, 47, 47, 0.1);
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #ffcdd2, #f44336);
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #e57373, #d32f2f);
+    }
+  }
+}
+
+/* Profile menu scrollbar */
+.profile-menu {
+  .mat-menu-content {
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #ffcdd2, #f44336);
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #e57373, #d32f2f);
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { Observable, BehaviorSubject, tap, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { User, LoginRequest, LoginResponse, RegisterRequest } from '../interfaces/user.interface';
 import { ApiResponse } from '../../dashboard/interfaces/donor.interface';
@@ -11,6 +11,7 @@ import { ApiResponse } from '../../dashboard/interfaces/donor.interface';
 export class AuthService {
   private apiUrl = environment.apiUrl;
   private tokenKey = 'roktoShebaAccessToken';
+  private userKey = 'roktoShebaCurrentUser';
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -42,7 +43,19 @@ export class AuthService {
         tap(response => {
           if (response.success) {
             localStorage.setItem(this.tokenKey, response.data);
-            // You might want to fetch user details here
+            this.getCurrentUserProfile().subscribe({
+              next: (userResponse) => {
+                if (userResponse.success && userResponse.data) {
+                  const user = Array.isArray(userResponse.data) ? userResponse.data[0] : userResponse.data;
+                  localStorage.setItem(this.userKey, JSON.stringify(user));
+                  this.currentUserSubject.next(user);
+                }
+              },
+              error: () => {
+                // If we can't get user profile, still proceed with login
+                console.warn('Could not fetch user profile after login');
+              }
+            });
           }
         })
       );
@@ -50,11 +63,16 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userKey);
     this.currentUserSubject.next(null);
   }
 
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
+  }
+
+  getCurrentUser(): User | null {
+    return this.currentUserSubject.value;
   }
 
   isAuthenticated(): boolean {
@@ -70,11 +88,33 @@ export class AuthService {
     }
   }
 
+  isAdmin(): boolean {
+    const user = this.getCurrentUser();
+    return user?.role === 'admin' || false;
+  }
+
+  private getCurrentUserProfile(): Observable<ApiResponse<User>> {
+    return this.http.get<ApiResponse<User>>(`${this.apiUrl}/users/profile`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
   private loadUserFromStorage(): void {
     const token = this.getToken();
-    if (token && this.isAuthenticated()) {
-      // You might want to fetch current user details from API
-      // For now, we'll just set authentication state
+    const userStr = localStorage.getItem(this.userKey);
+    
+    if (token && this.isAuthenticated() && userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        this.currentUserSubject.next(user);
+      } catch {
+        // Clear invalid data
+        this.logout();
+      }
+    } else {
+      // Clear invalid data
+      localStorage.removeItem(this.tokenKey);
+      localStorage.removeItem(this.userKey);
     }
   }
 
@@ -103,5 +143,42 @@ export class AuthService {
     return this.http.put<ApiResponse<User>>(`${this.apiUrl}/users/${id}`, userData, {
       headers: this.getAuthHeaders()
     });
+  }
+
+  // Admin check with fallback for development/testing
+  adminLogin(credentials: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.apiUrl}/admin/login`, credentials)
+      .pipe(
+        tap(response => {
+          if (response.success) {
+            localStorage.setItem(this.tokenKey, response.data);
+            this.getCurrentUserProfile().subscribe({
+              next: (userResponse) => {
+                if (userResponse.success && userResponse.data) {
+                  const user = Array.isArray(userResponse.data) ? userResponse.data[0] : userResponse.data;
+                  localStorage.setItem(this.userKey, JSON.stringify(user));
+                  this.currentUserSubject.next(user);
+                }
+              },
+              error: () => {
+                console.warn('Could not fetch admin profile after login');
+              }
+            });
+          }
+        })
+      );
+  }
+
+  // For development: create temporary admin session
+  createTempAdminSession(adminData: User): void {
+    const tempToken = btoa(JSON.stringify({ 
+      userId: adminData._id || 'temp-admin', 
+      role: 'admin',
+      exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60) // 24 hours
+    }));
+    
+    localStorage.setItem(this.tokenKey, tempToken);
+    localStorage.setItem(this.userKey, JSON.stringify(adminData));
+    this.currentUserSubject.next(adminData);
   }
 }

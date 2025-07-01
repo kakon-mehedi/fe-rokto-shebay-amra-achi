@@ -1,0 +1,701 @@
+// ====================
+// Admin Dashboard Styles
+// ====================
+
+.admin-dashboard-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
+
+  // ====================
+  // Dashboard Header
+  // ====================
+  .dashboard-header {
+    background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    color: white;
+    box-shadow: 0 8px 32px rgba(211, 47, 47, 0.3);
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        .header-icon {
+          font-size: 32px;
+          width: 32px;
+          height: 32px;
+        }
+
+        .header-text {
+          h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+
+            @media (max-width: 768px) {
+              font-size: 22px;
+            }
+          }
+
+          p {
+            margin: 4px 0 0 0;
+            opacity: 0.9;
+            font-size: 14px;
+          }
+        }
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+
+        button {
+          background: rgba(255, 255, 255, 0.2);
+          color: white;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.3);
+          }
+
+          mat-icon {
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+  }
+
+  // Loading State
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    text-align: center;
+
+    mat-spinner {
+      margin-bottom: 24px;
+    }
+
+    p {
+      color: #666;
+      font-size: 18px;
+      font-weight: 500;
+    }
+  }
+
+  // ====================
+  // Dashboard Content
+  // ====================
+  .dashboard-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  // ====================
+  // Main Statistics Grid
+  // ====================
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+      border-radius: 16px;
+      border: none;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        transition: all 0.3s ease;
+      }
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      &.total-donors {
+        &::before {
+          background: linear-gradient(90deg, #2196f3 0%, #1976d2 100%);
+        }
+        
+        .stat-icon {
+          background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+        }
+      }
+
+      &.active-donors {
+        &::before {
+          background: linear-gradient(90deg, #4caf50 0%, #388e3c 100%);
+        }
+        
+        .stat-icon {
+          background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+        }
+      }
+
+      &.pending-donors {
+        &::before {
+          background: linear-gradient(90deg, #ff9800 0%, #f57c00 100%);
+        }
+        
+        .stat-icon {
+          background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        }
+      }
+
+      &.total-donations {
+        &::before {
+          background: linear-gradient(90deg, #e91e63 0%, #c2185b 100%);
+        }
+        
+        .stat-icon {
+          background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+        }
+      }
+
+      mat-card-content {
+        padding: 24px;
+      }
+
+      .stat-content {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        .stat-icon {
+          width: 70px;
+          height: 70px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+          mat-icon {
+            font-size: 32px;
+            width: 32px;
+            height: 32px;
+          }
+        }
+
+        .stat-info {
+          flex: 1;
+
+          h3 {
+            margin: 0;
+            font-size: 36px;
+            font-weight: 700;
+            color: #333;
+            line-height: 1;
+          }
+
+          p {
+            margin: 8px 0 4px 0;
+            color: #666;
+            font-size: 16px;
+            font-weight: 600;
+          }
+
+          .stat-subtitle {
+            font-size: 12px;
+            color: #999;
+            font-weight: 400;
+          }
+        }
+      }
+
+      .urgent-chip {
+        background: #ff5722;
+        color: white;
+        font-size: 10px;
+        padding: 4px 8px;
+      }
+    }
+  }
+
+  // ====================
+  // Secondary Stats Grid
+  // ====================
+  .secondary-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+
+    .stat-card {
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      }
+
+      &.users .stat-icon {
+        background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+      }
+
+      &.monthly-donations .stat-icon {
+        background: linear-gradient(135deg, #00bcd4 0%, #0097a7 100%);
+      }
+
+      &.emergency-requests .stat-icon {
+        background: linear-gradient(135deg, #ff5722 0%, #d84315 100%);
+      }
+
+      &.suspended .stat-icon {
+        background: linear-gradient(135deg, #607d8b 0%, #455a64 100%);
+      }
+
+      mat-card-content {
+        padding: 20px;
+      }
+
+      .stat-content {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+
+        .stat-icon {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+
+          mat-icon {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+          }
+        }
+
+        .stat-info {
+          h3 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+          }
+
+          p {
+            margin: 4px 0 0 0;
+            color: #666;
+            font-size: 13px;
+            font-weight: 500;
+          }
+        }
+      }
+
+      .active-chip {
+        background: #4caf50;
+        color: white;
+        font-size: 10px;
+        padding: 4px 8px;
+      }
+    }
+  }
+
+  // ====================
+  // Content Grid
+  // ====================
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 24px;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+    }
+
+    // Recent Activities Card
+    .recent-activities-card {
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+      mat-card-header {
+        padding: 24px 24px 0 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        mat-card-title {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 18px;
+          font-weight: 600;
+          color: #333;
+
+          mat-icon {
+            color: #666;
+          }
+        }
+
+        .header-actions button {
+          color: #f44336;
+          font-weight: 500;
+        }
+      }
+
+      mat-card-content {
+        padding: 16px 24px 24px 24px;
+      }
+
+      .activities-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .activity-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          padding: 16px;
+          border-radius: 8px;
+          transition: background 0.2s ease;
+
+          &:hover {
+            background: #f8f9fa;
+          }
+
+          .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+
+            mat-icon {
+              font-size: 20px;
+              width: 20px;
+              height: 20px;
+            }
+          }
+
+          &.activity-registration .activity-icon {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+          }
+
+          &.activity-donation .activity-icon {
+            background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+          }
+
+          &.activity-emergency .activity-icon {
+            background: linear-gradient(135deg, #ff5722 0%, #d84315 100%);
+          }
+
+          &.activity-approval .activity-icon {
+            background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+          }
+
+          .activity-content {
+            flex: 1;
+
+            .activity-message {
+              margin: 0 0 8px 0;
+              color: #333;
+              font-size: 14px;
+              font-weight: 500;
+            }
+
+            .activity-meta {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 8px;
+              align-items: center;
+
+              .activity-user {
+                color: #f44336;
+                font-size: 12px;
+                font-weight: 500;
+              }
+
+              .activity-time {
+                color: #999;
+                font-size: 12px;
+              }
+
+              .activity-status {
+                padding: 2px 8px;
+                border-radius: 12px;
+                font-size: 10px;
+                font-weight: 600;
+                text-transform: uppercase;
+
+                &.status-pending {
+                  background: #fff3e0;
+                  color: #ef6c00;
+                }
+
+                &.status-completed {
+                  background: #e8f5e8;
+                  color: #2e7d32;
+                }
+
+                &.status-urgent {
+                  background: #ffebee;
+                  color: #c62828;
+                }
+
+                &.status-approved {
+                  background: #e8f5e8;
+                  color: #2e7d32;
+                }
+
+                &.status-active {
+                  background: #e3f2fd;
+                  color: #1565c0;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Blood Group Stats Card
+    .blood-group-stats-card {
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+      mat-card-header {
+        padding: 24px 24px 0 24px;
+
+        mat-card-title {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 18px;
+          font-weight: 600;
+          color: #333;
+
+          mat-icon {
+            color: #666;
+          }
+        }
+      }
+
+      mat-card-content {
+        padding: 16px 24px 24px 24px;
+      }
+
+      .blood-group-chart {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .blood-group-item {
+          .blood-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+
+            .blood-group-name {
+              font-weight: 600;
+              color: #333;
+              font-size: 14px;
+            }
+
+            .blood-group-count {
+              font-weight: 600;
+              color: #666;
+              font-size: 13px;
+            }
+          }
+
+          .blood-group-bar {
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 4px;
+
+            .bar-fill {
+              height: 100%;
+              background: linear-gradient(90deg, #d32f2f 0%, #f44336 100%);
+              border-radius: 4px;
+              transition: width 0.3s ease;
+            }
+          }
+
+          .blood-group-percentage {
+            font-size: 11px;
+            color: #999;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+
+  // ====================
+  // Quick Actions Card
+  // ====================
+  .quick-actions-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+    mat-card-header {
+      padding: 24px 24px 0 24px;
+
+      mat-card-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+
+        mat-icon {
+          color: #666;
+        }
+      }
+    }
+
+    mat-card-content {
+      padding: 16px 24px 24px 24px;
+    }
+
+    .quick-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-action-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 20px 16px;
+        min-height: 80px;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        mat-icon {
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+          margin-bottom: 4px;
+        }
+
+        span {
+          font-size: 13px;
+          font-weight: 500;
+          text-align: center;
+          line-height: 1.2;
+        }
+
+        &.approve-btn {
+          background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+          color: white;
+        }
+
+        &.emergency-btn {
+          background: linear-gradient(135deg, #ff5722 0%, #d84315 100%);
+          color: white;
+        }
+
+        &.report-btn {
+          background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%);
+          color: white;
+        }
+
+        &.settings-btn {
+          background: linear-gradient(135deg, #607d8b 0%, #455a64 100%);
+          color: white;
+        }
+
+        &.backup-btn {
+          background: linear-gradient(135deg, #795548 0%, #5d4037 100%);
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+// ====================
+// Responsive Design
+// ====================
+@media (max-width: 768px) {
+  .admin-dashboard-container {
+    padding: 0 8px;
+
+    .dashboard-header {
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .dashboard-content {
+      gap: 16px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-dashboard-container {
+    padding: 0 4px;
+
+    .stats-grid .stat-card .stat-content {
+      .stat-info h3 {
+        font-size: 28px;
+      }
+    }
+
+    .secondary-stats-grid .stat-card .stat-content {
+      .stat-info h3 {
+        font-size: 20px;
+      }
+    }
+  }
+}

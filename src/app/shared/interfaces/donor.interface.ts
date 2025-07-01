@@ -113,3 +113,60 @@ export interface EligibilityCheck {
   reason: string;
   nextEligibleDate?: string;
 }
+
+// Admin-specific interfaces
+export interface AdminDonorResponse {
+  _id: string;
+  name: string;
+  phone: string;
+  email?: string;
+  city: string;
+  location: string;
+  address: string;
+  bloodGroup: string;
+  gender: string;
+  religion: string;
+  dateOfBirth: string;
+  profession?: string;
+  weight?: number;
+  height?: number;
+  nationalId?: string;
+  profilePhoto?: string;
+  totalDonations: number;
+  lastDonationDate?: string;
+  nextEligibleDate?: string;
+  eligibilityStatus: 'ELIGIBLE' | 'NOT_ELIGIBLE' | 'UNKNOWN';
+  accountStatus: 'PENDING' | 'ACTIVE' | 'SUSPENDED';
+  donationHistory: DonationRecord[];
+  emergencyContact?: {
+    name?: string;
+    phone?: string;
+    relation?: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdminDonorsListResponse {
+  donors: AdminDonorResponse[];
+  totalPages: number;
+  currentPage: number;
+  total: number;
+  statistics: {
+    totalDonors: number;
+    activeDonors: number;
+    pendingDonors: number;
+    eligibleDonors: number;
+    totalDonations: number;
+  };
+}
+
+export interface DonorFilterParams {
+  page?: number;
+  limit?: number;
+  bloodGroup?: string;
+  city?: string;
+  eligibilityStatus?: 'ELIGIBLE' | 'NOT_ELIGIBLE' | 'UNKNOWN';
+  accountStatus?: 'PENDING' | 'ACTIVE' | 'SUSPENDED';
+  search?: string;
+}

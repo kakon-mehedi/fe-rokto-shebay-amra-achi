@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8000/api/v1'
+  apiUrl: 'http://localhost:8000/api/v1',
+  geminiApiKey: 'AIzaSyDA_ETs8ms2zDrMrBb-Nbbc3H4zX5HLQw4' // Replace with your actual Gemini API key
 };
 
 /*

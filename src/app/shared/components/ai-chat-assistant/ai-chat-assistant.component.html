@@ -1,0 +1,169 @@
+<!-- AI Chat Assistant Container -->
+<div class="ai-chat-container" [class.chat-open]="isChatOpen">
+  <!-- Chat Window -->
+  <div class="chat-window" *ngIf="isChatOpen" [@slideUpDown]>
+    <!-- Chat Header -->
+    <div class="chat-header">
+      <div class="ai-info">
+        <div class="ai-avatar">
+          <mat-icon>smart_toy</mat-icon>
+        </div>
+        <div class="ai-details">
+          <h4>রক্তসেবা AI সহায়ক</h4>
+          <span class="ai-status" [class.online]="isOnline">
+            {{ isOnline ? "অনলাইন" : "অফলাইন" }}
+          </span>
+        </div>
+      </div>
+      <button
+        class="close-chat-btn"
+        (click)="closeChatWindow()"
+        [attr.aria-label]="'চ্যাট বন্ধ করুন'"
+        mat-icon-button
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <!-- Chat Messages -->
+    <div class="chat-messages" #chatMessages>
+      <!-- Welcome Message -->
+      <div class="message ai-message" *ngIf="messages.length === 0">
+        <div class="message-content">
+          <div class="ai-avatar-small">
+            <mat-icon>smart_toy</mat-icon>
+          </div>
+          <div class="message-text">
+            <p>আস্সালামু আলাইকুম! আমি রক্তসেবার AI সহায়ক। 🩸</p>
+            <p>
+              রক্তদান, রক্তগ্রহণ, স্বাস্থ্য তথ্য এবং জরুরি সেবা নিয়ে যেকোনো
+              প্রশ্ন করুন।
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Messages -->
+      <div
+        *ngFor="let message of messages; trackBy: trackMessage"
+        class="message"
+        [class.user-message]="message.isUser"
+        [class.ai-message]="!message.isUser"
+      >
+        <div class="message-content">
+          <div class="message-avatar" *ngIf="!message.isUser">
+            <mat-icon>smart_toy</mat-icon>
+          </div>
+          <div class="message-text">
+            <p
+              [innerHTML]="
+                message.isUser
+                  ? message.text
+                  : message.displayText || message.text
+              "
+            ></p>
+            <span class="message-time" *ngIf="!message.isTyping">{{
+              message.timestamp | date : "short"
+            }}</span>
+            <!-- Typewriter cursor for AI messages -->
+            <span
+              class="typing-cursor"
+              *ngIf="message.isTyping && !message.isUser"
+              >|</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Typing Indicator -->
+      <div class="message ai-message" *ngIf="isTyping">
+        <div class="message-content">
+          <div class="message-avatar">
+            <mat-icon>smart_toy</mat-icon>
+          </div>
+          <div class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Suggestions -->
+    <div class="quick-suggestions" *ngIf="!isTyping && messages.length <= 2">
+      <button
+        *ngFor="let suggestion of quickSuggestions"
+        class="suggestion-btn"
+        (click)="sendMessage(suggestion)"
+        mat-stroked-button
+      >
+        {{ suggestion }}
+      </button>
+    </div>
+
+    <!-- Chat Input -->
+    <div class="chat-input-container">
+      <mat-form-field appearance="outline" class="chat-input-field">
+        <input
+          matInput
+          [(ngModel)]="currentMessage"
+          (keyup.enter)="sendUserMessage()"
+          [disabled]="isTyping"
+          placeholder="আপনার প্রশ্ন লিখুন..."
+          [attr.aria-label]="'বার্তা লিখুন'"
+          #messageInput
+        />
+        <mat-icon matSuffix>edit</mat-icon>
+      </mat-form-field>
+      <button
+        class="send-btn"
+        (click)="sendUserMessage()"
+        [disabled]="!currentMessage.trim() || isTyping"
+        [attr.aria-label]="'বার্তা পাঠান'"
+        mat-fab
+        color="primary"
+      >
+        <mat-icon>send</mat-icon>
+      </button>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message" *ngIf="errorMessage">
+      <mat-icon>error</mat-icon>
+      <span>{{ errorMessage }}</span>
+      <button mat-icon-button (click)="clearError()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Floating AI Chat Button -->
+  <button
+    class="ai-chat-btn"
+    (click)="toggleChatWindow()"
+    [class.chat-open]="isChatOpen"
+    [matTooltip]="isChatOpen ? 'চ্যাট বন্ধ করুন' : 'AI সহায়ক'"
+    matTooltipPosition="left"
+    [attr.aria-label]="isChatOpen ? 'AI চ্যাট বন্ধ করুন' : 'AI চ্যাট খুলুন'"
+    [attr.aria-expanded]="isChatOpen"
+  >
+    <mat-icon class="ai-icon" [class.rotated]="isChatOpen">
+      {{ isChatOpen ? "close" : "smart_toy" }}
+    </mat-icon>
+    <div
+      class="ai-pulse-ring"
+      *ngIf="!isChatOpen && hasUnreadMessage"
+      aria-hidden="true"
+    ></div>
+    <div class="ai-gradient-bg" aria-hidden="true"></div>
+  </button>
+</div>
+
+<!-- Chat Overlay -->
+<div
+  *ngIf="isChatOpen"
+  class="chat-overlay"
+  (click)="closeChatWindow()"
+  aria-hidden="true"
+></div>

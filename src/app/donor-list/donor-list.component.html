@@ -1,115 +1,226 @@
-<div class="donor-list-page-adv">
-  <header class="donor-list-header">
-    <h2>
-      <mat-icon>people</mat-icon>
-      ডোনার তালিকা
-    </h2>
-    <p class="subtitle">বাংলাদেশের সকল জেলার রক্তদাতাদের তালিকা</p>
+<div class="donor-list-page blood-theme-container">
+  <!-- Compact Header -->
+  <header class="page-header">
+    <div class="header-content">
+      <div class="header-left">
+        <mat-icon class="header-icon">groups</mat-icon>
+        <div class="header-text">
+          <h1>রক্তদাতা তালিকা</h1>
+          <p class="subtitle">{{ donors.length }} জন রক্তদাতা পাওয়া গেছে</p>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="stat-chip" *ngFor="let bg of bloodGroupStats">
+          <span class="bg-label">{{ bg.label }}</span>
+          <span class="bg-count">{{ bg.count }}</span>
+        </div>
+      </div>
+    </div>
   </header>
 
-  <form [formGroup]="filterForm" class="donor-filter-form sticky-filter donor-filter-responsive" autocomplete="off">
-    <mat-form-field appearance="outline">
-      <mat-label>সার্চ (নাম, ঠিকানা)</mat-label>
-      <input
-        matInput
-        formControlName="search"
-        placeholder="নাম বা ঠিকানা লিখুন"
-      />
+  <!-- Compact Filter Bar -->
+  <form [formGroup]="filterForm" class="filter-bar">
+    <div class="filter-row">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>খুঁজুন</mat-label>
+        <input matInput formControlName="search" placeholder="নাম বা ঠিকানা" />
+        <mat-icon matPrefix>search</mat-icon>
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filterForm.value.search"
+          (click)="filterForm.get('search')?.setValue('')"
+          type="button"
+        >
+          <mat-icon>clear</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>রক্তের গ্রুপ</mat-label>
+        <mat-select formControlName="bloodGroup">
+          <mat-option value="">সব গ্রুপ</mat-option>
+          <mat-option *ngFor="let bg of BLOOD_GROUPS" [value]="bg.value">
+            {{ bg.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>জেলা</mat-label>
+        <mat-select formControlName="city">
+          <mat-option value="">সব জেলা</mat-option>
+          <mat-option *ngFor="let d of BANGLADESH_DISTRICTS" [value]="d.name">
+            {{ d.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        appearance="outline"
+        class="filter-field"
+        *ngIf="upazilas.length > 0"
+      >
+        <mat-label>উপজেলা</mat-label>
+        <mat-select formControlName="location">
+          <mat-option value="">সব উপজেলা</mat-option>
+          <mat-option *ngFor="let u of upazilas" [value]="u.name">
+            {{ u.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <button
         mat-icon-button
+        class="reset-btn"
+        (click)="resetFilters()"
+        matTooltip="ফিল্টার রিসেট করুন"
         type="button"
-        *ngIf="filterForm.value.search"
-        matSuffix
-        (click)="filterForm.get('search')?.setValue('')"
-        tabindex="-1"
       >
-        <mat-icon>close</mat-icon>
+        <mat-icon>refresh</mat-icon>
       </button>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>ব্লাড গ্রুপ</mat-label>
-      <mat-select formControlName="bloodGroup">
-        <mat-option value="">সব</mat-option>
-        <mat-option *ngFor="let bg of BLOOD_GROUPS" [value]="bg.value">
-          {{ bg.label }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>জেলা/শহর</mat-label>
-      <mat-select formControlName="city">
-        <mat-option value="">সব</mat-option>
-        <mat-option *ngFor="let d of BANGLADESH_DISTRICTS" [value]="d.name">
-          {{ d.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="outline" *ngIf="upazilas.length > 0">
-      <mat-label>উপজেলা/এলাকা</mat-label>
-      <mat-select formControlName="location">
-        <mat-option value="">সব</mat-option>
-        <mat-option *ngFor="let u of upazilas" [value]="u.name">
-          {{ u.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    </div>
   </form>
 
-  <div *ngIf="isLoading" class="loading">
-    <mat-spinner></mat-spinner>
-    <p>লোড হচ্ছে...</p>
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>রক্তদাতাদের তথ্য লোড হচ্ছে...</p>
   </div>
 
-  <div *ngIf="error" class="error">
-    <mat-icon color="warn">error</mat-icon>
-    {{ error }}
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="getDonors()">
+      <mat-icon>refresh</mat-icon>
+      পুনরায় চেষ্টা করুন
+    </button>
   </div>
 
-  <div class="donor-cards-adv-grid" *ngIf="!isLoading && !error">
-    <mat-card class="donor-card-adv" *ngFor="let donor of donors" tabindex="0">
-      <div class="donor-card-adv-header">
-<img
-          [src]="donor.profilePhoto || 'assets/images/default-avatar.png'"
-          [alt]="donor.name"
-          [title]="donor.name + ' এর প্রোফাইল ছবি'"
-          class="donor-avatar-adv"
-        />
-        <div class="donor-info-adv">
-          <h3>{{ donor.name }}</h3>
-          <span class="blood-group-adv">{{ donor.bloodGroup }}</span>
+  <!-- Donor Cards Grid -->
+  <div class="donors-grid" *ngIf="!isLoading && !error">
+    <div
+      class="donor-card"
+      *ngFor="let donor of donors; trackBy: trackByDonorId"
+      (click)="openDonorDetails(donor)"
+    >
+      <!-- Card Header -->
+      <div class="card-header">
+        <div class="avatar-section">
+          <img
+            [src]="
+              donor.profilePhoto || 'assets/images/logo/profile_avatar.png'
+            "
+            [alt]="donor.name"
+            [title]="donor.name + ' এর প্রোফাইল ছবি'"
+            class="donor-avatar"
+          />
+          <div
+            class="status-indicator"
+            [class]="getDonorStatusClass(donor)"
+          ></div>
+        </div>
+
+        <div class="basic-info">
+          <h3 class="donor-name">{{ donor.name }}</h3>
+          <div
+            class="blood-group-badge"
+            [class]="
+              'bg-' + donor.bloodGroup.replace('+', 'pos').replace('-', 'neg')
+            "
+          >
+            {{ donor.bloodGroup }}
+          </div>
+        </div>
+
+        <div class="quick-actions">
+          <button
+            mat-icon-button
+            class="call-btn"
+            (click)="callDonor(donor, $event)"
+            matTooltip="কল করুন"
+          >
+            <mat-icon>call</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            class="info-btn"
+            (click)="openDonorDetails(donor, $event)"
+            matTooltip="বিস্তারিত"
+          >
+            <mat-icon>info</mat-icon>
+          </button>
         </div>
       </div>
-      <div class="donor-card-adv-body">
-        <div class="info-row-adv">
-          <mat-icon>location_on</mat-icon>
-          <span>{{ donor.city }}, {{ donor.location }}</span>
+
+      <!-- Card Body -->
+      <div class="card-body">
+        <div class="info-grid">
+          <div class="info-item">
+            <mat-icon class="info-icon">location_on</mat-icon>
+            <span class="info-text"
+              >{{ donor.city }}, {{ donor.location }}</span
+            >
+          </div>
+
+          <div class="info-item" *ngIf="donor.profession">
+            <mat-icon class="info-icon">work</mat-icon>
+            <span class="info-text">{{ donor.profession }}</span>
+          </div>
+
+          <div class="info-item">
+            <mat-icon class="info-icon">favorite</mat-icon>
+            <span class="info-text"
+              >{{ donor.totalDonations || 0 }} বার দান</span
+            >
+          </div>
+
+          <div class="info-item" *ngIf="donor.lastDonationDate">
+            <mat-icon class="info-icon">schedule</mat-icon>
+            <span class="info-text">{{
+              getLastDonationText(donor.lastDonationDate)
+            }}</span>
+          </div>
         </div>
-        <div class="info-row-adv">
-          <mat-icon>work</mat-icon>
-          <span>{{ donor.profession || "N/A" }}</span>
-        </div>
-        <div class="info-row-adv">
-          <mat-icon>favorite</mat-icon>
-          <span>মোট দান: {{ donor.totalDonations }}</span>
-        </div>
-        <div class="info-row-adv" *ngIf="donor.lastDonationDate">
-          <mat-icon>event</mat-icon>
-          <span>শেষ দান: {{ donor.lastDonationDate | date : "mediumDate" }}</span>
+
+        <!-- Donation Eligibility -->
+        <div class="eligibility-badge" [class]="getEligibilityClass(donor)">
+          <mat-icon>{{ getEligibilityIcon(donor) }}</mat-icon>
+          <span>{{ getEligibilityText(donor) }}</span>
         </div>
       </div>
-      <div class="donor-card-adv-actions">
-        <button mat-stroked-button color="primary" aria-label="ডিটেইলস" (click)="openDonorDetails(donor)">
-          <mat-icon>info</mat-icon>
-          বিস্তারিত
-        </button>
-        <button mat-icon-button color="accent" aria-label="কল করুন">
-          <mat-icon>call</mat-icon>
-        </button>
+
+      <!-- Card Footer -->
+      <div class="card-footer">
+        <div class="contact-info">
+          <span class="location-text"
+            >{{ donor.city }}, {{ donor.location }}</span
+          >
+        </div>
+        <div class="action-menu">
+          <button
+            mat-stroked-button
+            color="primary"
+            class="details-btn"
+            (click)="openDonorDetails(donor, $event)"
+          >
+            <mat-icon>visibility</mat-icon>
+            বিস্তারিত
+          </button>
+        </div>
       </div>
-    </mat-card>
-    <div *ngIf="donors.length === 0" class="no-donors">
-      <mat-icon>sentiment_dissatisfied</mat-icon>
-      <p>কোনো ডোনার পাওয়া যায়নি</p>
+    </div>
+
+    <!-- No Results -->
+    <div *ngIf="donors.length === 0" class="no-results">
+      <mat-icon>search_off</mat-icon>
+      <h3>কোনো রক্তদাতা পাওয়া যায়নি</h3>
+      <p>অনুসন্ধানের শর্ত পরিবর্তন করে আবার চেষ্টা করুন</p>
+      <button mat-raised-button color="primary" (click)="resetFilters()">
+        <mat-icon>refresh</mat-icon>
+        ফিল্টার রিসেট করুন
+      </button>
     </div>
   </div>
 </div>

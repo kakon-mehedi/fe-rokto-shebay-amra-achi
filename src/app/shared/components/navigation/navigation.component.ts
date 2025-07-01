@@ -1,5 +1,5 @@
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Observable, map, shareReplay } from "rxjs";
 import { NavigationService } from "../../services/navigation.service";
 import { AuthService } from "../../services/auth.service";
@@ -23,6 +23,8 @@ interface Notification {
 })
 export class NavigationComponent implements OnInit {
 
+  @Input() hidden: boolean = false;
+  
   isLoggedIn: boolean = false;
   isLoading: boolean = false;
   openNotificationPanel: boolean = false;
