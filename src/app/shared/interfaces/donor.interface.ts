@@ -166,6 +166,8 @@ export interface DonorFilterParams {
   limit?: number;
   bloodGroup?: string;
   city?: string;
+  location?: string;
+  gender?: string;
   eligibilityStatus?: 'ELIGIBLE' | 'NOT_ELIGIBLE' | 'UNKNOWN';
   accountStatus?: 'PENDING' | 'ACTIVE' | 'SUSPENDED';
   search?: string;

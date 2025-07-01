@@ -56,15 +56,16 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
   bloodGroupFilter = new FormControl('');
   genderFilter = new FormControl('');
   cityFilter = new FormControl('');
+  locationFilter = new FormControl(''); // New location filter
   statusFilter = new FormControl('');
   eligibilityFilter = new FormControl('');
 
   // Filter Options
   bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
   genders = [
-    { value: 'male', label: 'পুরুষ' },
-    { value: 'female', label: 'নারী' },
-    { value: 'other', label: 'অন্যান্য' }
+    { value: 'Male', label: 'পুরুষ' },
+    { value: 'Female', label: 'নারী' },
+    { value: 'Other', label: 'অন্যান্য' }
   ];
   statuses = [
     { value: 'PENDING', label: 'অপেক্ষমাণ' },
@@ -85,6 +86,7 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
   pendingDonors = 0;
   suspendedDonors = 0;
   cities: string[] = [];
+  locations: string[] = []; // New locations array
 
   // Pagination
   currentPage = 0;
@@ -112,41 +114,47 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    // Server-side pagination - don't bind paginator to dataSource
     if (this.paginator) {
-      this.paginator.page.subscribe(() => {
-        this.currentPage = this.paginator.pageIndex;
-        this.pageSize = this.paginator.pageSize;
-        this.loadDonors();
+      this.paginator.page.subscribe((event) => {
+        this.currentPage = event.pageIndex;
+        this.pageSize = event.pageSize;
+        this.loadDonors(); // API call with new page
       });
     }
     
-    // Don't set paginator to dataSource as we're doing server-side pagination
     this.dataSource.sort = this.sort;
   }
 
   setupFilters() {
-    // Search filter with debounce
+    // Search filter with debounce - server-side filtering
     this.searchControl.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe(() => {
         this.currentPage = 0; // Reset to first page
-        this.loadDonors();
+        this.loadDonors(); // API call with search filter
       });
 
-    // Other filters
-    [this.bloodGroupFilter, this.cityFilter, this.statusFilter, this.eligibilityFilter]
+    // Other filters - server-side filtering
+    [this.bloodGroupFilter, this.genderFilter, this.cityFilter, this.locationFilter, this.statusFilter, this.eligibilityFilter]
       .forEach(control => {
         control.valueChanges.subscribe(() => {
           this.currentPage = 0; // Reset to first page
-          this.loadDonors();
+          this.loadDonors(); // API call with filters
         });
       });
+  }
+
+  applyFilters() {
+    // Trigger filter by updating the filter value
+    this.dataSource.filter = Date.now().toString();
   }
 
   loadDonors() {
     this.isLoading = true;
     this.error = null;
 
+    // Server-side filtering and pagination
     const params: DonorFilterParams = {
       page: this.currentPage + 1, // API expects 1-based page
       limit: this.pageSize
@@ -168,6 +176,16 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
       params.city = city;
     }
 
+    const location = this.locationFilter.value;
+    if (location) {
+      params.location = location;
+    }
+
+    const gender = this.genderFilter.value;
+    if (gender) {
+      params.gender = gender;
+    }
+
     const accountStatus = this.statusFilter.value;
     if (accountStatus) {
       params.accountStatus = accountStatus;
@@ -184,7 +202,14 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
           this.dataSource.data = response.data.donors;
           this.totalRecords = response.data.total;
           this.statistics = response.data.statistics;
+          
+          // Update paginator manually for server-side pagination
+          if (this.paginator) {
+            this.paginator.length = this.totalRecords;
+          }
+          
           this.extractCities();
+          this.extractLocations();
           this.isLoading = false;
         } else {
           this.handleError('ডেটা লোড করতে সমস্যা হয়েছে');
@@ -216,14 +241,24 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
     this.cities = uniqueCities.sort();
   }
 
+  extractLocations() {
+    const uniqueLocations = [...new Set(this.dataSource.data.map(donor => donor.location))];
+    this.locations = uniqueLocations.sort();
+  }
+
   clearFilters() {
     this.searchControl.setValue('');
     this.bloodGroupFilter.setValue('');
+    this.genderFilter.setValue('');
     this.cityFilter.setValue('');
+    this.locationFilter.setValue('');
     this.statusFilter.setValue('');
     this.eligibilityFilter.setValue('');
-    // Trigger reload
+    // Reset pagination and reload
     this.currentPage = 0;
+    if (this.paginator) {
+      this.paginator.pageIndex = 0;
+    }
     this.loadDonors();
   }
 
@@ -295,9 +330,9 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
 
   getGenderLabel(gender: string): string {
     const genderMap = {
-      'male': 'পুরুষ',
-      'female': 'নারী',
-      'other': 'অন্যান্য'
+      'Male': 'পুরুষ',
+      'Female': 'নারী',
+      'Other': 'অন্যান্য'
     };
     return genderMap[gender as keyof typeof genderMap] || gender;
   }
