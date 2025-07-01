@@ -1,0 +1,469 @@
+<!-- Donor Registration Form -->
+<div class="donor-register-container">
+  <div class="register-wrapper">
+    <!-- Header -->
+    <div class="register-header">
+      <h1 class="register-title">রক্তদাতা নিবন্ধন</h1>
+      <p class="register-subtitle">রক্তদানের মহান কাজে যোগ দিন</p>
+
+      <!-- Progress Indicator -->
+      <div class="progress-indicator">
+        <div
+          class="step"
+          [class.active]="currentStep >= 1"
+          [class.completed]="currentStep > 1"
+        >
+          <div class="step-number">১</div>
+          <div class="step-label">ব্যক্তিগত তথ্য</div>
+        </div>
+        <div class="step-line" [class.active]="currentStep > 1"></div>
+        <div
+          class="step"
+          [class.active]="currentStep >= 2"
+          [class.completed]="currentStep > 2"
+        >
+          <div class="step-number">২</div>
+          <div class="step-label">ঠিকানা</div>
+        </div>
+        <div class="step-line" [class.active]="currentStep > 2"></div>
+        <div class="step" [class.active]="currentStep >= 3">
+          <div class="step-number">৩</div>
+          <div class="step-label">অতিরিক্ত তথ্য</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Registration Form -->
+    <form
+      [formGroup]="registerForm"
+      (ngSubmit)="onSubmit()"
+      class="register-form"
+    >
+      <!-- Step 1: Basic Information -->
+      <div class="form-step" *ngIf="currentStep === 1">
+        <h2 class="step-title">ব্যক্তিগত তথ্য</h2>
+
+        <div class="form-grid">
+          <!-- Name -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>পূর্ণ নাম *</mat-label>
+            <input
+              matInput
+              formControlName="name"
+              placeholder="আপনার পূর্ণ নাম লিখুন"
+            />
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error>{{ getErrorMessage("name") }}</mat-error>
+          </mat-form-field>
+
+          <!-- Phone -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>মোবাইল নম্বর *</mat-label>
+            <input matInput formControlName="phone" placeholder="01712345678" />
+            <mat-icon matSuffix>phone</mat-icon>
+            <mat-error>{{ getErrorMessage("phone") }}</mat-error>
+          </mat-form-field>
+
+          <!-- Email -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>ইমেইল (ঐচ্ছিক)</mat-label>
+            <input
+              matInput
+              formControlName="email"
+              type="email"
+              placeholder="example@email.com"
+            />
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error>{{ getErrorMessage("email") }}</mat-error>
+          </mat-form-field>
+
+          <!-- Date of Birth -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>জন্ম তারিখ *</mat-label>
+            <input matInput formControlName="dateOfBirth" type="date" />
+            <mat-icon matSuffix>cake</mat-icon>
+            <mat-error>{{ getErrorMessage("dateOfBirth") }}</mat-error>
+          </mat-form-field>
+
+          <!-- Gender -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>লিঙ্গ *</mat-label>
+            <mat-select formControlName="gender">
+              <mat-option *ngFor="let gender of genders" [value]="gender.value">
+                {{ gender.label }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>person_outline</mat-icon>
+            <mat-error>{{ getErrorMessage("gender") }}</mat-error>
+          </mat-form-field>
+
+          <!-- Religion -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>ধর্ম *</mat-label>
+            <mat-select formControlName="religion">
+              <mat-option
+                *ngFor="let religion of religions"
+                [value]="religion.value"
+              >
+                {{ religion.label }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>account_balance</mat-icon>
+            <mat-error>{{ getErrorMessage("religion") }}</mat-error>
+          </mat-form-field>
+
+          <!-- Blood Group -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>রক্তের গ্রুপ *</mat-label>
+            <mat-select formControlName="bloodGroup">
+              <mat-option
+                *ngFor="let bloodGroup of bloodGroups"
+                [value]="bloodGroup.value"
+              >
+                {{ bloodGroup.label }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>opacity</mat-icon>
+            <mat-error>{{ getErrorMessage("bloodGroup") }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="nextStep()"
+            class="next-btn"
+          >
+            পরবর্তী
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Address Information -->
+      <div class="form-step" *ngIf="currentStep === 2">
+        <h2 class="step-title">ঠিকানার তথ্য</h2>
+
+        <div class="form-grid">
+          <!-- City/District -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>জেলা *</mat-label>
+            <mat-select formControlName="city">
+              <mat-option
+                *ngFor="let district of districts"
+                [value]="district.name"
+              >
+                {{ district.name }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>location_city</mat-icon>
+            <mat-error>{{ getErrorMessage("city") }}</mat-error>
+          </mat-form-field>
+
+          <!-- Location/Upazila -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>এলাকা/উপজেলা *</mat-label>
+            <mat-select
+              formControlName="location"
+              [disabled]="!selectedDistrict"
+            >
+              <mat-option
+                *ngFor="let location of availableLocations"
+                [value]="location.name"
+              >
+                {{ location.name }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>place</mat-icon>
+            <mat-error>{{ getErrorMessage("location") }}</mat-error>
+          </mat-form-field>
+
+          <!-- Address -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>বিস্তারিত ঠিকানা *</mat-label>
+            <textarea
+              matInput
+              formControlName="address"
+              rows="3"
+              placeholder="বাড়ি/ফ্ল্যাট নম্বর, রোড, এলাকার নাম"
+            ></textarea>
+            <mat-icon matSuffix>home</mat-icon>
+            <mat-error>{{ getErrorMessage("address") }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="previousStep()"
+            class="prev-btn"
+          >
+            <mat-icon>arrow_back</mat-icon>
+            পূর্ববর্তী
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            (click)="nextStep()"
+            class="next-btn"
+          >
+            পরবর্তী
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Additional Information & Security -->
+      <div class="form-step" *ngIf="currentStep === 3">
+        <h2 class="step-title">অতিরিক্ত তথ্য ও নিরাপত্তা</h2>
+
+        <div class="form-grid">
+          <!-- Profile Photo -->
+          <div class="photo-upload-section full-width">
+            <h3>প্রোফাইল ছবি (ঐচ্ছিক)</h3>
+            <div class="photo-upload-area" [class.has-image]="previewUrl">
+              <div *ngIf="!previewUrl" class="upload-placeholder">
+                <mat-icon class="upload-icon">add_a_photo</mat-icon>
+                <p>ছবি আপলোড করুন</p>
+                <input
+                  type="file"
+                  #fileInput
+                  (change)="onFileSelected($event)"
+                  accept="image/jpeg,image/jpg,image/png"
+                  hidden
+                />
+                <button
+                  mat-stroked-button
+                  type="button"
+                  (click)="fileInput.click()"
+                >
+                  ছবি নির্বাচন করুন
+                </button>
+              </div>
+              <div *ngIf="previewUrl" class="image-preview">
+                <img [src]="previewUrl" alt="প্রোফাইল ছবি" />
+                <button
+                  mat-icon-button
+                  type="button"
+                  (click)="removeSelectedFile()"
+                  class="remove-image-btn"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Profession -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>পেশা (ঐচ্ছিক)</mat-label>
+            <input
+              matInput
+              formControlName="profession"
+              placeholder="আপনার পেশা লিখুন"
+            />
+            <mat-icon matSuffix>work</mat-icon>
+          </mat-form-field>
+
+          <!-- Weight & Height -->
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>ওজন (কেজি)</mat-label>
+              <input
+                matInput
+                formControlName="weight"
+                type="number"
+                placeholder="65"
+              />
+              <mat-icon matSuffix>monitor_weight</mat-icon>
+              <mat-error>{{ getErrorMessage("weight") }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>উচ্চতা (সেমি)</mat-label>
+              <input
+                matInput
+                formControlName="height"
+                type="number"
+                placeholder="170"
+              />
+              <mat-icon matSuffix>height</mat-icon>
+              <mat-error>{{ getErrorMessage("height") }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- National ID -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>জাতীয় পরিচয়পত্র নম্বর (ঐচ্ছিক)</mat-label>
+            <input
+              matInput
+              formControlName="nationalId"
+              placeholder="1234567890123"
+            />
+            <mat-icon matSuffix>badge</mat-icon>
+            <mat-error>{{ getErrorMessage("nationalId") }}</mat-error>
+          </mat-form-field>
+
+          <!-- Emergency Contact Section -->
+          <div class="emergency-contact-section full-width">
+            <h3>জরুরি যোগাযোগ (ঐচ্ছিক)</h3>
+            <div class="form-grid">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>জরুরি যোগাযোগের নাম</mat-label>
+                <input
+                  matInput
+                  formControlName="emergencyContactName"
+                  placeholder="নাম"
+                />
+                <mat-icon matSuffix>contact_emergency</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>জরুরি যোগাযোগের ফোন</mat-label>
+                <input
+                  matInput
+                  formControlName="emergencyContactPhone"
+                  placeholder="01712345678"
+                />
+                <mat-icon matSuffix>phone</mat-icon>
+                <mat-error>{{
+                  getErrorMessage("emergencyContactPhone")
+                }}</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>সম্পর্ক</mat-label>
+                <input
+                  matInput
+                  formControlName="emergencyContactRelation"
+                  placeholder="বাবা/মা/স্ত্রী/স্বামী"
+                />
+                <mat-icon matSuffix>family_restroom</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Password Section -->
+          <div class="password-section full-width">
+            <h3>অ্যাকাউন্ট নিরাপত্তা</h3>
+            <div class="form-grid">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>পাসওয়ার্ড *</mat-label>
+                <input
+                  matInput
+                  formControlName="password"
+                  [type]="hidePassword ? 'password' : 'text'"
+                  placeholder="কমপক্ষে ৬ অক্ষর"
+                />
+                <button
+                  mat-icon-button
+                  matSuffix
+                  type="button"
+                  (click)="hidePassword = !hidePassword"
+                >
+                  <mat-icon>{{
+                    hidePassword ? "visibility" : "visibility_off"
+                  }}</mat-icon>
+                </button>
+                <mat-error>{{ getErrorMessage("password") }}</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>পাসওয়ার্ড নিশ্চিতকরণ *</mat-label>
+                <input
+                  matInput
+                  formControlName="confirmPassword"
+                  [type]="hideConfirmPassword ? 'password' : 'text'"
+                  placeholder="পাসওয়ার্ড পুনরায় লিখুন"
+                />
+                <button
+                  mat-icon-button
+                  matSuffix
+                  type="button"
+                  (click)="hideConfirmPassword = !hideConfirmPassword"
+                >
+                  <mat-icon>{{
+                    hideConfirmPassword ? "visibility" : "visibility_off"
+                  }}</mat-icon>
+                </button>
+                <mat-error>{{ getErrorMessage("confirmPassword") }}</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Terms and Conditions -->
+          <div class="terms-section full-width">
+            <mat-checkbox
+              formControlName="termsAccepted"
+              class="terms-checkbox"
+            >
+              আমি <a href="#" target="_blank">শর্তাবলী ও নীতিমালা</a> পড়েছি এবং
+              সম্মত আছি *
+            </mat-checkbox>
+            <mat-error
+              *ngIf="
+                registerForm.get('termsAccepted')?.invalid &&
+                registerForm.get('termsAccepted')?.touched
+              "
+            >
+              শর্তাবলী গ্রহণ করা আবশ্যক
+            </mat-error>
+
+            <mat-checkbox
+              formControlName="privacyAccepted"
+              class="terms-checkbox"
+            >
+              আমি <a href="#" target="_blank">গোপনীয়তা নীতি</a> পড়েছি এবং
+              সম্মত আছি *
+            </mat-checkbox>
+            <mat-error
+              *ngIf="
+                registerForm.get('privacyAccepted')?.invalid &&
+                registerForm.get('privacyAccepted')?.touched
+              "
+            >
+              গোপনীয়তা নীতি গ্রহণ করা আবশ্যক
+            </mat-error>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="previousStep()"
+            class="prev-btn"
+          >
+            <mat-icon>arrow_back</mat-icon>
+            পূর্ববর্তী
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="isLoading || registerForm.invalid"
+            class="submit-btn"
+          >
+            <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+            <span *ngIf="!isLoading">নিবন্ধন সম্পন্ন করুন</span>
+            <span *ngIf="isLoading">নিবন্ধন হচ্ছে...</span>
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Footer -->
+    <div class="register-footer">
+      <p>
+        ইতিমধ্যে নিবন্ধিত?
+        <button mat-button (click)="goToLogin()" class="login-link">
+          লগইন করুন
+        </button>
+      </p>
+    </div>
+  </div>
+</div>

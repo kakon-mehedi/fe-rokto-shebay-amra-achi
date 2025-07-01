@@ -26,21 +26,21 @@
         <button
           mat-raised-button
           color="primary"
-          class="action-btn admin-btn"
-          routerLink="/users/login"
+          class="action-btn donor-register-btn"
+          routerLink="/auth/donor-register"
         >
-          <mat-icon>admin_panel_settings</mat-icon>
-          <span>এডমিন লগইন</span>
+          <mat-icon>person_add</mat-icon>
+          <span>দাতা হিসেবে নিবন্ধন</span>
         </button>
 
         <button
           mat-raised-button
           color="accent"
-          class="action-btn donor-btn"
-          routerLink="/donors"
+          class="action-btn donor-login-btn"
+          routerLink="/auth/donor-login"
         >
-          <mat-icon>people</mat-icon>
-          <span>ডোনার লিস্ট</span>
+          <mat-icon>login</mat-icon>
+          <span>দাতা লগইন</span>
         </button>
 
         <button
@@ -51,6 +51,16 @@
         >
           <mat-icon>emergency</mat-icon>
           <span>ইমারজেন্সি যোগাযোগ</span>
+        </button>
+
+        <button
+          mat-stroked-button
+          color="primary"
+          class="action-btn admin-btn"
+          routerLink="/auth/login"
+        >
+          <mat-icon>admin_panel_settings</mat-icon>
+          <span>এডমিন লগইন</span>
         </button>
 
         <button

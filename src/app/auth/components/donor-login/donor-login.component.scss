@@ -1,0 +1,210 @@
+/* Donor Login Component Styles */
+.donor-login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #f7f8fa;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-wrapper {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  padding: 40px 32px 24px 32px;
+  max-width: 420px;
+  width: 100%;
+  margin: 48px 0 24px 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.logo-section .logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.login-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #c62828;
+}
+
+.login-subtitle {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 0;
+}
+
+.login-methods {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.method-btn {
+  border-radius: 20px !important;
+  min-width: 120px;
+  font-weight: 500;
+  background: #f3f3f3;
+  color: #c62828;
+  transition: background 0.2s, color 0.2s;
+}
+.method-btn.active,
+.method-btn:focus {
+  background: #c62828 !important;
+  color: #fff !important;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 360px;
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.mat-form-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.remember-me {
+  font-size: 0.95rem;
+}
+
+.forgot-password {
+  color: #c62828 !important;
+  font-size: 0.95rem;
+  text-decoration: underline;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.login-btn {
+  width: 100%;
+  margin-bottom: 16px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  min-height: 44px;
+}
+
+.divider {
+  text-align: center;
+  margin: 16px 0;
+  color: #aaa;
+  position: relative;
+}
+.divider span {
+  background: #fff;
+  padding: 0 12px;
+  position: relative;
+  z-index: 1;
+}
+.divider:before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #eee;
+  z-index: 0;
+}
+
+.alternative-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.register-btn,
+.public-btn {
+  width: 100%;
+  font-weight: 500;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 24px;
+  color: #888;
+  font-size: 0.95rem;
+}
+
+.help-link {
+  color: #c62828;
+  text-decoration: underline;
+  margin-left: 4px;
+}
+
+.app-info {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #bbb;
+}
+
+.background-elements {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+.blood-drop, .heart-icon {
+  position: absolute;
+  font-size: 2.2rem;
+  opacity: 0.13;
+}
+.drop-1 { top: 10%; left: 8%; }
+.drop-2 { top: 80%; left: 12%; }
+.drop-3 { top: 60%; right: 10%; }
+.heart-1 { top: 20%; right: 8%; }
+.heart-2 { bottom: 10%; left: 40%; }
+
+@media (max-width: 600px) {
+  .login-wrapper {
+    padding: 16px 4px 12px 4px;
+    max-width: 98vw;
+  }
+  .login-form {
+    max-width: 100vw;
+  }
+  .logo-section .logo {
+    width: 48px;
+    height: 48px;
+  }
+ 
+}
+
+

@@ -5,6 +5,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { RouterModule } from '@angular/router';
 import { FooterComponent } from './components/footer/footer.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
+import { MobileNavComponent } from './components/mobile-nav/mobile-nav.component';
 import { MaterialModule } from './modules/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -13,7 +14,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     NavigationComponent,
-    FooterComponent
+    FooterComponent,
+    MobileNavComponent
   ],
   imports: [
     CommonModule,
@@ -30,6 +32,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FlexLayoutModule,
     NavigationComponent,
     FooterComponent,
+    MobileNavComponent,
     FormsModule,
     ReactiveFormsModule
   ]

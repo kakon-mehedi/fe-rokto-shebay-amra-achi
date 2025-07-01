@@ -9,6 +9,8 @@ import { SharedModule } from './shared/shared.module';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @NgModule({
   declarations: [
@@ -33,4 +35,16 @@ import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+  constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+    iconRegistry.addSvgIcon(
+      'messenger',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/messenger.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'whatsapp',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/icons/whatsapp.svg')
+    );
+  }
+ }

@@ -1,0 +1,65 @@
+<mat-dialog-content class="donor-details-dialog-content">
+  <div class="donor-details-header">
+    <img
+      [src]="donor.profilePhoto || 'assets/images/default-avatar.png'"
+      [alt]="donor.name"
+      [title]="donor.name + ' এর প্রোফাইল ছবি'"
+      class="donor-details-avatar"
+    />
+    <div>
+      <h2>{{ donor.name }}</h2>
+      <span class="blood-group">{{ donor.bloodGroup }}</span>
+      <div class="donor-location">
+        <mat-icon>location_on</mat-icon>
+        {{ donor.city }}, {{ donor.location }}, {{ donor.address }}
+      </div>
+    </div>
+  </div>
+  <div class="donor-details-body">
+    <div class="info-row">
+      <mat-icon>work</mat-icon>
+      <span>{{ donor.profession || "N/A" }}</span>
+    </div>
+    <div class="info-row">
+      <mat-icon>favorite</mat-icon>
+      <span>মোট দান: {{ donor.totalDonations }}</span>
+    </div>
+    <div class="info-row" *ngIf="donor.lastDonationDate">
+      <mat-icon>event</mat-icon>
+      <span>শেষ দান: {{ donor.lastDonationDate | date : "mediumDate" }}</span>
+    </div>
+  </div>
+  <div class="donor-details-warning">
+    <mat-icon color="warn">info</mat-icon>
+    <span>
+      ব্যক্তিগত তথ্য দেখতে চাইলে অ্যাডমিন/মডারেটরের সাথে যোগাযোগ করুন।
+      <br />
+      অথবা নিচের সোশ্যাল/সাপোর্ট অপশনে যোগাযোগ করুন।
+    </span>
+  </div>
+  <div class="donor-details-social">
+    <a
+      href="https://m.me/roktoseba"
+      target="_blank"
+      class="social-link messenger"
+    >
+      <mat-icon svgIcon="messenger"></mat-icon>
+    </a>
+    <a
+      href="https://wa.me/8801234567890"
+      target="_blank"
+      class="social-link whatsapp"
+    >
+      <mat-icon svgIcon="whatsapp"></mat-icon>
+    </a>
+    <a href="tel:+8801234567890" class="social-link phone">
+      <mat-icon>call</mat-icon>
+    </a>
+  </div>
+  <div class="donor-details-support">
+    <span>সাপোর্ট: <a href="tel:+8801234567890">০১২৩৪৫৬৭৮৯০</a></span>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">বন্ধ করুন</button>
+</mat-dialog-actions>

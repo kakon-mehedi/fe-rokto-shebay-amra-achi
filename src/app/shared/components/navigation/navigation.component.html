@@ -24,7 +24,7 @@
       <span>হোম</span>
     </button>
 
-    <button mat-button routerLink="/donors" routerLinkActive="active-link">
+    <button mat-button routerLink="/donor-list" routerLinkActive="active-link">
       <mat-icon>people</mat-icon>
       <span>ডোনার তালিকা</span>
     </button>
@@ -133,9 +133,9 @@
     <span>আমার প্রোফাইল</span>
   </button>
 
-  <button mat-menu-item *ngIf="isLoggedIn" routerLink="/donors">
+  <button mat-menu-item *ngIf="isLoggedIn" routerLink="/donor-list">
     <mat-icon>people</mat-icon>
-    <span>ডোনার ম্যানেজমেন্ট</span>
+    <span>ডোনার তালিকা</span>
   </button>
 
   <button mat-menu-item *ngIf="isLoggedIn" routerLink="/reports">
@@ -243,7 +243,7 @@
         <span>হোম</span>
       </a>
 
-      <a mat-list-item routerLink="/donors" (click)="closeSidenav()">
+      <a mat-list-item routerLink="/donor-list" (click)="closeSidenav()">
         <mat-icon matListIcon>people</mat-icon>
         <span>ডোনার তালিকা</span>
       </a>
