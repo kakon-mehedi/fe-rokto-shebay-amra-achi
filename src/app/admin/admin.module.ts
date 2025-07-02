@@ -34,6 +34,7 @@ import { DonorManagementComponent } from './components/donor-management/donor-ma
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { DashboardStatsComponent } from './components/dashboard-stats/dashboard-stats.component';
 import { AddEditDonorDialogComponent } from './components/add-edit-donor-dialog/add-edit-donor-dialog.component';
+import { DonorDetailsModalComponent } from './components/donor-details-modal/donor-details-modal.component';
 
 // Shared Module
 import { SharedModule } from '../shared/shared.module';
@@ -62,7 +63,8 @@ const routes: Routes = [
     DonorManagementComponent,
     UserManagementComponent,
     DashboardStatsComponent,
-    AddEditDonorDialogComponent
+    AddEditDonorDialogComponent,
+    DonorDetailsModalComponent
   ],
   imports: [
     CommonModule,

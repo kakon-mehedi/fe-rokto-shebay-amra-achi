@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { DonorService } from '../../../shared/services/donor.service';
+import { DonorDetailsModalComponent } from '../donor-details-modal/donor-details-modal.component';
 import { 
   AdminDonorResponse, 
   AdminDonorsListResponse, 
@@ -265,6 +266,24 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
   addDonor() {
     // TODO: Open add donor dialog
     console.log('Add donor');
+  }
+
+  viewDonorDetails(donor: DonorAdmin) {
+    const dialogRef = this.dialog.open(DonorDetailsModalComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      data: { donorId: donor._id },
+      panelClass: 'donor-details-dialog'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // Handle any actions after modal closes if needed
+      if (result) {
+        // Refresh data if donor was updated
+        this.loadDonors();
+      }
+    });
   }
 
   editDonor(donor: DonorAdmin) {

@@ -352,5 +352,41 @@ body {
   }
 }
 
+/* ==================== */
+/* Donor Details Dialog Styles */
+/* ==================== */
+.donor-details-dialog {
+  .mat-mdc-dialog-container {
+    border-radius: 16px;
+    padding: 0;
+    overflow: hidden;
+    max-width: 95vw;
+    max-height: 90vh;
+  }
+  
+  .mat-mdc-dialog-content {
+    padding: 0;
+    margin: 0;
+    max-height: none;
+  }
+}
+
+/* ==================== */
+/* Success/Error Snackbar Styles */
+/* ==================== */
+.success-snackbar {
+  background: #4caf50 !important;
+  color: white !important;
+}
+
+.error-snackbar {
+  background: #f44336 !important;
+  color: white !important;
+}
+
 /* ============================================== */
 
+.mat-dialog-container {
+  padding: 0 0 0 0 !important     ;
+  // width: auto !important;
+}

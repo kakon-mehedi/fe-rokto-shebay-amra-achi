@@ -529,6 +529,22 @@
       padding: 16px 24px;
     }
   }
+
+  // ====================
+  // Clickable Table Rows
+  // ====================
+  .clickable-row {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(211, 47, 47, 0.04);
+    }
+
+    &:active {
+      background-color: rgba(211, 47, 47, 0.08);
+    }
+  }
 }
 
 // ====================
