@@ -925,3 +925,34 @@ mat-form-field {
     min-height: 200px;
   }
 }
+
+
+// Add these to your existing CSS
+.clickable-cell {
+  cursor: pointer;
+  position: relative;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+  }
+}
+
+.row-hover:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+// Ensure action buttons remain clickable above the overlay
+.action-buttons {
+  position: relative;
+  z-index: 2;
+}

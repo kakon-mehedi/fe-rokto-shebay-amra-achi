@@ -223,7 +223,12 @@
           <!-- Profile Photo Column -->
           <ng-container matColumnDef="profilePhoto">
             <th mat-header-cell *matHeaderCellDef>ছবি</th>
-            <td mat-cell *matCellDef="let donor">
+            <td
+              mat-cell
+              *matCellDef="let donor"
+              (click)="viewDonorDetails(donor)"
+              class="clickable-cell"
+            >
               <div class="donor-avatar">
                 <img
                   [src]="
@@ -240,7 +245,12 @@
           <!-- Name Column -->
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>নাম</th>
-            <td mat-cell *matCellDef="let donor">
+            <td
+              mat-cell
+              *matCellDef="let donor"
+              (click)="viewDonorDetails(donor)"
+              class="clickable-cell"
+            >
               <div class="donor-name-cell">
                 <span class="name">{{ donor.name }}</span>
                 <span class="email">{{ donor.email }}</span>
@@ -394,8 +404,7 @@
           <tr
             mat-row
             *matRowDef="let row; columns: displayedColumns"
-            (click)="viewDonorDetails(row)"
-            class="clickable-row"
+            class="row-hover"
           ></tr>
         </table>
 
