@@ -125,17 +125,23 @@
         <div class="form-row">
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>শহর *</mat-label>
-            <input matInput formControlName="city" placeholder="শহরের নাম" />
+            <mat-select formControlName="city">
+              <mat-option value="">শহর নির্বাচন করুন</mat-option>
+              <mat-option *ngFor="let city of cities" [value]="city.value">
+                {{ city.label }}
+              </mat-option>
+            </mat-select>
             <mat-error>{{ getFieldError("city") }}</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>এলাকা *</mat-label>
-            <input
-              matInput
-              formControlName="location"
-              placeholder="এলাকার নাম"
-            />
+            <mat-select formControlName="location">
+              <mat-option value="">এলাকা নির্বাচন করুন</mat-option>
+              <mat-option *ngFor="let location of locations" [value]="location.value">
+                {{ location.label }}
+              </mat-option>
+            </mat-select>
             <mat-error>{{ getFieldError("location") }}</mat-error>
           </mat-form-field>
         </div>
