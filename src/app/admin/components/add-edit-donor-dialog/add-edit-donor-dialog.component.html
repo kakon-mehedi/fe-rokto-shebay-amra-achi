@@ -1,0 +1,316 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title class="dialog-title">
+    <mat-icon>{{ isEdit ? "edit" : "person_add" }}</mat-icon>
+    {{ isEdit ? "রক্তদাতার তথ্য সম্পাদনা" : "নতুন রক্তদাতা যোগ করুন" }}
+  </h2>
+
+  <mat-dialog-content class="dialog-content">
+    <form [formGroup]="donorForm" (ngSubmit)="onSubmit()">
+      <!-- Basic Information Section -->
+      <div class="form-section">
+        <h3 class="section-title">
+          <mat-icon>person</mat-icon>
+          মৌলিক তথ্য
+        </h3>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>নাম *</mat-label>
+            <input
+              matInput
+              formControlName="name"
+              placeholder="পূর্ণ নাম লিখুন"
+            />
+            <mat-error>{{ getFieldError("name") }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>ফোন নম্বর *</mat-label>
+            <input matInput formControlName="phone" placeholder="01XXXXXXXXX" />
+            <mat-error>{{ getFieldError("phone") }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>ইমেইল</mat-label>
+            <input
+              matInput
+              formControlName="email"
+              type="email"
+              placeholder="example@email.com"
+            />
+            <mat-error>{{ getFieldError("email") }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>পেশা</mat-label>
+            <input
+              matInput
+              formControlName="profession"
+              placeholder="পেশা লিখুন"
+            />
+            <mat-error>{{ getFieldError("profession") }}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Personal Information Section -->
+      <div class="form-section">
+        <h3 class="section-title">
+          <mat-icon>badge</mat-icon>
+          ব্যক্তিগত তথ্য
+        </h3>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>লিঙ্গ *</mat-label>
+            <mat-select formControlName="gender">
+              <mat-option *ngFor="let gender of genders" [value]="gender.value">
+                {{ gender.label }}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{ getFieldError("gender") }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>ধর্ম *</mat-label>
+            <mat-select formControlName="religion">
+              <mat-option
+                *ngFor="let religion of religions"
+                [value]="religion.value"
+              >
+                {{ religion.label }}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{ getFieldError("religion") }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>জন্ম তারিখ *</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="dateOfBirth"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error>{{ getFieldError("dateOfBirth") }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>জাতীয় পরিচয়পত্র নম্বর</mat-label>
+            <input
+              matInput
+              formControlName="nationalId"
+              placeholder="10/13/17 ডিজিটের NID"
+            />
+            <mat-error>{{ getFieldError("nationalId") }}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Location Information Section -->
+      <div class="form-section">
+        <h3 class="section-title">
+          <mat-icon>location_on</mat-icon>
+          ঠিকানা
+        </h3>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>শহর *</mat-label>
+            <input matInput formControlName="city" placeholder="শহরের নাম" />
+            <mat-error>{{ getFieldError("city") }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>এলাকা *</mat-label>
+            <input
+              matInput
+              formControlName="location"
+              placeholder="এলাকার নাম"
+            />
+            <mat-error>{{ getFieldError("location") }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="form-field full-width">
+          <mat-label>সম্পূর্ণ ঠিকানা *</mat-label>
+          <textarea
+            matInput
+            formControlName="address"
+            rows="2"
+            placeholder="বিস্তারিত ঠিকানা লিখুন"
+          ></textarea>
+          <mat-error>{{ getFieldError("address") }}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Medical Information Section -->
+      <div class="form-section">
+        <h3 class="section-title">
+          <mat-icon>medical_services</mat-icon>
+          চিকিৎসা সংক্রান্ত তথ্য
+        </h3>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>রক্তের গ্রুপ *</mat-label>
+            <mat-select formControlName="bloodGroup">
+              <mat-option *ngFor="let group of bloodGroups" [value]="group">
+                {{ group }}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{ getFieldError("bloodGroup") }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>ওজন (কেজি)</mat-label>
+            <input
+              matInput
+              formControlName="weight"
+              type="number"
+              placeholder="45-200 কেজি"
+            />
+            <mat-error>{{ getFieldError("weight") }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>উচ্চতা (সেমি)</mat-label>
+            <input
+              matInput
+              formControlName="height"
+              type="number"
+              placeholder="120-250 সেমি"
+            />
+            <mat-error>{{ getFieldError("height") }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>সর্বশেষ রক্তদানের তারিখ</mat-label>
+            <input
+              matInput
+              [matDatepicker]="lastDonationPicker"
+              formControlName="lastDonationDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="lastDonationPicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #lastDonationPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Emergency Contact Section -->
+      <div class="form-section">
+        <h3 class="section-title">
+          <mat-icon>emergency</mat-icon>
+          জরুরি যোগাযোগ
+        </h3>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>জরুরি যোগাযোগের নাম</mat-label>
+            <input
+              matInput
+              formControlName="emergencyContactName"
+              placeholder="যোগাযোগের ব্যক্তির নাম"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>জরুরি যোগাযোগের ফোন</mat-label>
+            <input
+              matInput
+              formControlName="emergencyContactPhone"
+              placeholder="01XXXXXXXXX"
+            />
+            <mat-error>{{ getFieldError("emergencyContactPhone") }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>সম্পর্ক</mat-label>
+          <input
+            matInput
+            formControlName="emergencyContactRelation"
+            placeholder="যেমন: বাবা, মা, ভাই, বোন"
+          />
+        </mat-form-field>
+      </div>
+
+      <!-- Administrative Section (Only for Admin) -->
+      <div class="form-section" *ngIf="isEdit">
+        <h3 class="section-title">
+          <mat-icon>admin_panel_settings</mat-icon>
+          প্রশাসনিক তথ্য
+        </h3>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>অ্যাকাউন্ট স্ট্যাটাস</mat-label>
+            <mat-select formControlName="accountStatus">
+              <mat-option
+                *ngFor="let status of accountStatuses"
+                [value]="status.value"
+              >
+                {{ status.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>রক্তদানের যোগ্যতা</mat-label>
+            <mat-select formControlName="eligibilityStatus">
+              <mat-option
+                *ngFor="let status of eligibilityStatuses"
+                [value]="status.value"
+              >
+                {{ status.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>মোট রক্তদানের সংখ্যা</mat-label>
+          <input
+            matInput
+            formControlName="totalDonations"
+            type="number"
+            min="0"
+          />
+          <mat-error>{{ getFieldError("totalDonations") }}</mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button (click)="close()" [disabled]="isLoading">বাতিল</button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="!donorForm.valid || isLoading"
+      class="save-btn"
+    >
+      <mat-spinner
+        *ngIf="isLoading"
+        diameter="20"
+        class="button-spinner"
+      ></mat-spinner>
+      <mat-icon *ngIf="!isLoading">{{ isEdit ? "save" : "add" }}</mat-icon>
+      {{ isEdit ? "আপডেট করুন" : "সংরক্ষণ করুন" }}
+    </button>
+  </mat-dialog-actions>
+</div>

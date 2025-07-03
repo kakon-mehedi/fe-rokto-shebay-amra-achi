@@ -26,6 +26,8 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 // Components
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
@@ -95,7 +97,9 @@ const routes: Routes = [
     MatBadgeModule,
     MatTooltipModule,
     MatMenuModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ]
 })
 export class AdminModule { }

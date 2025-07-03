@@ -8,6 +8,7 @@ import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { DonorService } from '../../../shared/services/donor.service';
 import { DonorDetailsModalComponent } from '../donor-details-modal/donor-details-modal.component';
+import { AddEditDonorDialogComponent } from '../add-edit-donor-dialog/add-edit-donor-dialog.component';
 import { 
   AdminDonorResponse, 
   AdminDonorsListResponse, 
@@ -264,8 +265,26 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
   }
 
   addDonor() {
-    // TODO: Open add donor dialog
-    console.log('Add donor');
+    const dialogRef = this.dialog.open(AddEditDonorDialogComponent, {
+      width: '800px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      data: {
+        donor: null,
+        mode: 'add'
+      },
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.success) {
+        this.snackBar.open('নতুন রক্তদাতা সফলভাবে যোগ করা হয়েছে', 'বন্ধ করুন', {
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
+        this.loadDonors(); // Refresh the table
+      }
+    });
   }
 
   viewDonorDetails(donor: DonorAdmin) {
@@ -287,8 +306,26 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
   }
 
   editDonor(donor: DonorAdmin) {
-    // TODO: Open edit donor dialog
-    console.log('Edit donor:', donor);
+    const dialogRef = this.dialog.open(AddEditDonorDialogComponent, {
+      width: '800px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      data: {
+        donor: donor,
+        mode: 'edit'
+      },
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.success) {
+        this.snackBar.open('রক্তদাতার তথ্য সফলভাবে আপডেট করা হয়েছে', 'বন্ধ করুন', {
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
+        this.loadDonors(); // Refresh the table
+      }
+    });
   }
 
   deleteDonor(donor: DonorAdmin) {
