@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DonorService } from '../../../shared/services/donor.service';
 import { AdminDonorResponse } from '../../../shared/interfaces/donor.interface';
+import { BANGLADESH_DISTRICTS, District, Upazila } from '../../../shared/data/bangladesh-data';
 
 interface DialogData {
   donor: AdminDonorResponse | null;
@@ -19,6 +20,11 @@ export class AddEditDonorDialogComponent implements OnInit {
   donorForm!: FormGroup;
   isLoading = false;
   isEdit = false;
+
+  // Bangladesh data
+  allDistricts: District[] = BANGLADESH_DISTRICTS;
+  cities: { value: string, label: string }[] = [];
+  locations: { value: string, label: string }[] = [];
 
   // Form options
   bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
@@ -58,7 +64,50 @@ export class AddEditDonorDialogComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadBangladeshData();
     this.initializeForm();
+    this.setupCityLocationFilter();
+  }
+
+  private loadBangladeshData() {
+    // Load all districts as cities
+    this.cities = this.allDistricts.map(district => ({
+      value: district.name,
+      label: district.name
+    })).sort((a, b) => a.label.localeCompare(b.label, 'bn'));
+
+    // Initially load all upazilas as locations
+    this.locations = this.allDistricts
+      .flatMap(district => district.upazilas)
+      .map(upazila => ({
+        value: upazila.name,
+        label: upazila.name
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label, 'bn'));
+  }
+
+  private setupCityLocationFilter() {
+    // When city changes, update location options
+    this.donorForm.get('city')?.valueChanges.subscribe(selectedCity => {
+      if (selectedCity) {
+        const selectedDistrict = this.allDistricts.find(district => district.name === selectedCity);
+        if (selectedDistrict) {
+          this.locations = selectedDistrict.upazilas.map(upazila => ({
+            value: upazila.name,
+            label: upazila.name
+          })).sort((a, b) => a.label.localeCompare(b.label, 'bn'));
+          
+          // Reset location if it's not valid for selected city
+          const currentLocation = this.donorForm.get('location')?.value;
+          if (currentLocation && !this.locations.find(loc => loc.value === currentLocation)) {
+            this.donorForm.get('location')?.setValue('');
+          }
+        }
+      } else {
+        // If no city selected, show all upazilas
+        this.loadBangladeshData();
+      }
+    });
   }
 
   private initializeForm() {

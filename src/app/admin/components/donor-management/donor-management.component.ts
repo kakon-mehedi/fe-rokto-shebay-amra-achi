@@ -15,6 +15,7 @@ import {
   DonorFilterParams,
   ApiResponse 
 } from '../../../shared/interfaces/donor.interface';
+import { BANGLADESH_DISTRICTS, District, Upazila } from '../../../shared/data/bangladesh-data';
 
 // Interfaces
 interface DonorAdmin extends AdminDonorResponse {}
@@ -87,8 +88,12 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
   activeDonors = 0;
   pendingDonors = 0;
   suspendedDonors = 0;
-  cities: string[] = [];
-  locations: string[] = []; // New locations array
+  
+  // Bangladesh data for filters
+  allDistricts: District[] = BANGLADESH_DISTRICTS;
+  cities: { value: string, label: string }[] = [];
+  locations: { value: string, label: string }[] = [];
+  selectedDistrict: string = '';
 
   // Pagination
   currentPage = 0;
@@ -111,6 +116,7 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
+    this.loadBangladeshData();
     this.setupFilters();
     this.loadDonors();
   }
@@ -137,8 +143,15 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
         this.loadDonors(); // API call with search filter
       });
 
+    // City filter with special handling for location update
+    this.cityFilter.valueChanges.subscribe((selectedCity) => {
+      this.onCityFilterChange(selectedCity);
+      this.currentPage = 0; // Reset to first page
+      this.loadDonors(); // API call with filters
+    });
+
     // Other filters - server-side filtering
-    [this.bloodGroupFilter, this.genderFilter, this.cityFilter, this.locationFilter, this.statusFilter, this.eligibilityFilter]
+    [this.bloodGroupFilter, this.genderFilter, this.locationFilter, this.statusFilter, this.eligibilityFilter]
       .forEach(control => {
         control.valueChanges.subscribe(() => {
           this.currentPage = 0; // Reset to first page
@@ -238,14 +251,53 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
     // This method is kept for any additional stats calculation if needed
   }
 
+  loadBangladeshData() {
+    // Load all districts as cities for filter
+    this.cities = this.allDistricts.map(district => ({
+      value: district.name,
+      label: district.name
+    })).sort((a, b) => a.label.localeCompare(b.label, 'bn'));
+
+    // Initially load all upazilas as locations
+    this.locations = this.allDistricts
+      .flatMap(district => district.upazilas)
+      .map(upazila => ({
+        value: upazila.name,
+        label: upazila.name
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label, 'bn'));
+  }
+
+  onCityFilterChange(selectedCity: string) {
+    if (selectedCity) {
+      // Find the selected district
+      const selectedDistrict = this.allDistricts.find(district => district.name === selectedCity);
+      
+      if (selectedDistrict) {
+        // Update locations to show only upazilas of selected district
+        this.locations = selectedDistrict.upazilas.map(upazila => ({
+          value: upazila.name,
+          label: upazila.name
+        })).sort((a, b) => a.label.localeCompare(b.label, 'bn'));
+        
+        // Reset location filter when city changes
+        this.locationFilter.setValue('');
+      }
+    } else {
+      // If no city selected, show all upazilas
+      this.loadBangladeshData();
+      this.locationFilter.setValue('');
+    }
+  }
+
   extractCities() {
-    const uniqueCities = [...new Set(this.dataSource.data.map(donor => donor.city))];
-    this.cities = uniqueCities.sort();
+    // This method is now replaced by loadBangladeshData()
+    // Keep it for backward compatibility but don't use
   }
 
   extractLocations() {
-    const uniqueLocations = [...new Set(this.dataSource.data.map(donor => donor.location))];
-    this.locations = uniqueLocations.sort();
+    // This method is now replaced by loadBangladeshData()
+    // Keep it for backward compatibility but don't use
   }
 
   clearFilters() {
@@ -256,6 +308,10 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
     this.locationFilter.setValue('');
     this.statusFilter.setValue('');
     this.eligibilityFilter.setValue('');
+    
+    // Reset location data to show all upazilas
+    this.loadBangladeshData();
+    
     // Reset pagination and reload
     this.currentPage = 0;
     if (this.paginator) {

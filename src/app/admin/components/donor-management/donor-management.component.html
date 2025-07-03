@@ -147,8 +147,8 @@
           <mat-label>শহর</mat-label>
           <mat-select [formControl]="cityFilter">
             <mat-option value="">সব শহর</mat-option>
-            <mat-option *ngFor="let city of cities" [value]="city">
-              {{ city }}
+            <mat-option *ngFor="let city of cities" [value]="city.value">
+              {{ city.label }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -158,8 +158,11 @@
           <mat-label>এলাকা</mat-label>
           <mat-select [formControl]="locationFilter">
             <mat-option value="">সব এলাকা</mat-option>
-            <mat-option *ngFor="let location of locations" [value]="location">
-              {{ location }}
+            <mat-option
+              *ngFor="let location of locations"
+              [value]="location.value"
+            >
+              {{ location.label }}
             </mat-option>
           </mat-select>
         </mat-form-field>
