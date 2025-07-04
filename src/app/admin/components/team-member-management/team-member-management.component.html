@@ -1,0 +1,292 @@
+<div class="team-member-management">
+  <div class="header">
+    <h2>দল সদস্য ব্যবস্থাপনা</h2>
+    <button mat-raised-button color="primary" (click)="openAddDialog()">
+      <mat-icon>add</mat-icon>
+      নতুন সদস্য যোগ করুন
+    </button>
+  </div>
+
+  <!-- Search and Filter -->
+  <div class="filter-section">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>নাম বা পদবী অনুসন্ধান করুন</mat-label>
+      <input
+        matInput
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="onSearch()"
+        placeholder="অনুসন্ধান..."
+      />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+    <button mat-raised-button color="accent" (click)="onSearch()">
+      অনুসন্ধান
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="60"></mat-spinner>
+    <p>দল সদস্যদের তথ্য লোড হচ্ছে...</p>
+  </div>
+
+  <!-- Table -->
+  <div class="table-container" *ngIf="!isLoading">
+    <table
+      mat-table
+      [dataSource]="filteredTeamMembers"
+      class="team-members-table"
+    >
+      <!-- Image Column -->
+      <ng-container matColumnDef="image">
+        <th mat-header-cell *matHeaderCellDef>ছবি</th>
+        <td mat-cell *matCellDef="let member">
+          <div class="member-image">
+            <img
+              [src]="
+                member.image ||
+                'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSIjRjVGNUY1Ii8+CjxjaXJjbGUgY3g9IjYwIiBjeT0iNDAiIHI9IjIwIiBmaWxsPSIjQ0NDIi8+CjxwYXRoIGQ9Ik0yNSA5NUw5NSA5NUw4NSA3NUwyNSA3NVoiIGZpbGw9IiNDQ0MiLz4KPC9zdmc+'
+              "
+              [alt]="member.name"
+              [title]="member.name"
+              (error)="onImageError($event)"
+            />
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>নাম</th>
+        <td mat-cell *matCellDef="let member">
+          <div class="member-info">
+            <span class="name">{{ member.name }}</span>
+            <small class="description"
+              >{{ member.description | slice : 0 : 50
+              }}{{ member.description.length > 50 ? "..." : "" }}</small
+            >
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef>পদবী</th>
+        <td mat-cell *matCellDef="let member">{{ member.position }}</td>
+      </ng-container>
+
+      <!-- Qualification Column -->
+      <ng-container matColumnDef="qualification">
+        <th mat-header-cell *matHeaderCellDef>যোগ্যতা</th>
+        <td mat-cell *matCellDef="let member">
+          {{ member.qualification || "N/A" }}
+        </td>
+      </ng-container>
+
+      <!-- Display Order Column -->
+      <ng-container matColumnDef="displayOrder">
+        <th mat-header-cell *matHeaderCellDef>ক্রম</th>
+        <td mat-cell *matCellDef="let member">{{ member.displayOrder }}</td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="isActive">
+        <th mat-header-cell *matHeaderCellDef>স্ট্যাটাস</th>
+        <td mat-cell *matCellDef="let member">
+          <mat-slide-toggle
+            [checked]="member.isActive"
+            (change)="toggleStatus(member)"
+            [color]="'primary'"
+          >
+          </mat-slide-toggle>
+          <span
+            class="status-text"
+            [class.active]="member.isActive"
+            [class.inactive]="!member.isActive"
+          >
+            {{ member.isActive ? "সক্রিয়" : "নিষ্ক্রিয়" }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>অ্যাকশন</th>
+        <td mat-cell *matCellDef="let member">
+          <button
+            mat-icon-button
+            color="primary"
+            class="edit-btn"
+            (click)="openEditDialog(member)"
+            matTooltip="সম্পাদনা"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            class="delete-btn"
+            (click)="deleteTeamMember(member._id!, member.name)"
+            matTooltip="মুছে দিন"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <!-- No Data -->
+    <div *ngIf="filteredTeamMembers.length === 0" class="no-data">
+      <mat-icon>group</mat-icon>
+      <h3>কোন দল সদস্য পাওয়া যায়নি</h3>
+      <p>নতুন দল সদস্য যোগ করুন</p>
+    </div>
+
+    <!-- Pagination -->
+    <mat-paginator
+      *ngIf="filteredTeamMembers.length > 0"
+      [length]="totalItems"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      [pageIndex]="currentPage - 1"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+    >
+    </mat-paginator>
+  </div>
+</div>
+
+<!-- Add/Edit Dialog Template -->
+<ng-template #addEditDialog>
+  <div class="add-edit-dialog">
+    <h2 mat-dialog-title>
+      {{ isEditing ? "দল সদস্য সম্পাদনা" : "নতুন দল সদস্য যোগ করুন" }}
+    </h2>
+
+    <form [formGroup]="teamMemberForm" (ngSubmit)="onSubmit()">
+      <mat-dialog-content>
+        <!-- Image Upload -->
+        <div class="image-upload-section">
+          <div class="image-preview" *ngIf="imagePreview">
+            <img [src]="imagePreview" alt="Preview" />
+          </div>
+          <div class="upload-area" [class.has-image]="imagePreview">
+            <input
+              type="file"
+              #fileInput
+              (change)="onFileSelected($event)"
+              accept="image/*"
+              hidden
+            />
+            <button
+              type="button"
+              mat-stroked-button
+              (click)="fileInput.click()"
+            >
+              <mat-icon>cloud_upload</mat-icon>
+              {{ imagePreview ? "ছবি পরিবর্তন করুন" : "ছবি আপলোড করুন" }}
+            </button>
+            <small>JPG, PNG, WEBP (সর্বোচ্চ ৫MB)</small>
+          </div>
+        </div>
+
+        <!-- Form Fields -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>নাম *</mat-label>
+            <input
+              matInput
+              formControlName="name"
+              placeholder="সদস্যের নাম লিখুন"
+            />
+            <mat-error>{{ getErrorMessage("name") }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>পদবী *</mat-label>
+            <input
+              matInput
+              formControlName="position"
+              placeholder="পদবী লিখুন"
+            />
+            <mat-error>{{ getErrorMessage("position") }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>যোগ্যতা</mat-label>
+            <input
+              matInput
+              formControlName="qualification"
+              placeholder="শিক্ষাগত যোগ্যতা লিখুন"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>বিবরণ *</mat-label>
+            <textarea
+              matInput
+              formControlName="description"
+              rows="3"
+              placeholder="সংক্ষিপ্ত বিবরণ লিখুন"
+            ></textarea>
+            <mat-error>{{ getErrorMessage("description") }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>প্রদর্শন ক্রম</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="displayOrder"
+              placeholder="0"
+            />
+            <mat-error>{{ getErrorMessage("displayOrder") }}</mat-error>
+          </mat-form-field>
+
+          <div class="half-width">
+            <mat-checkbox formControlName="isActive" color="primary">
+              সক্রিয় রাখুন
+            </mat-checkbox>
+          </div>
+        </div>
+      </mat-dialog-content>
+
+      <mat-dialog-actions align="end">
+        <button
+          type="button"
+          mat-button
+          (click)="closeDialog()"
+          [disabled]="isLoading"
+        >
+          বাতিল
+        </button>
+        <button
+          type="submit"
+          mat-raised-button
+          color="primary"
+          [disabled]="isLoading || teamMemberForm.invalid"
+        >
+          <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+          {{
+            isLoading
+              ? "সংরক্ষণ হচ্ছে..."
+              : isEditing
+              ? "আপডেট করুন"
+              : "সংরক্ষণ করুন"
+          }}
+        </button>
+      </mat-dialog-actions>
+    </form>
+  </div>
+</ng-template>

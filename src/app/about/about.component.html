@@ -217,14 +217,45 @@
         <h2 class="section-title">পরিচালনা পর্ষদ ও কর্মকর্তাবৃন্দ</h2>
       </div>
 
-      <div class="team-grid">
+      <!-- Loading State -->
+      <div *ngIf="isLoadingTeamMembers" class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>দল সদস্যদের তথ্য লোড হচ্ছে...</p>
+      </div>
+
+      <!-- Team Members Grid -->
+      <div
+        class="team-grid"
+        *ngIf="!isLoadingTeamMembers && teamMembers.length > 0"
+      >
         <div class="team-card" *ngFor="let member of teamMembers">
-          <img [src]="member.image" [alt]="member.name" class="team-image" />
+          <img
+            [src]="
+              member.image ||
+              'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSIjRjVGNUY1Ii8+CjxjaXJjbGUgY3g9IjYwIiBjeT0iNDAiIHI9IjIwIiBmaWxsPSIjQ0NDIi8+CjxwYXRoIGQ9Ik0yNSA5NUw5NSA5NUw4NSA3NUwyNSA3NVoiIGZpbGw9IiNDQ0MiLz4KPC9zdmc+'
+            "
+            [alt]="member.name"
+            [title]="member.name"
+            class="team-image"
+            (error)="onImageError($event)"
+          />
           <h3 class="team-name">{{ member.name }}</h3>
           <p class="team-position">{{ member.position }}</p>
-          <p class="team-qualification">{{ member.qualification }}</p>
+          <p class="team-qualification" *ngIf="member.qualification">
+            {{ member.qualification }}
+          </p>
           <p class="team-description">{{ member.description }}</p>
         </div>
+      </div>
+
+      <!-- No Data Message -->
+      <div
+        *ngIf="!isLoadingTeamMembers && teamMembers.length === 0"
+        class="no-data-message"
+      >
+        <mat-icon>group_off</mat-icon>
+        <h3>কোন দল সদস্যের তথ্য পাওয়া যায়নি</h3>
+        <p>এই মুহূর্তে দল সদস্যদের তথ্য উপলব্ধ নেই।</p>
       </div>
     </section>
 
@@ -314,7 +345,7 @@
               <mat-icon>location_on</mat-icon>
               <div>
                 <h4>প্রধান কার্যালয়</h4>
-                <p>বরাব, তারবো, রূপগঞ্জ, নারায়নগঞ্জ। </p>
+                <p>বরাব, তারবো, রূপগঞ্জ, নারায়নগঞ্জ।</p>
               </div>
             </div>
             <div class="contact-item">

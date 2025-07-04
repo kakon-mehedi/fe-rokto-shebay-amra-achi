@@ -28,6 +28,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 // Components
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
@@ -38,6 +40,7 @@ import { DashboardStatsComponent } from './components/dashboard-stats/dashboard-
 import { AddEditDonorDialogComponent } from './components/add-edit-donor-dialog/add-edit-donor-dialog.component';
 import { DonorDetailsModalComponent } from './components/donor-details-modal/donor-details-modal.component';
 import { AdminProfileComponent } from './components/admin-profile/admin-profile.component';
+import { TeamMemberManagementComponent } from './components/team-member-management/team-member-management.component';
 
 // Shared Module
 import { SharedModule } from '../shared/shared.module';
@@ -55,6 +58,7 @@ const routes: Routes = [
       { path: 'dashboard', component: AdminDashboardComponent },
       { path: 'donors', component: DonorManagementComponent },
       { path: 'users', component: UserManagementComponent },
+      { path: 'team-members', component: TeamMemberManagementComponent },
       { path: 'profile', component: AdminProfileComponent },
     ]
   }
@@ -69,7 +73,8 @@ const routes: Routes = [
     DashboardStatsComponent,
     AddEditDonorDialogComponent,
     DonorDetailsModalComponent,
-    AdminProfileComponent
+    AdminProfileComponent,
+    TeamMemberManagementComponent
   ],
   imports: [
     CommonModule,
@@ -102,7 +107,9 @@ const routes: Routes = [
     MatMenuModule,
     MatFormFieldModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatSlideToggleModule,
+    MatCheckboxModule
   ]
 })
 export class AdminModule { }

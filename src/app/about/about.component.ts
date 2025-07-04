@@ -1,4 +1,7 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { TeamMemberService, TeamMember } from '../shared/services/team-member.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-about',
@@ -6,54 +9,11 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
   styleUrls: ['./about.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class AboutComponent implements OnInit {
+export class AboutComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
 
-  teamMembers = [
-    {
-      name: 'মোঃ শাহীন মাহমুদ ',
-      position: 'প্রতিষ্ঠাতা ও চেয়ারম্যান',
-      qualification: '',
-      image: './../assets/images/team/chairman.jpg',
-      description: 'সামাজিক কাজে ১০ বছরের অভিজ্ঞতা'
-    },
-    {
-      name: 'মোঃ রেজওয়ান খন্দকার',
-      position: 'মেডিকেল অ্যাডভাইজার',
-      qualification: 'physiotherapist',
-      image: 'assets/images/team/medical-advisor.jpg',
-      description: 'ফিজিওথেরাপিস্ট'
-    },
-
-    {
-        name: 'মোঃ শহীদ আলম',
-        position: 'উপদেষ্টা',
-        qualification: 'Honors in Business Administration',
-        image: '../../assets/images/team/shahid_alam.jpg',
-        description: 'সমাজকর্ম বিশেষজ্ঞ এবং স্বেচ্ছাসেবক দল পরিচালক।'
-      },
-    {
-      name: 'মো. রিফাত হোসেন ',
-      position: 'ফার্মাসিস্ট ',
-      qualification: 'Degree in Accounting',
-      image: 'assets/images/team/executive-director.jpg',
-      description: 'সমাজসেবক এবং ফার্মাসিস্ট।'
-    },
-    
-    {
-      name: 'মোঃ মেহেদী হাসান কাকন',
-      position: 'প্রযুক্তি পরিচালক ও উপদেষ্টা ',
-      qualification: 'BSc in CSE, RUET',
-      image: '../../assets/images/team/tech-director.jpg',
-      description: 'সফটওয়্যার ডেভেলপমেন্ট এবং সিস্টেম ডিজাইনে ৬ বছরের অভিজ্ঞতা।'
-    },
-    {
-      name: 'মোঃ মাসুদুর রহমান ',
-      position: 'ডেভেলপার এবং ডিজাইনার',
-      qualification: 'BSc in CSE, NUB',
-      image: '../../assets/images/team/masud.webp',
-      description: 'সফটওয়্যার ডেভেলপমেন্টে ৩ বছরের অভিজ্ঞতা।'
-    }
-  ];
+  teamMembers: TeamMember[] = [];
+  isLoadingTeamMembers = false;
 
   achievements = [
     {
@@ -111,9 +71,39 @@ export class AboutComponent implements OnInit {
     }
   ];
 
-  constructor() { }
+  constructor(private teamMemberService: TeamMemberService) { }
 
   ngOnInit(): void {
+    this.loadTeamMembers();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  loadTeamMembers(): void {
+    if (this.isLoadingTeamMembers) {
+      return; // Prevent multiple concurrent requests
+    }
+    
+    this.isLoadingTeamMembers = true;
+    this.teamMemberService.getAllTeamMembers()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.teamMembers = response.data;
+          }
+          this.isLoadingTeamMembers = false;
+        },
+        error: (error) => {
+          console.error('Error loading team members:', error);
+          this.isLoadingTeamMembers = false;
+          // Fallback to empty array or show error message
+          this.teamMembers = [];
+        }
+      });
   }
 
   scrollToSection(sectionId: string): void {
@@ -123,6 +113,13 @@ export class AboutComponent implements OnInit {
         behavior: 'smooth', 
         block: 'start' 
       });
+    }
+  }
+
+  onImageError(event: any): void {
+    if (event.target && event.target.src !== 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSIjRjVGNUY1Ii8+CjxjaXJjbGUgY3g9IjYwIiBjeT0iNDAiIHI9IjIwIiBmaWxsPSIjQ0NDIi8+CjxwYXRoIGQ9Ik0yNSA5NUw5NSA5NUw4NSA3NUwyNSA3NVoiIGZpbGw9IiNDQ0MiLz4KPC9zdmc+') {
+      // Use inline SVG as fallback to prevent infinite loop
+      event.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSIjRjVGNUY1Ii8+CjxjaXJjbGUgY3g9IjYwIiBjeT0iNDAiIHI9IjIwIiBmaWxsPSIjQ0NDIi8+CjxwYXRoIGQ9Ik0yNSA5NUw5NSA5NUw4NSA3NUwyNSA3NVoiIGZpbGw9IiNDQ0MiLz4KPC9zdmc+';
     }
   }
 }
