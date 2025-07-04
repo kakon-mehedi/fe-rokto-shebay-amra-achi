@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import * as XLSX from 'xlsx';
 import { DonorService } from '../../../shared/services/donor.service';
 import { DonorDetailsModalComponent } from '../donor-details-modal/donor-details-modal.component';
 import { AddEditDonorDialogComponent } from '../add-edit-donor-dialog/add-edit-donor-dialog.component';
@@ -460,9 +461,287 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
     }
   }
 
-  exportData() {
-    // TODO: Export filtered data to Excel/CSV
-    console.log('Export data');
+  exportData(format: 'excel' | 'csv' = 'excel') {
+    // Show loading state
+    this.isLoading = true;
+
+    // First get all donors with current filters (without pagination)
+    const params: DonorFilterParams = {
+      page: 1,
+      limit: 10000 // Get all records
+    };
+
+    // Add current filters
+    const searchValue = this.searchControl.value;
+    if (searchValue) {
+      params.search = searchValue;
+    }
+
+    const bloodGroup = this.bloodGroupFilter.value;
+    if (bloodGroup) {
+      params.bloodGroup = bloodGroup;
+    }
+
+    const city = this.cityFilter.value;
+    if (city) {
+      params.city = city;
+    }
+
+    const location = this.locationFilter.value;
+    if (location) {
+      params.location = location;
+    }
+
+    const gender = this.genderFilter.value;
+    if (gender) {
+      params.gender = gender;
+    }
+
+    const accountStatus = this.statusFilter.value;
+    if (accountStatus) {
+      params.accountStatus = accountStatus;
+    }
+
+    const eligibilityStatus = this.eligibilityFilter.value;
+    if (eligibilityStatus) {
+      params.eligibilityStatus = eligibilityStatus;
+    }
+
+    this.donorService.getAllDonorsForAdmin(params).subscribe({
+      next: (response: ApiResponse<AdminDonorsListResponse>) => {
+        if (response.success) {
+          if (format === 'excel') {
+            this.exportToExcel(response.data.donors);
+          } else {
+            this.exportToCSV(response.data.donors);
+          }
+        } else {
+          this.snackBar.open('এক্সপোর্ট করতে সমস্যা হয়েছে', 'বন্ধ করুন', {
+            duration: 3000,
+            panelClass: ['error-snackbar']
+          });
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error exporting data:', error);
+        this.snackBar.open('ডেটা এক্সপোর্ট করতে সমস্যা হয়েছে', 'বন্ধ করুন', {
+          duration: 3000,
+          panelClass: ['error-snackbar']
+        });
+        this.isLoading = false;
+      }
+    });
+  }
+
+  private exportToExcel(donors: DonorAdmin[]) {
+    // Prepare data for export
+    const exportData = donors.map((donor, index) => ({
+      'ক্রমিক নং': index + 1,
+      'নাম': donor.name,
+      'ফোন': donor.phone,
+      'ইমেইল': donor.email || 'N/A',
+      'রক্তের গ্রুপ': donor.bloodGroup,
+      'লিঙ্গ': this.getGenderLabel(donor.gender),
+      'জন্ম তারিখ': donor.dateOfBirth ? new Date(donor.dateOfBirth).toLocaleDateString('bn-BD') : 'N/A',
+      'বয়স': donor.dateOfBirth ? this.calculateAge(donor.dateOfBirth) : 'N/A',
+      'শহর': donor.city,
+      'এলাকা': donor.location,
+      'ঠিকানা': donor.address,
+      'ধর্ম': donor.religion,
+      'পেশা': donor.profession || 'N/A',
+      'ওজন (কেজি)': donor.weight || 'N/A',
+      'উচ্চতা (সেমি)': donor.height || 'N/A',
+      'জাতীয় পরিচয়পত্র': donor.nationalId || 'N/A',
+      'মোট রক্তদান': donor.totalDonations,
+      'শেষ রক্তদানের তারিখ': donor.lastDonationDate ? this.formatDate(donor.lastDonationDate) : 'কোনো দান নেই',
+      'শেষ রক্তদানের পর দিন': donor.lastDonationDate ? this.getDaysSinceLastDonation(donor.lastDonationDate) + ' দিন আগে' : 'N/A',
+      'পরবর্তী যোগ্যতার তারিখ': donor.nextEligibleDate ? this.formatDate(donor.nextEligibleDate) : 'N/A',
+      'রক্তদানের যোগ্যতা': this.getEligibilityLabel(this.getRealEligibilityStatus(donor)),
+      'অ্যাকাউন্ট স্ট্যাটাস': this.getStatusLabel(donor.accountStatus),
+      'নিবন্ধনের তারিখ': donor.createdAt ? this.formatDate(donor.createdAt) : 'N/A',
+      'সর্বশেষ আপডেট': donor.updatedAt ? this.formatDate(donor.updatedAt) : 'N/A',
+      'জরুরি যোগাযোগের নাম': donor.emergencyContact?.name || 'N/A',
+      'জরুরি যোগাযোগের ফোন': donor.emergencyContact?.phone || 'N/A',
+      'জরুরি যোগাযোগের সম্পর্ক': donor.emergencyContact?.relation || 'N/A',
+      'মোট রক্তদানের ইতিহাস': donor.donationHistory ? donor.donationHistory.length : 0
+    }));
+
+    // Create workbook and worksheet
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    
+    // Set column widths
+    const colWidths = [
+      { wch: 8 },  // ক্রমিক নং
+      { wch: 20 }, // নাম
+      { wch: 15 }, // ফোন
+      { wch: 25 }, // ইমেইল
+      { wch: 10 }, // রক্তের গ্রুপ
+      { wch: 8 },  // লিঙ্গ
+      { wch: 12 }, // জন্ম তারিখ
+      { wch: 6 },  // বয়স
+      { wch: 15 }, // শহর
+      { wch: 15 }, // এলাকা
+      { wch: 30 }, // ঠিকানা
+      { wch: 10 }, // ধর্ম
+      { wch: 15 }, // পেশা
+      { wch: 8 },  // ওজন
+      { wch: 8 },  // উচ্চতা
+      { wch: 15 }, // জাতীয় পরিচয়পত্র
+      { wch: 10 }, // মোট রক্তদান
+      { wch: 15 }, // শেষ রক্তদানের তারিখ
+      { wch: 15 }, // শেষ রক্তদানের পর দিন
+      { wch: 18 }, // পরবর্তী যোগ্যতার তারিখ
+      { wch: 15 }, // রক্তদানের যোগ্যতা
+      { wch: 12 }, // অ্যাকাউন্ট স্ট্যাটাস
+      { wch: 15 }, // নিবন্ধনের তারিখ
+      { wch: 15 }, // সর্বশেষ আপডেট
+      { wch: 20 }, // জরুরি যোগাযোগের নাম
+      { wch: 15 }, // জরুরি যোগাযোগের ফোন
+      { wch: 15 }, // জরুরি যোগাযোগের সম্পর্ক
+      { wch: 12 }  // মোট রক্তদানের ইতিহাস
+    ];
+    ws['!cols'] = colWidths;
+
+    // Add worksheet to workbook
+    XLSX.utils.book_append_sheet(wb, ws, 'রক্তদাতার তালিকা');
+
+    // Generate filename with current date and filters
+    const today = new Date();
+    const dateStr = today.toISOString().split('T')[0];
+    let filename = `রক্তদাতার_তালিকা_${dateStr}`;
+    
+    // Add filter info to filename if any filters are applied
+    const appliedFilters: string[] = [];
+    if (this.searchControl.value) appliedFilters.push('অনুসন্ধান');
+    if (this.bloodGroupFilter.value) appliedFilters.push(this.bloodGroupFilter.value);
+    if (this.cityFilter.value) appliedFilters.push(this.cityFilter.value);
+    if (this.genderFilter.value) appliedFilters.push(this.getGenderLabel(this.genderFilter.value));
+    if (this.statusFilter.value) appliedFilters.push(this.getStatusLabel(this.statusFilter.value));
+    
+    if (appliedFilters.length > 0) {
+      filename += `_ফিল্টার_${appliedFilters.join('_')}`;
+    }
+
+    // Save the file
+    XLSX.writeFile(wb, `${filename}.xlsx`);
+
+    // Show success message
+    this.snackBar.open(`${donors.length}টি রক্তদাতার তথ্য সফলভাবে এক্সপোর্ট করা হয়েছে`, 'বন্ধ করুন', {
+      duration: 5000,
+      panelClass: ['success-snackbar']
+    });
+  }
+
+  private exportToCSV(donors: DonorAdmin[]) {
+    // Prepare data for CSV export
+    const csvData = donors.map((donor, index) => [
+      index + 1, // ক্রমিক নং
+      donor.name, // নাম
+      donor.phone, // ফোন
+      donor.email || 'N/A', // ইমেইল
+      donor.bloodGroup, // রক্তের গ্রুপ
+      this.getGenderLabel(donor.gender), // লিঙ্গ
+      donor.dateOfBirth ? new Date(donor.dateOfBirth).toLocaleDateString('bn-BD') : 'N/A', // জন্ম তারিখ
+      donor.dateOfBirth ? this.calculateAge(donor.dateOfBirth) : 'N/A', // বয়স
+      donor.city, // শহর
+      donor.location, // এলাকা
+      donor.address, // ঠিকানা
+      donor.religion, // ধর্ম
+      donor.profession || 'N/A', // পেশা
+      donor.weight || 'N/A', // ওজন
+      donor.height || 'N/A', // উচ্চতা
+      donor.nationalId || 'N/A', // জাতীয় পরিচয়পত্র
+      donor.totalDonations, // মোট রক্তদান
+      donor.lastDonationDate ? this.formatDate(donor.lastDonationDate) : 'কোনো দান নেই', // শেষ রক্তদানের তারিখ
+      donor.lastDonationDate ? this.getDaysSinceLastDonation(donor.lastDonationDate) + ' দিন আগে' : 'N/A', // শেষ রক্তদানের পর দিন
+      donor.nextEligibleDate ? this.formatDate(donor.nextEligibleDate) : 'N/A', // পরবর্তী যোগ্যতার তারিখ
+      this.getEligibilityLabel(this.getRealEligibilityStatus(donor)), // রক্তদানের যোগ্যতা
+      this.getStatusLabel(donor.accountStatus), // অ্যাকাউন্ট স্ট্যাটাস
+      donor.createdAt ? this.formatDate(donor.createdAt) : 'N/A', // নিবন্ধনের তারিখ
+      donor.updatedAt ? this.formatDate(donor.updatedAt) : 'N/A', // সর্বশেষ আপডেট
+      donor.emergencyContact?.name || 'N/A', // জরুরি যোগাযোগের নাম
+      donor.emergencyContact?.phone || 'N/A', // জরুরি যোগাযোগের ফোন
+      donor.emergencyContact?.relation || 'N/A', // জরুরি যোগাযোগের সম্পর্ক
+      donor.donationHistory ? donor.donationHistory.length : 0 // মোট রক্তদানের ইতিহাস
+    ]);
+
+    // CSV Headers
+    const headers = [
+      'ক্রমিক নং',
+      'নাম',
+      'ফোন',
+      'ইমেইল',
+      'রক্তের গ্রুপ',
+      'লিঙ্গ',
+      'জন্ম তারিখ',
+      'বয়স',
+      'শহর',
+      'এলাকা',
+      'ঠিকানা',
+      'ধর্ম',
+      'পেশা',
+      'ওজন (কেজি)',
+      'উচ্চতা (সেমি)',
+      'জাতীয় পরিচয়পত্র',
+      'মোট রক্তদান',
+      'শেষ রক্তদানের তারিখ',
+      'শেষ রক্তদানের পর দিন',
+      'পরবর্তী যোগ্যতার তারিখ',
+      'রক্তদানের যোগ্যতা',
+      'অ্যাকাউন্ট স্ট্যাটাস',
+      'নিবন্ধনের তারিখ',
+      'সর্বশেষ আপডেট',
+      'জরুরি যোগাযোগের নাম',
+      'জরুরি যোগাযোগের ফোন',
+      'জরুরি যোগাযোগের সম্পর্ক',
+      'মোট রক্তদানের ইতিহাস'
+    ];
+
+    // Create worksheet and workbook
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([headers, ...csvData]);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'রক্তদাতার তালিকা');
+
+    // Generate filename with current date and filters
+    const today = new Date();
+    const dateStr = today.toISOString().split('T')[0];
+    let filename = `রক্তদাতার_তালিকা_${dateStr}`;
+    
+    // Add filter info to filename if any filters are applied
+    const appliedFilters: string[] = [];
+    if (this.searchControl.value) appliedFilters.push('অনুসন্ধান');
+    if (this.bloodGroupFilter.value) appliedFilters.push(this.bloodGroupFilter.value);
+    if (this.cityFilter.value) appliedFilters.push(this.cityFilter.value);
+    if (this.genderFilter.value) appliedFilters.push(this.getGenderLabel(this.genderFilter.value));
+    if (this.statusFilter.value) appliedFilters.push(this.getStatusLabel(this.statusFilter.value));
+    
+    if (appliedFilters.length > 0) {
+      filename += `_ফিল্টার_${appliedFilters.join('_')}`;
+    }
+
+    // Save the file as CSV
+    XLSX.writeFile(wb, `${filename}.csv`);
+
+    // Show success message
+    this.snackBar.open(`${donors.length}টি রক্তদাতার তথ্য CSV ফরম্যাটে সফলভাবে এক্সপোর্ট করা হয়েছে`, 'বন্ধ করুন', {
+      duration: 5000,
+      panelClass: ['success-snackbar']
+    });
+  }
+
+  private calculateAge(dateOfBirth: string): number {
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    return age;
   }
 
   refreshData() {

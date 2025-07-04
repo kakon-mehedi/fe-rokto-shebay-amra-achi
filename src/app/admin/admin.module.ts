@@ -37,6 +37,7 @@ import { UserManagementComponent } from './components/user-management/user-manag
 import { DashboardStatsComponent } from './components/dashboard-stats/dashboard-stats.component';
 import { AddEditDonorDialogComponent } from './components/add-edit-donor-dialog/add-edit-donor-dialog.component';
 import { DonorDetailsModalComponent } from './components/donor-details-modal/donor-details-modal.component';
+import { AdminProfileComponent } from './components/admin-profile/admin-profile.component';
 
 // Shared Module
 import { SharedModule } from '../shared/shared.module';
@@ -54,6 +55,7 @@ const routes: Routes = [
       { path: 'dashboard', component: AdminDashboardComponent },
       { path: 'donors', component: DonorManagementComponent },
       { path: 'users', component: UserManagementComponent },
+      { path: 'profile', component: AdminProfileComponent },
     ]
   }
 ];
@@ -66,7 +68,8 @@ const routes: Routes = [
     UserManagementComponent,
     DashboardStatsComponent,
     AddEditDonorDialogComponent,
-    DonorDetailsModalComponent
+    DonorDetailsModalComponent,
+    AdminProfileComponent
   ],
   imports: [
     CommonModule,

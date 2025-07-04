@@ -19,10 +19,27 @@
           <mat-icon>person_add</mat-icon>
           নতুন রক্তদাতা
         </button>
-        <button mat-stroked-button (click)="exportData()" class="export-btn">
+        <button
+          mat-stroked-button
+          [matMenuTriggerFor]="exportMenu"
+          class="export-btn"
+          [disabled]="isLoading"
+        >
           <mat-icon>download</mat-icon>
           এক্সপোর্ট
+          <mat-icon>arrow_drop_down</mat-icon>
         </button>
+
+        <mat-menu #exportMenu="matMenu">
+          <button mat-menu-item (click)="exportData('excel')">
+            <mat-icon>table_view</mat-icon>
+            <span>Excel (.xlsx)</span>
+          </button>
+          <button mat-menu-item (click)="exportData('csv')">
+            <mat-icon>text_snippet</mat-icon>
+            <span>CSV (.csv)</span>
+          </button>
+        </mat-menu>
         <button
           mat-icon-button
           (click)="refreshData()"

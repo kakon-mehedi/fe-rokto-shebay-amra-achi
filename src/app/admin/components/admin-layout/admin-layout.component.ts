@@ -41,6 +41,7 @@ export class AdminLayoutComponent implements OnInit {
     { icon: 'dashboard', label: 'ড্যাশবোর্ড', route: '/admin/dashboard' },
     { icon: 'people', label: 'রক্তদাতা ব্যবস্থাপনা', route: '/admin/donors' },
     { icon: 'person', label: 'ব্যবহারকারী ব্যবস্থাপনা', route: '/admin/users' },
+    { icon: 'account_circle', label: 'প্রোফাইল', route: '/admin/profile' },
     { icon: 'analytics', label: 'রিপোর্ট ও পরিসংখ্যান', route: '/admin/reports' },
     { icon: 'settings', label: 'সেটিংস', route: '/admin/settings' },
   ];
