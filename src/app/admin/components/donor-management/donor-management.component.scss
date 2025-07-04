@@ -418,19 +418,33 @@
           }
         }
 
+        .eligibility-cell {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .eligibility-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
         .eligibility-chip {
           padding: 4px 12px;
           border-radius: 20px;
           font-weight: 600;
           font-size: 11px;
           display: inline-block;
+          text-align: center;
 
           &.eligibility-eligible {
             background: #e8f5e8;
             color: #2e7d32;
           }
 
-          &.eligibility-not-eligible {
+          &.eligibility-not-eligible,
+          &.eligibility-temporarily-ineligible {
             background: #ffebee;
             color: #c62828;
           }
@@ -439,6 +453,14 @@
             background: #f5f5f5;
             color: #666;
           }
+        }
+        
+        .days-remaining {
+          display: block;
+          color: #666;
+          font-size: 11px;
+          margin-top: 2px;
+          text-align: center;
         }
 
         .action-buttons {

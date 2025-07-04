@@ -234,6 +234,14 @@ export class DonorService {
     return this.http.put(`${this.API_BASE_URL}/donors/${donorId}/reject`, {}, { headers });
   }
 
+  // Update donor status (admin only)
+  updateDonorStatus(donorId: string, status: string): Observable<any> {
+    const updateData = {
+      accountStatus: status
+    };
+    return this.updateDonorAsAdmin(donorId, updateData);
+  }
+
   // Helper Methods
   isAuthenticated(): boolean {
     return !!localStorage.getItem('donor_access_token') && !!this.currentDonorSubject.value;

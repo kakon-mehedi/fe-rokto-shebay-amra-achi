@@ -341,13 +341,32 @@
           <!-- Eligibility Status Column -->
           <ng-container matColumnDef="eligibilityStatus">
             <th mat-header-cell *matHeaderCellDef>রক্তদানের যোগ্যতা</th>
-            <td mat-cell *matCellDef="let donor">
-              <span
-                class="eligibility-chip"
-                [ngClass]="getEligibilityClass(donor.eligibilityStatus)"
-              >
-                {{ getEligibilityLabel(donor.eligibilityStatus) }}
-              </span>
+            <td mat-cell *matCellDef="let donor" class="eligibility-cell">
+              <div class="eligibility-container">
+                <span
+                  class="eligibility-chip"
+                  [ngClass]="
+                    getEligibilityClass(getRealEligibilityStatus(donor))
+                  "
+                  [matTooltip]="
+                    donor.lastDonationDate
+                      ? 'শেষ রক্তদান: ' + formatDate(donor.lastDonationDate)
+                      : 'কোনো দান নেই'
+                  "
+                >
+                  {{ getEligibilityLabel(getRealEligibilityStatus(donor)) }}
+                </span>
+                <span
+                  *ngIf="
+                    donor.lastDonationDate &&
+                    getRealEligibilityStatus(donor) === 'TEMPORARILY_INELIGIBLE'
+                  "
+                  class="days-remaining"
+                >
+                  {{ 120 - getDaysSinceLastDonation(donor.lastDonationDate) }}
+                  দিন বাকি
+                </span>
+              </div>
             </td>
           </ng-container>
 

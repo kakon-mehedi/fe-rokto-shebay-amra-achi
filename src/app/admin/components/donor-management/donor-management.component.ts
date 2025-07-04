@@ -384,14 +384,80 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
     });
   }
 
-  deleteDonor(donor: DonorAdmin) {
-    // TODO: Implement delete confirmation and API call
-    console.log('Delete donor:', donor);
+  // Update donor status
+  updateStatus(donor: DonorAdmin, newStatus: string) {
+    // Display confirmation dialog
+    const statusLabel = this.getStatusLabel(newStatus);
+    const confirmMessage = newStatus === 'SUSPENDED' ? 
+      `আপনি কি নিশ্চিত যে ${donor.name} কে স্থগিত করতে চান?` : 
+      `আপনি কি নিশ্চিত যে ${donor.name} কে ${statusLabel} করতে চান?`;
+
+    if (confirm(confirmMessage)) {
+      this.isLoading = true;
+      
+      this.donorService.updateDonorStatus(donor._id, newStatus).subscribe({
+        next: (response: any) => {
+          this.snackBar.open(`রক্তদাতার স্ট্যাটাস ${statusLabel} করা হয়েছে`, 'বন্ধ করুন', {
+            duration: 3000,
+            panelClass: ['success-snackbar']
+          });
+          
+          // Update the donor in the dataSource
+          const index = this.dataSource.data.findIndex(d => d._id === donor._id);
+          if (index !== -1) {
+            const updatedData = [...this.dataSource.data];
+            updatedData[index] = { 
+              ...updatedData[index], 
+              accountStatus: newStatus as 'ACTIVE' | 'PENDING' | 'SUSPENDED' 
+            };
+            this.dataSource.data = updatedData;
+          }
+          
+          this.isLoading = false;
+          this.loadDonors(); // Refresh data
+        },
+        error: (error) => {
+          console.error('Error updating donor status:', error);
+          this.snackBar.open('স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে', 'বন্ধ করুন', {
+            duration: 3000,
+            panelClass: ['error-snackbar']
+          });
+          this.isLoading = false;
+        }
+      });
+    }
   }
 
-  updateStatus(donor: DonorAdmin, status: string) {
-    // TODO: Update donor status
-    console.log('Update status:', donor, status);
+  // Delete donor
+  deleteDonor(donor: DonorAdmin) {
+    // Display confirmation dialog
+    if (confirm(`আপনি কি নিশ্চিত যে আপনি ${donor.name} কে মুছে ফেলতে চান? এই কাজটি পূর্বাবস্থায় ফেরানো যাবে না।`)) {
+      this.isLoading = true;
+      
+      this.donorService.deleteDonorAsAdmin(donor._id).subscribe({
+        next: (response: any) => {
+          this.snackBar.open('রক্তদাতা সফলভাবে মুছে ফেলা হয়েছে', 'বন্ধ করুন', {
+            duration: 3000,
+            panelClass: ['success-snackbar']
+          });
+          
+          // Remove the donor from the dataSource
+          const updatedData = this.dataSource.data.filter(d => d._id !== donor._id);
+          this.dataSource.data = updatedData;
+          
+          this.isLoading = false;
+          this.loadDonors(); // Refresh data and statistics
+        },
+        error: (error) => {
+          console.error('Error deleting donor:', error);
+          this.snackBar.open('রক্তদাতা মুছে ফেলতে সমস্যা হয়েছে', 'বন্ধ করুন', {
+            duration: 3000,
+            panelClass: ['error-snackbar']
+          });
+          this.isLoading = false;
+        }
+      });
+    }
   }
 
   exportData() {
@@ -417,6 +483,7 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
     switch (status) {
       case 'ELIGIBLE': return 'eligibility-eligible';
       case 'NOT_ELIGIBLE': return 'eligibility-not-eligible';
+      case 'TEMPORARILY_INELIGIBLE': return 'eligibility-temporarily-ineligible';
       case 'UNKNOWN': return 'eligibility-unknown';
       default: return '';
     }
@@ -435,6 +502,7 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
     const eligibilityMap = {
       'ELIGIBLE': 'যোগ্য',
       'NOT_ELIGIBLE': 'অযোগ্য',
+      'TEMPORARILY_INELIGIBLE': 'অযোগ্য',
       'UNKNOWN': 'অজানা'
     };
     return eligibilityMap[status as keyof typeof eligibilityMap] || status;
@@ -460,5 +528,24 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
     const today = new Date();
     const diffTime = Math.abs(today.getTime() - lastDonation.getTime());
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  }
+
+  // Calculate real eligibility status based on last donation date
+  getRealEligibilityStatus(donor: DonorAdmin): string {
+    if (!donor.lastDonationDate) {
+      return 'ELIGIBLE'; // If no donation, donor is eligible
+    }
+    
+    const lastDonation = new Date(donor.lastDonationDate);
+    const today = new Date();
+    const diffTime = Math.abs(today.getTime() - lastDonation.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    // Blood donors are typically eligible to donate again after 120 days (4 months)
+    if (diffDays >= 120) {
+      return 'ELIGIBLE';
+    } else {
+      return 'TEMPORARILY_INELIGIBLE';
+    }
   }
 }
