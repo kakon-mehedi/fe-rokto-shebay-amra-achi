@@ -10,6 +10,7 @@ export interface TeamMember {
   position: string;
   qualification?: string;
   description: string;
+  phone?: string;
   image?: string;
   displayOrder?: number;
   isActive?: boolean;

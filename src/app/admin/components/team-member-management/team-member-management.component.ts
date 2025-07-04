@@ -34,7 +34,7 @@ export class TeamMemberManagementComponent implements OnInit, OnDestroy {
   totalItems = 0;
   totalPages = 0;
 
-  displayedColumns: string[] = ['image', 'name', 'position', 'qualification', 'displayOrder', 'isActive', 'actions'];
+  displayedColumns: string[] = ['image', 'name', 'position', 'phone', 'qualification', 'displayOrder', 'isActive', 'actions'];
 
   constructor(
     private fb: FormBuilder,
@@ -47,6 +47,7 @@ export class TeamMemberManagementComponent implements OnInit, OnDestroy {
       position: ['', [Validators.required, Validators.minLength(2)]],
       qualification: [''],
       description: ['', [Validators.required, Validators.minLength(10)]],
+      phone: ['', [Validators.pattern(/^(\+88)?01[3-9]\d{8}$/)]],
       displayOrder: [0, [Validators.min(0)]],
       isActive: [true]
     });
@@ -117,6 +118,7 @@ export class TeamMemberManagementComponent implements OnInit, OnDestroy {
       position: teamMember.position,
       qualification: teamMember.qualification || '',
       description: teamMember.description,
+      phone: teamMember.phone || '',
       displayOrder: teamMember.displayOrder || 0,
       isActive: teamMember.isActive
     });
@@ -168,6 +170,7 @@ export class TeamMemberManagementComponent implements OnInit, OnDestroy {
     formData.append('position', formValue.position);
     formData.append('qualification', formValue.qualification || '');
     formData.append('description', formValue.description);
+    formData.append('phone', formValue.phone || '');
     formData.append('displayOrder', formValue.displayOrder.toString());
     formData.append('isActive', formValue.isActive.toString());
 
@@ -265,6 +268,9 @@ export class TeamMemberManagementComponent implements OnInit, OnDestroy {
     }
     if (control?.hasError('min')) {
       return 'মান ০ বা তার বেশি হতে হবে';
+    }
+    if (control?.hasError('pattern') && field === 'phone') {
+      return 'বৈধ বাংলাদেশী ফোন নম্বর লিখুন (যেমন: 01712345678)';
     }
     return '';
   }

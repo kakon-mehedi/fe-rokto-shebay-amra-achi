@@ -75,6 +75,14 @@
         <td mat-cell *matCellDef="let member">{{ member.position }}</td>
       </ng-container>
 
+      <!-- Phone Column -->
+      <ng-container matColumnDef="phone">
+        <th mat-header-cell *matHeaderCellDef>ফোন</th>
+        <td mat-cell *matCellDef="let member">
+          {{ member.phone || "N/A" }}
+        </td>
+      </ng-container>
+
       <!-- Qualification Column -->
       <ng-container matColumnDef="qualification">
         <th mat-header-cell *matHeaderCellDef>যোগ্যতা</th>
@@ -226,6 +234,14 @@
               formControlName="qualification"
               placeholder="শিক্ষাগত যোগ্যতা লিখুন"
             />
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>ফোন নম্বর</mat-label>
+            <input matInput formControlName="phone" placeholder="01712345678" />
+            <mat-error>{{ getErrorMessage("phone") }}</mat-error>
           </mat-form-field>
         </div>
 
