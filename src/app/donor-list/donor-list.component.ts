@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ViewChild, ElementRef, AfterViewInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { DonorService } from '../shared/services/donor.service';
 import { PublicDonorResponse } from '../shared/interfaces/donor.interface';
 import { FormControl } from '@angular/forms';
@@ -13,8 +13,11 @@ import { Subject } from 'rxjs';
   selector: 'app-donor-list',
   templateUrl: './donor-list.component.html',
   styleUrls: ['./donor-list.component.scss']
+  // Removed OnPush strategy for now - it was causing loading state issues with infinite scroll
 })
-export class DonorListComponent implements OnInit, OnDestroy {
+export class DonorListComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('scrollSentinel', { static: false }) scrollSentinel!: ElementRef;
+  
   donors: PublicDonorResponse[] = [];
   isLoading = true;
   isLoadingMore = false;
@@ -42,11 +45,17 @@ export class DonorListComponent implements OnInit, OnDestroy {
   // Caching
   private donorCache = new Map<string, PublicDonorResponse[]>();
   private destroy$ = new Subject<void>();
+  
+  // Cross-browser infinite scroll support
+  private intersectionObserver?: IntersectionObserver;
+  private scrollThrottleTimeout?: number;
 
   constructor(
     private donorService: DonorService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -55,9 +64,27 @@ export class DonorListComponent implements OnInit, OnDestroy {
     this.getDonors(true); // Reset on init
   }
 
+  ngAfterViewInit(): void {
+    // Setup IntersectionObserver for cross-browser infinite scroll
+    this.setupIntersectionObserver();
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    
+    // Clean up IntersectionObserver
+    if (this.intersectionObserver) {
+      this.intersectionObserver.disconnect();
+    }
+    
+    // Clean up scroll throttle timeout
+    if (this.scrollThrottleTimeout) {
+      clearTimeout(this.scrollThrottleTimeout);
+    }
+    
+    // Clear cache to free memory
+    this.donorCache.clear();
   }
 
   initializeFilters(): void {
@@ -77,6 +104,7 @@ export class DonorListComponent implements OnInit, OnDestroy {
         const district = this.BANGLADESH_DISTRICTS.find(d => d.name === districtName);
         this.upazilas = district ? district.upazilas : [];
         this.locationControl.setValue('');
+        this.cdr.detectChanges(); // Force change detection
         this.getDonors(true); // Reset on city change
       });
 
@@ -116,14 +144,44 @@ export class DonorListComponent implements OnInit, OnDestroy {
       });
   }
 
-  // Infinite scroll listener
+  // Cross-browser compatible infinite scroll listener with throttling
   @HostListener('window:scroll', ['$event'])
   onScroll(): void {
-    const threshold = 300; // একটু বেশি threshold
-    const position = window.pageYOffset + window.innerHeight;
-    const height = document.documentElement.scrollHeight;
+    // Throttle scroll events for better performance
+    if (this.scrollThrottleTimeout) {
+      clearTimeout(this.scrollThrottleTimeout);
+    }
+    
+    this.scrollThrottleTimeout = window.setTimeout(() => {
+      // Wrap in NgZone to ensure change detection
+      this.ngZone.run(() => {
+        this.checkScrollForInfiniteLoad();
+      });
+    }, 16); // ~60fps throttling
+  }
 
-    if (position > height - threshold && !this.isLoadingMore && this.hasMoreData && !this.isLoading) {
+  // Separate method for better cross-browser compatibility
+  private checkScrollForInfiniteLoad(): void {
+    // Cross-browser scroll position calculation
+    const scrollTop = window.pageYOffset || window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    
+    // Cross-browser viewport height calculation
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight || 0;
+    
+    // Cross-browser document height calculation
+    const documentHeight = Math.max(
+      document.body.scrollHeight || 0,
+      document.body.offsetHeight || 0,
+      document.documentElement.clientHeight || 0,
+      document.documentElement.scrollHeight || 0,
+      document.documentElement.offsetHeight || 0
+    );
+
+    const threshold = 300;
+    const currentPosition = scrollTop + viewportHeight;
+    const shouldLoad = currentPosition > (documentHeight - threshold);
+
+    if (shouldLoad && !this.isLoadingMore && this.hasMoreData && !this.isLoading) {
       this.loadMoreDonors();
     }
   }
@@ -133,19 +191,15 @@ export class DonorListComponent implements OnInit, OnDestroy {
       this.currentPage = 1;
       this.hasMoreData = true;
       this.donors = [];
-    }
-
-    // Check cache first
-    const cacheKey = this.generateCacheKey();
-    if (this.donorCache.has(cacheKey) && !reset) {
-      const cachedData = this.donorCache.get(cacheKey)!;
-      this.donors = [...this.donors, ...cachedData];
-      this.isLoading = false;
-      return;
+      // Clear cache on reset
+      this.donorCache.clear();
     }
 
     this.isLoading = reset;
     this.isLoadingMore = !reset;
+    
+    // Force change detection for OnPush strategy
+    this.cdr.detectChanges();
 
     const params: any = {
       page: this.currentPage,
@@ -169,7 +223,10 @@ export class DonorListComponent implements OnInit, OnDestroy {
     this.donorService.getPublicDonors(params).subscribe({
       next: (res) => {
         const newDonors = res.data?.donors || [];
-        this.totalPages = res.data?.totalPages || 1;
+        const totalPages = parseInt(res.data?.totalPages) || 1;
+        const currentPage = parseInt(res.data?.currentPage) || 1;
+
+        this.totalPages = totalPages;
 
         if (reset) {
           this.donors = newDonors;
@@ -177,25 +234,30 @@ export class DonorListComponent implements OnInit, OnDestroy {
           this.donors = [...this.donors, ...newDonors];
         }
 
-        // Cache the data
-        this.donorCache.set(cacheKey, newDonors);
-
         // Check if more data available
         this.hasMoreData = this.currentPage < this.totalPages;
 
         this.calculateBloodGroupStats();
         this.isLoading = false;
         this.isLoadingMore = false;
+        
+        // Force change detection for OnPush strategy
+        this.cdr.detectChanges();
+        
+        // Re-setup IntersectionObserver after data loads (for new sentinel element)
+        if (!reset && this.scrollSentinel?.nativeElement && this.intersectionObserver) {
+          setTimeout(() => {
+            this.intersectionObserver!.observe(this.scrollSentinel.nativeElement);
+          }, 100);
+        }
       },
       error: (err) => {
         this.error = 'ডোনার তালিকা লোড করা যায়নি। আবার চেষ্টা করুন।';
         this.isLoading = false;
         this.isLoadingMore = false;
-        console.error('Error loading donors:', err);
         
-        // Clear problematic cache entry
-        const cacheKey = this.generateCacheKey();
-        this.donorCache.delete(cacheKey);
+        // Force change detection for OnPush strategy
+        this.cdr.detectChanges();
       }
     });
   }
@@ -204,10 +266,13 @@ export class DonorListComponent implements OnInit, OnDestroy {
     if (this.hasMoreData && !this.isLoadingMore) {
       this.currentPage++;
       this.getDonors(false);
+      // Force change detection
+      this.cdr.detectChanges();
     }
   }
 
   generateCacheKey(): string {
+    // Cache key without page number - we want to cache per filter combination, not per page
     const search = this.searchControl.value || '';
     const donorId = this.donorIdControl.value || '';
     const bloodGroup = this.bloodGroupControl.value || '';
@@ -217,6 +282,7 @@ export class DonorListComponent implements OnInit, OnDestroy {
   }
 
   calculateBloodGroupStats(): void {
+    // Calculate stats from all loaded donors, not just current page
     const stats: { [key: string]: number } = {};
     this.donors.forEach(donor => {
       stats[donor.bloodGroup] = (stats[donor.bloodGroup] || 0) + 1;
@@ -245,12 +311,20 @@ export class DonorListComponent implements OnInit, OnDestroy {
     this.hasMoreData = true;
     this.donors = [];
     
+    // Force change detection for OnPush strategy
+    this.cdr.detectChanges();
+    
     // Reload data
     this.getDonors(true);
   }
 
+  // Performance optimization: TrackBy functions
   trackByDonorId(index: number, donor: PublicDonorResponse): string {
-    return donor._id || index.toString();
+    return donor._id || donor.donorId || index.toString();
+  }
+
+  trackByBloodGroup(index: number, stat: { label: string; count: number }): string {
+    return stat.label;
   }
 
   getDonorStatusClass(donor: PublicDonorResponse): string {
@@ -309,12 +383,10 @@ export class DonorListComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Utility methods (optimized for performance)
   formatPhoneNumber(phone: string): string {
-    // Format: 01XXXXXXXXX -> 01XXX-XXXXXX
-    if (phone && phone.length >= 11) {
-      return `${phone.slice(0, 5)}-${phone.slice(5)}`;
-    }
-    return phone;
+    // Format: 01XXXXXXXXX -> 01XXX-XXXXXX (memory efficient)
+    return phone?.length >= 11 ? `${phone.slice(0, 5)}-${phone.slice(5)}` : phone;
   }
 
   callDonor(donor: PublicDonorResponse, event: Event): void {
@@ -357,5 +429,45 @@ export class DonorListComponent implements OnInit, OnDestroy {
       maxWidth: '95vw',
       maxHeight: '90vh'
     });
+  }
+
+  private setupIntersectionObserver(): void {
+    // Check if IntersectionObserver is supported
+    if (!('IntersectionObserver' in window)) {
+      return;
+    }
+
+    this.intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        // ✅ Fix: Wrap callback in NgZone to trigger Angular change detection
+        this.ngZone.run(() => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && !this.isLoadingMore && this.hasMoreData && !this.isLoading) {
+              this.loadMoreDonors();
+              // Force change detection
+              this.cdr.detectChanges();
+            }
+          });
+        });
+      },
+      {
+        rootMargin: '50px', // Start loading 50px before the element comes into view
+        threshold: 0.1 // Trigger when 10% of the element is visible
+      }
+    );
+
+    // Start observing when component is ready
+    setTimeout(() => {
+      if (this.scrollSentinel?.nativeElement) {
+        this.intersectionObserver!.observe(this.scrollSentinel.nativeElement);
+      } else {
+        // Try again after a longer delay
+        setTimeout(() => {
+          if (this.scrollSentinel?.nativeElement) {
+            this.intersectionObserver!.observe(this.scrollSentinel.nativeElement);
+          }
+        }, 500);
+      }
+    }, 100);
   }
 }

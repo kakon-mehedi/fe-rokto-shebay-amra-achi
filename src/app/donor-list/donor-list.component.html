@@ -10,7 +10,10 @@
         </div>
       </div>
       <div class="header-stats">
-        <div class="stat-chip" *ngFor="let bg of bloodGroupStats">
+        <div
+          class="stat-chip"
+          *ngFor="let bg of bloodGroupStats; trackBy: trackByBloodGroup"
+        >
           <span class="bg-label">{{ bg.label }}</span>
           <span class="bg-count">{{ bg.count }}</span>
         </div>
@@ -245,6 +248,25 @@
           </button>
         </div>
       </div>
+    </div>
+
+    <!-- Intersection Observer Sentinel for better cross-browser infinite scroll -->
+    <div
+      #scrollSentinel
+      *ngIf="hasMoreData && !isLoadingMore"
+      class="scroll-sentinel"
+    ></div>
+
+    <!-- Manual Load More Button (for debugging and UX enhancement) -->
+    <div *ngIf="hasMoreData && !isLoadingMore" class="manual-load-more">
+      <button mat-raised-button color="primary" (click)="loadMoreDonors()">
+        <mat-icon>expand_more</mat-icon>
+        আরো রক্তদাতা লোড করুন ({{ itemsPerPage }}টি)
+      </button>
+      <p class="debug-info">
+        পেইজ {{ currentPage }} এর {{ totalPages }} | মোট: {{ donors.length }} জন
+        রক্তদাতা
+      </p>
     </div>
 
     <!-- Loading More Indicator -->

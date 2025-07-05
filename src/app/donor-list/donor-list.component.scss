@@ -662,6 +662,74 @@
         margin: 0;
       }
     }
+
+    // ====================
+    // Scroll Sentinel for IntersectionObserver
+    // ====================
+    .scroll-sentinel {
+      height: 50px; // Increased height for better detection
+      background: transparent;
+      width: 100%;
+      pointer-events: none;
+      // Debug styles (remove in production)
+      // background: rgba(255, 0, 0, 0.1);
+      // border: 1px dashed red;
+    }
+
+    // ====================
+    // Manual Load More (for debugging)
+    // ====================
+    .manual-load-more {
+      text-align: center;
+      margin: 20px 0;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+      button {
+        background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 24px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(211, 47, 47, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 auto;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 24px rgba(211, 47, 47, 0.4);
+          background: linear-gradient(135deg, #b71c1c 0%, #d32f2f 100%);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+        }
+      }
+
+      .debug-info {
+        font-size: 12px;
+        color: #666;
+        margin-top: 12px;
+        padding: 8px 12px;
+        background: rgba(211, 47, 47, 0.05);
+        border-radius: 6px;
+        border-left: 3px solid #d32f2f;
+      }
+    }
   }
 
   /* Custom Donor List Scrollbar */
