@@ -180,6 +180,36 @@ export class DonorProfileDashboardComponent implements OnInit {
     }
   }
 
+  getEligibilityStatusClass(status: string): string {
+    switch (status) {
+      case 'ELIGIBLE':
+        return 'eligible';
+      case 'TEMPORARILY_INELIGIBLE':
+        return 'temporarily-ineligible';
+      case 'PERMANENTLY_INELIGIBLE':
+        return 'permanently-ineligible';
+      case 'PENDING':
+        return 'pending';
+      default:
+        return 'unknown';
+    }
+  }
+
+  getEligibilityStatusText(status: string): string {
+    switch (status) {
+      case 'ELIGIBLE':
+        return 'রক্তদানের জন্য যোগ্য';
+      case 'TEMPORARILY_INELIGIBLE':
+        return 'সাময়িকভাবে অযোগ্য';
+      case 'PERMANENTLY_INELIGIBLE':
+        return 'স্থায়ীভাবে অযোগ্য';
+      case 'PENDING':
+        return 'যোগ্যতা নির্ধারণের অপেক্ষায়';
+      default:
+        return 'অজানা অবস্থা';
+    }
+  }
+
   formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleDateString('bn-BD', {

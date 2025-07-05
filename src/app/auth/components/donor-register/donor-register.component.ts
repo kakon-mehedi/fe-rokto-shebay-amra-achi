@@ -65,6 +65,11 @@ export class DonorRegisterComponent implements OnInit {
       weight: ['', [Validators.min(45), Validators.max(200)]],
       height: ['', [Validators.min(120), Validators.max(250)]],
       nationalId: ['', [Validators.pattern(/^\d{10}$|^\d{13}$|^\d{17}$/)]],
+      
+      // Previous Donation History (Optional)
+      initialTotalDonations: ['', [Validators.min(0), Validators.max(100)]],
+      initialLastDonationDate: [''],
+      
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
       
@@ -250,6 +255,14 @@ export class DonorRegisterComponent implements OnInit {
       if (formValue.height) donorData.height = parseFloat(formValue.height);
       if (formValue.nationalId) donorData.nationalId = formValue.nationalId;
 
+      // Add initial donation data if provided
+      if (formValue.initialTotalDonations) {
+        donorData.initialTotalDonations = parseInt(formValue.initialTotalDonations);
+      }
+      if (formValue.initialLastDonationDate) {
+        donorData.initialLastDonationDate = formValue.initialLastDonationDate;
+      }
+
       // Add emergency contact if provided
       if (formValue.emergencyContactName) {
         donorData.emergencyContact = {
@@ -262,8 +275,13 @@ export class DonorRegisterComponent implements OnInit {
       this.donorService.register(donorData, this.selectedFile || undefined).subscribe({
         next: (response) => {
           this.isLoading = false;
-          this.snackBar.open('রক্তদাতা নিবন্ধন সফল হয়েছে! অনুমোদনের জন্য অপেক্ষা করুন।', 'বন্ধ করুন', {
-            duration: 5000,
+          const donorId = response.data?.donorId;
+          let successMessage = 'রক্তদাতা নিবন্ধন সফল হয়েছে! অনুমোদনের জন্য অপেক্ষা করুন।';
+          if (donorId) {
+            successMessage = `রক্তদাতা নিবন্ধন সফল হয়েছে! আপনার ডোনার আইডি: ${donorId}। অনুমোদনের জন্য অপেক্ষা করুন।`;
+          }
+          this.snackBar.open(successMessage, 'বন্ধ করুন', {
+            duration: 8000,
             panelClass: ['success-snackbar']
           });
           this.router.navigate(['/auth/donor-login']);
@@ -335,10 +353,13 @@ export class DonorRegisterComponent implements OnInit {
 
     if (control?.hasError('min')) {
       if (fieldName === 'weight') {
-        return 'ওজন কমপক্ষে ৫২ কেজি হতে হবে';
+        return 'ওজন কমপক্ষে ৪৫ কেজি হতে হবে';
       }
       if (fieldName === 'height') {
         return 'উচ্চতা কমপক্ষে ১২০ সেমি হতে হবে';
+      }
+      if (fieldName === 'initialTotalDonations') {
+        return 'রক্তদানের সংখ্যা ০ এর কম হতে পারবে না';
       }
     }
 
@@ -349,6 +370,9 @@ export class DonorRegisterComponent implements OnInit {
       if (fieldName === 'height') {
         return 'উচ্চতা ২৫০ সেমির বেশি হতে পারবে না';
       }
+      if (fieldName === 'initialTotalDonations') {
+        return 'রক্তদানের সংখ্যা ১০০ এর বেশি হতে পারবে না';
+      }
     }
 
     if (control?.hasError('mismatch')) {
@@ -356,6 +380,11 @@ export class DonorRegisterComponent implements OnInit {
     }
 
     return '';
+  }
+
+  getTodayDate(): string {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
   }
 
   goToLogin(): void {

@@ -36,6 +36,25 @@
         </button>
       </mat-form-field>
 
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>ডোনার আইডি</mat-label>
+        <input
+          matInput
+          formControlName="donorId"
+          placeholder="যেমন: D05072501"
+        />
+        <mat-icon matPrefix>badge</mat-icon>
+        <button
+          mat-icon-button
+          matSuffix
+          *ngIf="filterForm.value.donorId"
+          (click)="filterForm.get('donorId')?.setValue('')"
+          type="button"
+        >
+          <mat-icon>clear</mat-icon>
+        </button>
+      </mat-form-field>
+
       <mat-form-field appearance="outline" class="filter-field">
         <mat-label>রক্তের গ্রুপ</mat-label>
         <mat-select formControlName="bloodGroup">
@@ -124,6 +143,18 @@
 
         <div class="basic-info">
           <h3 class="donor-name">{{ donor.name }}</h3>
+          <p class="donor-id" *ngIf="donor.donorId">
+            <mat-icon>badge</mat-icon>
+            <span class="donor-id-text">{{ donor.donorId }}</span>
+            <button
+              mat-icon-button
+              class="copy-id-btn"
+              (click)="copyDonorId(donor.donorId, $event)"
+              matTooltip="ডোনার আইডি কপি করুন"
+            >
+              <mat-icon>content_copy</mat-icon>
+            </button>
+          </p>
           <div
             class="blood-group-badge"
             [class]="

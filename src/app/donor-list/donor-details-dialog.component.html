@@ -10,6 +10,18 @@
 
     <div class="donor-header-info">
       <h2 class="donor-name">{{ donor.name }}</h2>
+      <div class="donor-id-section" *ngIf="donor.donorId">
+        <span class="donor-id-label">ডোনার আইডি:</span>
+        <span class="donor-id-value">{{ donor.donorId }}</span>
+        <button
+          mat-icon-button
+          class="copy-btn"
+          (click)="copyDonorId()"
+          matTooltip="ডোনার আইডি কপি করুন"
+        >
+          <mat-icon>content_copy</mat-icon>
+        </button>
+      </div>
       <div class="blood-group">{{ donor.bloodGroup }} রক্তদাতা</div>
       <div class="donor-location">
         <mat-icon>place</mat-icon>

@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { PublicDonorResponse } from '../shared/interfaces/donor.interface';
 
 @Component({
@@ -10,11 +11,36 @@ import { PublicDonorResponse } from '../shared/interfaces/donor.interface';
 export class DonorDetailsDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<DonorDetailsDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public donor: PublicDonorResponse
+    @Inject(MAT_DIALOG_DATA) public donor: PublicDonorResponse,
+    private snackBar: MatSnackBar
   ) {}
 
   close(): void {
     this.dialogRef.close();
+  }
+
+  copyDonorId(): void {
+    if (this.donor.donorId) {
+      navigator.clipboard.writeText(this.donor.donorId).then(() => {
+        this.snackBar.open('ডোনার আইডি কপি করা হয়েছে!', 'বন্ধ করুন', {
+          duration: 2000,
+          panelClass: ['success-snackbar']
+        });
+      }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = this.donor.donorId!;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        this.snackBar.open('ডোনার আইডি কপি করা হয়েছে!', 'বন্ধ করুন', {
+          duration: 2000,
+          panelClass: ['success-snackbar']
+        });
+      });
+    }
   }
 
   getGenderInBangla(gender: string): string {

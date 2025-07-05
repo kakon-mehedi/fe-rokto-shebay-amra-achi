@@ -14,6 +14,9 @@ export interface DonorRegisterRequest {
   weight?: number;
   height?: number;
   nationalId?: string;
+  // Initial donation data (optional)
+  initialTotalDonations?: number;
+  initialLastDonationDate?: string;
   emergencyContact?: {
     name?: string;
     phone?: string;
@@ -36,6 +39,7 @@ export interface ApiResponse<T> {
 
 export interface DonorResponse {
   _id: string;
+  donorId?: string;
   name: string;
   phone?: string;
   email?: string;
@@ -72,6 +76,7 @@ export interface DonorResponse {
 
 export interface PublicDonorResponse {
   _id: string;
+  donorId?: string;
   name: string;
   gender: string;
   religion: string;
@@ -117,6 +122,7 @@ export interface EligibilityCheck {
 // Admin-specific interfaces
 export interface AdminDonorResponse {
   _id: string;
+  donorId?: string; // Auto-generated unique donor ID
   name: string;
   phone: string;
   email?: string;

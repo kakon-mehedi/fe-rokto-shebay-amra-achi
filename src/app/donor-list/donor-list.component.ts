@@ -4,6 +4,7 @@ import { PublicDonorResponse } from '../shared/interfaces/donor.interface';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BANGLADESH_DISTRICTS, BLOOD_GROUPS } from '../shared/data/bangladesh-data';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DonorDetailsDialogComponent } from './donor-details-dialog.component';
 
 @Component({
@@ -25,10 +26,12 @@ export class DonorListComponent implements OnInit {
   constructor(
     private donorService: DonorService,
     private fb: FormBuilder,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {
     this.filterForm = this.fb.group({
       search: [''],
+      donorId: [''],
       bloodGroup: [''],
       city: [''],
       location: ['']
@@ -52,13 +55,17 @@ export class DonorListComponent implements OnInit {
     this.filterForm.get('search')?.valueChanges.subscribe(() => {
       this.getDonors();
     });
+    this.filterForm.get('donorId')?.valueChanges.subscribe(() => {
+      this.getDonors();
+    });
   }
 
   getDonors(): void {
     this.isLoading = true;
     const params: any = {};
-    const { search, bloodGroup, city, location } = this.filterForm.value;
+    const { search, donorId, bloodGroup, city, location } = this.filterForm.value;
     if (search) params.search = search;
+    if (donorId) params.donorId = donorId;
     if (bloodGroup) params.bloodGroup = bloodGroup;
     if (city) params.city = city;
     if (location) params.location = location;
@@ -165,6 +172,29 @@ export class DonorListComponent implements OnInit {
     // Phone number is not available in public response for privacy
     // This will be handled in the donor details modal
     this.openDonorDetails(donor, event);
+  }
+
+  copyDonorId(donorId: string, event: Event): void {
+    event.stopPropagation();
+    navigator.clipboard.writeText(donorId).then(() => {
+      this.snackBar.open('ডোনার আইডি কপি করা হয়েছে!', 'বন্ধ করুন', {
+        duration: 2000,
+        panelClass: ['success-snackbar']
+      });
+    }).catch(() => {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = donorId;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      
+      this.snackBar.open('ডোনার আইডি কপি করা হয়েছে!', 'বন্ধ করুন', {
+        duration: 2000,
+        panelClass: ['success-snackbar']
+      });
+    });
   }
 
   openDonorDetails(donor: PublicDonorResponse, event?: Event): void {

@@ -32,11 +32,25 @@
         <div class="profile-info">
           <h1>{{ donorProfile?.name }}</h1>
           <p class="blood-group">{{ donorProfile?.bloodGroup }}</p>
+          <p class="donor-id" *ngIf="donorProfile?.donorId">
+            <mat-icon>badge</mat-icon>
+            ডোনার আইডি: {{ donorProfile?.donorId }}
+          </p>
           <div
             class="status-badge"
             [ngClass]="getStatusClass(donorProfile?.accountStatus || '')"
           >
             {{ getStatusText(donorProfile?.accountStatus || "") }}
+          </div>
+          <div
+            class="eligibility-badge"
+            [ngClass]="
+              getEligibilityStatusClass(donorProfile?.eligibilityStatus || '')
+            "
+          >
+            {{
+              getEligibilityStatusText(donorProfile?.eligibilityStatus || "")
+            }}
           </div>
         </div>
       </div>

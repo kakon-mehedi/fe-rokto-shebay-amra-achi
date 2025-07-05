@@ -308,6 +308,45 @@
             <mat-error>{{ getErrorMessage("nationalId") }}</mat-error>
           </mat-form-field>
 
+          <!-- Previous Donation History Section -->
+          <div class="donation-history-section full-width">
+            <h3>পূর্বের রক্তদানের ইতিহাস (ঐচ্ছিক)</h3>
+            <p class="section-description">
+              আপনি যদি আগে রক্তদান করে থাকেন, তবে সেই তথ্য দিন। এটি আপনার ডোনেশন
+              যোগ্যতা নির্ধারণে সাহায্য করবে।
+            </p>
+            <div class="form-grid">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>মোট রক্তদানের সংখ্যা</mat-label>
+                <input
+                  matInput
+                  formControlName="initialTotalDonations"
+                  type="number"
+                  placeholder="যেমন: ৫"
+                  min="0"
+                  max="100"
+                />
+                <mat-icon matSuffix>volunteer_activism</mat-icon>
+                <mat-hint>আগে কতবার রক্তদান করেছেন</mat-hint>
+                <mat-error>{{
+                  getErrorMessage("initialTotalDonations")
+                }}</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>সর্বশেষ রক্তদানের তারিখ</mat-label>
+                <input
+                  matInput
+                  formControlName="initialLastDonationDate"
+                  type="date"
+                  [max]="getTodayDate()"
+                />
+                <mat-icon matSuffix>calendar_today</mat-icon>
+                <mat-hint>শেষ কবে রক্তদান করেছেন</mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
+
           <!-- Emergency Contact Section -->
           <div class="emergency-contact-section full-width">
             <h3>জরুরি যোগাযোগ (ঐচ্ছিক)</h3>

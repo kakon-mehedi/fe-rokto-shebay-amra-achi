@@ -125,6 +125,30 @@
                     }
                 }
 
+                .donor-id {
+                    font-size: 14px;
+                    font-weight: 500;
+                    margin: 0 0 12px 0;
+                    color: rgba(255, 255, 255, 0.9);
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    background: rgba(255, 255, 255, 0.15);
+                    padding: 4px 12px;
+                    border-radius: 16px;
+                    width: fit-content;
+
+                    mat-icon {
+                        font-size: 16px;
+                        width: 16px;
+                        height: 16px;
+                    }
+
+                    @media (max-width: 768px) {
+                        font-size: 13px;
+                    }
+                }
+
                 .status-badge {
                     display: inline-block;
                     padding: 6px 16px;
@@ -158,6 +182,49 @@
                         background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
                         color: white;
                         box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
+                    }
+                }
+
+                .eligibility-badge {
+                    display: inline-block;
+                    padding: 4px 12px;
+                    border-radius: 16px;
+                    font-size: 11px;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 0.3px;
+                    margin-left: 8px;
+                    -webkit-backdrop-filter: blur(10px);
+                    backdrop-filter: blur(10px);
+
+                    &.eligible {
+                        background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+                        color: white;
+                        box-shadow: 0 2px 6px rgba(76, 175, 80, 0.3);
+                    }
+
+                    &.temporarily-ineligible {
+                        background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+                        color: white;
+                        box-shadow: 0 2px 6px rgba(255, 152, 0, 0.3);
+                    }
+
+                    &.permanently-ineligible {
+                        background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+                        color: white;
+                        box-shadow: 0 2px 6px rgba(244, 67, 54, 0.3);
+                    }
+
+                    &.pending {
+                        background: linear-gradient(135deg, #607d8b 0%, #455a64 100%);
+                        color: white;
+                        box-shadow: 0 2px 6px rgba(96, 125, 139, 0.3);
+                    }
+
+                    &.unknown {
+                        background: linear-gradient(135deg, #9e9e9e 0%, #616161 100%);
+                        color: white;
+                        box-shadow: 0 2px 6px rgba(158, 158, 158, 0.3);
                     }
                 }
             }
