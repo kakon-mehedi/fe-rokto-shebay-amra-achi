@@ -194,6 +194,30 @@ export class DonorService {
     return this.http.get(`${this.API_BASE_URL}/donors/admin/${donorId}`, { headers });
   }
 
+  // Add donor (admin only)
+  addDonorAsAdmin(donorData: any): Observable<any> {
+    const token = localStorage.getItem('access_token'); // Admin token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    const formData = new FormData();
+    
+    // Add all donor data to FormData
+    Object.keys(donorData).forEach(key => {
+      const value = donorData[key];
+      if (value !== undefined && value !== null && value !== '') {
+        if (key === 'emergencyContact' && typeof value === 'object') {
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, value.toString());
+        }
+      }
+    });
+
+    return this.http.post(`${this.API_BASE_URL}/donors`, formData, { headers });
+  }
+
   // Update donor (admin only)
   updateDonorAsAdmin(donorId: string, updateData: any): Observable<any> {
     const token = localStorage.getItem('access_token'); // Admin token

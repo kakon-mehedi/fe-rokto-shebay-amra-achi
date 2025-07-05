@@ -171,4 +171,5 @@ export interface DonorFilterParams {
   eligibilityStatus?: 'ELIGIBLE' | 'NOT_ELIGIBLE' | 'UNKNOWN';
   accountStatus?: 'PENDING' | 'ACTIVE' | 'SUSPENDED';
   search?: string;
+  donorId?: string;
 }

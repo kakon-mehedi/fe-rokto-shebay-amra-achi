@@ -41,6 +41,7 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
   // Table Configuration
   displayedColumns: string[] = [
     'profilePhoto',
+    'donorId',
     'name',
     'phone',
     'bloodGroup',
@@ -57,6 +58,7 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
   
   // Search and Filter
   searchControl = new FormControl('');
+  donorIdFilter = new FormControl('');
   bloodGroupFilter = new FormControl('');
   genderFilter = new FormControl('');
   cityFilter = new FormControl('');
@@ -144,6 +146,14 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
         this.loadDonors(); // API call with search filter
       });
 
+    // Donor ID filter with debounce - server-side filtering
+    this.donorIdFilter.valueChanges
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe(() => {
+        this.currentPage = 0; // Reset to first page
+        this.loadDonors(); // API call with donorId filter
+      });
+
     // City filter with special handling for location update
     this.cityFilter.valueChanges.subscribe((selectedCity) => {
       this.onCityFilterChange(selectedCity);
@@ -180,6 +190,11 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
     const searchValue = this.searchControl.value;
     if (searchValue) {
       params.search = searchValue;
+    }
+
+    const donorId = this.donorIdFilter.value;
+    if (donorId) {
+      params.donorId = donorId;
     }
 
     const bloodGroup = this.bloodGroupFilter.value;
@@ -303,6 +318,7 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
 
   clearFilters() {
     this.searchControl.setValue('');
+    this.donorIdFilter.setValue('');
     this.bloodGroupFilter.setValue('');
     this.genderFilter.setValue('');
     this.cityFilter.setValue('');

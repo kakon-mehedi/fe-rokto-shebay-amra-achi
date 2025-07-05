@@ -138,7 +138,10 @@
             <mat-label>এলাকা *</mat-label>
             <mat-select formControlName="location">
               <mat-option value="">এলাকা নির্বাচন করুন</mat-option>
-              <mat-option *ngFor="let location of locations" [value]="location.value">
+              <mat-option
+                *ngFor="let location of locations"
+                [value]="location.value"
+              >
                 {{ location.label }}
               </mat-option>
             </mat-select>
@@ -198,6 +201,71 @@
               placeholder="120-250 সেমি"
             />
             <mat-error>{{ getFieldError("height") }}</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Previous Donation History Section (For Registration) -->
+      <div class="form-section" *ngIf="!isEdit">
+        <h3 class="section-title">
+          <mat-icon>history</mat-icon>
+          পূর্বের রক্তদানের ইতিহাস (ঐচ্ছিক)
+        </h3>
+        <p class="section-description">
+          যদি আপনি আগে কোথাও রক্তদান করে থাকেন, তাহলে সেই তথ্য প্রদান করুন। এটি
+          ঐচ্ছিক এবং নতুন রক্তদাতাদের জন্য প্রয়োজন নেই।
+        </p>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>পূর্বের মোট রক্তদানের সংখ্যা</mat-label>
+            <input
+              matInput
+              formControlName="initialTotalDonations"
+              type="number"
+              min="0"
+              max="100"
+              placeholder="যেমন: 3"
+            />
+            <mat-hint>আগে কতবার রক্তদান করেছেন</mat-hint>
+            <mat-error>{{ getFieldError("initialTotalDonations") }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>সর্বশেষ রক্তদানের তারিখ</mat-label>
+            <input
+              matInput
+              [matDatepicker]="initialLastDonationPicker"
+              formControlName="initialLastDonationDate"
+              placeholder="সর্বশেষ কবে রক্তদান করেছেন"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="initialLastDonationPicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #initialLastDonationPicker></mat-datepicker>
+            <mat-hint>সর্বশেষ রক্তদানের তারিখ</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Current Donation Status Section (For Edit Mode) -->
+      <div class="form-section" *ngIf="isEdit">
+        <h3 class="section-title">
+          <mat-icon>bloodtype</mat-icon>
+          রক্তদানের বর্তমান অবস্থা
+        </h3>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>মোট রক্তদানের সংখ্যা</mat-label>
+            <input
+              matInput
+              formControlName="totalDonations"
+              type="number"
+              min="0"
+            />
+            <mat-error>{{ getFieldError("totalDonations") }}</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="form-field">

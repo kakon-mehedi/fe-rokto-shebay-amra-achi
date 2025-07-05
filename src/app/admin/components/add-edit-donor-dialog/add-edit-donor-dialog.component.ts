@@ -135,19 +135,42 @@ export class AddEditDonorDialogComponent implements OnInit {
       weight: [donor?.weight || '', [Validators.min(45), Validators.max(200)]],
       height: [donor?.height || '', [Validators.min(120), Validators.max(250)]],
       
+      // Initial Donation Information (for registration)
+      initialTotalDonations: ['', [Validators.min(0), Validators.max(100)]],
+      initialLastDonationDate: [''],
+      
       // Emergency Contact
       emergencyContactName: [donor?.emergencyContact?.name || ''],
       emergencyContactPhone: [donor?.emergencyContact?.phone || '', Validators.pattern(/^(\+88)?01[3-9]\d{8}$/)],
       emergencyContactRelation: [donor?.emergencyContact?.relation || ''],
       
-      // Administrative
-      accountStatus: [donor?.accountStatus || 'PENDING'],
-      eligibilityStatus: [donor?.eligibilityStatus || 'PENDING'],
+      // Administrative (for edit mode)
+      accountStatus: [donor?.accountStatus || 'ACTIVE'],
+      eligibilityStatus: [donor?.eligibilityStatus || 'ELIGIBLE'],
       
       // Additional Information
       nationalId: [donor?.nationalId || '', Validators.pattern(/^\d{10}$|^\d{13}$|^\d{17}$/)],
       totalDonations: [donor?.totalDonations || 0, Validators.min(0)],
       lastDonationDate: [donor?.lastDonationDate ? new Date(donor.lastDonationDate) : '']
+    });
+
+    // Set up field validation dependencies
+    this.setupFormValidation();
+  }
+
+  private setupFormValidation() {
+    // Set up validation dependencies between initial donation fields
+    const initialTotalDonations = this.donorForm.get('initialTotalDonations');
+    const initialLastDonationDate = this.donorForm.get('initialLastDonationDate');
+
+    // If total donations is provided, make last donation date required
+    initialTotalDonations?.valueChanges.subscribe(value => {
+      if (value && value > 0) {
+        initialLastDonationDate?.setValidators([Validators.required]);
+      } else {
+        initialLastDonationDate?.clearValidators();
+      }
+      initialLastDonationDate?.updateValueAndValidity();
     });
   }
 
@@ -169,7 +192,7 @@ export class AddEditDonorDialogComponent implements OnInit {
   private prepareFormData() {
     const formValue = this.donorForm.value;
     
-    return {
+    const donorData = {
       ...formValue,
       emergencyContact: {
         name: formValue.emergencyContactName,
@@ -177,6 +200,25 @@ export class AddEditDonorDialogComponent implements OnInit {
         relation: formValue.emergencyContactRelation
       }
     };
+
+    // Add initial donation data for new donors
+    if (!this.isEdit) {
+      if (formValue.initialTotalDonations && formValue.initialTotalDonations > 0) {
+        donorData.initialTotalDonations = formValue.initialTotalDonations;
+      }
+      if (formValue.initialLastDonationDate) {
+        donorData.initialLastDonationDate = formValue.initialLastDonationDate;
+      }
+    }
+
+    // Clean up undefined values
+    Object.keys(donorData).forEach(key => {
+      if (donorData[key] === '' || donorData[key] === null) {
+        delete donorData[key];
+      }
+    });
+
+    return donorData;
   }
 
   private updateDonor(id: string, donorData: any) {
@@ -199,11 +241,27 @@ export class AddEditDonorDialogComponent implements OnInit {
   }
 
   private createDonor(donorData: any) {
-    // TODO: Implement create donor functionality
-    this.snackBar.open('নতুন রক্তদাতা যোগ করার ফিচার শীঘ্রই আসছে', 'বন্ধ করুন', {
-      duration: 3000
+    this.donorService.addDonorAsAdmin(donorData).subscribe({
+      next: (response: any) => {
+        this.snackBar.open(
+          `নতুন রক্তদাতা সফলভাবে যোগ করা হয়েছে। ${response.data?.donorId ? 'ডোনার আইডি: ' + response.data.donorId : ''}`, 
+          'বন্ধ করুন', 
+          {
+            duration: 5000,
+            panelClass: ['success-snackbar']
+          }
+        );
+        this.dialogRef.close({ success: true, donor: response.data });
+      },
+      error: (error: any) => {
+        const errorMessage = error.error?.message || 'নতুন রক্তদাতা যোগ করতে ত্রুটি হয়েছে';
+        this.snackBar.open(errorMessage, 'বন্ধ করুন', {
+          duration: 3000,
+          panelClass: ['error-snackbar']
+        });
+        this.isLoading = false;
+      }
     });
-    this.isLoading = false;
   }
 
   private markFormGroupTouched() {

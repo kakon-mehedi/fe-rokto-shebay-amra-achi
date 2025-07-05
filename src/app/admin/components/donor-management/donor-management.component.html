@@ -137,6 +137,17 @@
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
 
+        <!-- Donor ID Search -->
+        <mat-form-field appearance="outline" class="donor-id-search">
+          <mat-label>ডোনার আইডি</mat-label>
+          <input
+            matInput
+            [formControl]="donorIdFilter"
+            placeholder="যেমন: D01012501"
+          />
+          <mat-icon matSuffix>badge</mat-icon>
+        </mat-form-field>
+
         <!-- Blood Group Filter -->
         <mat-form-field appearance="outline">
           <mat-label>রক্তের গ্রুপ</mat-label>
@@ -255,6 +266,26 @@
                   [alt]="donor.name + ' এর প্রোফাইল ছবি'"
                   class="avatar-img"
                 />
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Donor ID Column -->
+          <ng-container matColumnDef="donorId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              ডোনার আইডি
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let donor"
+              (click)="viewDonorDetails(donor)"
+              class="clickable-cell"
+            >
+              <div class="donor-id-cell">
+                <span class="donor-id" *ngIf="donor.donorId">{{
+                  donor.donorId
+                }}</span>
+                <span class="no-id" *ngIf="!donor.donorId">-</span>
               </div>
             </td>
           </ng-container>
