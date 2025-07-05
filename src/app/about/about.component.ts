@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { TeamMemberService, TeamMember } from '../shared/services/team-member.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -71,7 +72,10 @@ export class AboutComponent implements OnInit, OnDestroy {
     }
   ];
 
-  constructor(private teamMemberService: TeamMemberService) { }
+  constructor(
+    private teamMemberService: TeamMemberService,
+    private snackBar: MatSnackBar
+  ) { }
 
   ngOnInit(): void {
     this.loadTeamMembers();
@@ -121,5 +125,26 @@ export class AboutComponent implements OnInit, OnDestroy {
       // Use inline SVG as fallback to prevent infinite loop
       event.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSIjRjVGNUY1Ii8+CjxjaXJjbGUgY3g9IjYwIiBjeT0iNDAiIHI9IjIwIiBmaWxsPSIjQ0NDIi8+CjxwYXRoIGQ9Ik0yNSA5NUw5NSA5NUw4NSA3NUwyNSA3NVoiIGZpbGw9IiNDQ0MiLz4KPC9zdmc+';
     }
+  }
+
+  // Copy phone number to clipboard
+  copyPhoneNumber(phone: string): void {
+    navigator.clipboard.writeText(phone).then(() => {
+      this.snackBar.open(`ফোন নম্বর কপি হয়েছে: ${phone}`, 'বন্ধ করুন', {
+        duration: 3000,
+        panelClass: ['success-snackbar']
+      });
+    }).catch(err => {
+      console.error('ফোন নম্বর কপি করতে সমস্যা হয়েছে: ', err);
+      this.snackBar.open('ফোন নম্বর কপি করতে সমস্যা হয়েছে', 'বন্ধ করুন', {
+        duration: 3000,
+        panelClass: ['error-snackbar']
+      });
+    });
+  }
+
+  // Call phone number
+  callPhoneNumber(phone: string): void {
+    window.location.href = `tel:${phone}`;
   }
 }

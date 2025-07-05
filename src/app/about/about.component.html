@@ -244,10 +244,32 @@
           <p class="team-qualification" *ngIf="member.qualification">
             {{ member.qualification }}
           </p>
-          <p class="team-phone" *ngIf="member.phone">
-            <mat-icon>phone</mat-icon>
-            {{ member.phone }}
-          </p>
+          <div class="team-phone" *ngIf="member.phone">
+            <div class="phone-info">
+              <mat-icon>phone</mat-icon>
+              <span class="phone-number">{{ member.phone }}</span>
+            </div>
+            <div class="phone-actions">
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="copyPhoneNumber(member.phone)"
+                matTooltip="নম্বর কপি করুন"
+                class="phone-action-btn"
+              >
+                <mat-icon>content_copy</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="accent"
+                (click)="callPhoneNumber(member.phone)"
+                matTooltip="কল করুন"
+                class="phone-action-btn"
+              >
+                <mat-icon>call</mat-icon>
+              </button>
+            </div>
+          </div>
           <p class="team-description">{{ member.description }}</p>
         </div>
       </div>
