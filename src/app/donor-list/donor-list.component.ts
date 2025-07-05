@@ -1,85 +1,219 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { DonorService } from '../shared/services/donor.service';
 import { PublicDonorResponse } from '../shared/interfaces/donor.interface';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { BANGLADESH_DISTRICTS, BLOOD_GROUPS } from '../shared/data/bangladesh-data';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DonorDetailsDialogComponent } from './donor-details-dialog.component';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-donor-list',
   templateUrl: './donor-list.component.html',
   styleUrls: ['./donor-list.component.scss']
 })
-export class DonorListComponent implements OnInit {
+export class DonorListComponent implements OnInit, OnDestroy {
   donors: PublicDonorResponse[] = [];
   isLoading = true;
+  isLoadingMore = false;
   error: string | null = null;
-  filterForm: FormGroup;
+  
+  // Admin style filters using FormControl
+  searchControl = new FormControl('');
+  donorIdControl = new FormControl('');
+  bloodGroupControl = new FormControl('');
+  cityControl = new FormControl('');
+  locationControl = new FormControl('');
+  
   BANGLADESH_DISTRICTS = BANGLADESH_DISTRICTS;
   BLOOD_GROUPS = BLOOD_GROUPS;
   selectedDistrict: string = '';
   upazilas: { id: number; name: string; nameEn: string }[] = [];
   bloodGroupStats: { label: string; count: number }[] = [];
 
+  // Infinite scroll properties
+  currentPage = 1;
+  itemsPerPage = 20; // Backend এর মতো বেশি items
+  totalPages = 1;
+  hasMoreData = true;
+
+  // Caching
+  private donorCache = new Map<string, PublicDonorResponse[]>();
+  private destroy$ = new Subject<void>();
+
   constructor(
     private donorService: DonorService,
-    private fb: FormBuilder,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
-  ) {
-    this.filterForm = this.fb.group({
-      search: [''],
-      donorId: [''],
-      bloodGroup: [''],
-      city: [''],
-      location: ['']
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.getDonors();
-    this.filterForm.get('city')?.valueChanges.subscribe((districtName) => {
-      const district = this.BANGLADESH_DISTRICTS.find(d => d.name === districtName);
-      this.upazilas = district ? district.upazilas : [];
-      this.filterForm.get('location')?.setValue('');
-      this.getDonors();
-    });
-    this.filterForm.get('location')?.valueChanges.subscribe(() => {
-      this.getDonors();
-    });
-    this.filterForm.get('bloodGroup')?.valueChanges.subscribe(() => {
-      this.getDonors();
-    });
-    this.filterForm.get('search')?.valueChanges.subscribe(() => {
-      this.getDonors();
-    });
-    this.filterForm.get('donorId')?.valueChanges.subscribe(() => {
-      this.getDonors();
+    this.initializeFilters();
+    this.setupFormSubscriptions();
+    this.getDonors(true); // Reset on init
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  initializeFilters(): void {
+    // Initialize first load
+    this.currentPage = 1;
+    this.hasMoreData = true;
+    this.donors = [];
+  }
+
+  setupFormSubscriptions(): void {
+    // Admin style filter setup with FormControl
+    
+    // City change subscription
+    this.cityControl.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((districtName: string | null) => {
+        const district = this.BANGLADESH_DISTRICTS.find(d => d.name === districtName);
+        this.upazilas = district ? district.upazilas : [];
+        this.locationControl.setValue('');
+        this.getDonors(true); // Reset on city change
+      });
+
+    // Search with debouncing (Admin style)
+    this.searchControl.valueChanges
+      .pipe(
+        debounceTime(300), // Admin এ 300ms
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        this.getDonors(true); // Reset on search
+      });
+
+    // Donor ID search with debouncing (Admin style)
+    this.donorIdControl.valueChanges
+      .pipe(
+        debounceTime(300), // Admin এর মতো same delay
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        this.getDonors(true); // Reset on donor ID search
+      });
+
+    // Other filters (immediate - Admin style)
+    this.locationControl.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.getDonors(true); // Reset on location change
+      });
+
+    this.bloodGroupControl.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.getDonors(true); // Reset on blood group change
+      });
+  }
+
+  // Infinite scroll listener
+  @HostListener('window:scroll', ['$event'])
+  onScroll(): void {
+    const threshold = 300; // একটু বেশি threshold
+    const position = window.pageYOffset + window.innerHeight;
+    const height = document.documentElement.scrollHeight;
+
+    if (position > height - threshold && !this.isLoadingMore && this.hasMoreData && !this.isLoading) {
+      this.loadMoreDonors();
+    }
+  }
+
+  getDonors(reset: boolean = false): void {
+    if (reset) {
+      this.currentPage = 1;
+      this.hasMoreData = true;
+      this.donors = [];
+    }
+
+    // Check cache first
+    const cacheKey = this.generateCacheKey();
+    if (this.donorCache.has(cacheKey) && !reset) {
+      const cachedData = this.donorCache.get(cacheKey)!;
+      this.donors = [...this.donors, ...cachedData];
+      this.isLoading = false;
+      return;
+    }
+
+    this.isLoading = reset;
+    this.isLoadingMore = !reset;
+
+    const params: any = {
+      page: this.currentPage,
+      limit: this.itemsPerPage
+    };
+
+    // Admin style parameter handling with FormControl values
+    const search = this.searchControl.value;
+    const donorId = this.donorIdControl.value;
+    const bloodGroup = this.bloodGroupControl.value;
+    const city = this.cityControl.value;
+    const location = this.locationControl.value;
+    
+    // Trim এবং empty check করে parameter যোগ করা (Admin style)
+    if (search && search.trim()) params.search = search.trim();
+    if (donorId && donorId.trim()) params.donorId = donorId.trim();
+    if (bloodGroup && bloodGroup.trim()) params.bloodGroup = bloodGroup.trim();
+    if (city && city.trim()) params.city = city.trim();
+    if (location && location.trim()) params.location = location.trim();
+
+    this.donorService.getPublicDonors(params).subscribe({
+      next: (res) => {
+        const newDonors = res.data?.donors || [];
+        this.totalPages = res.data?.totalPages || 1;
+
+        if (reset) {
+          this.donors = newDonors;
+        } else {
+          this.donors = [...this.donors, ...newDonors];
+        }
+
+        // Cache the data
+        this.donorCache.set(cacheKey, newDonors);
+
+        // Check if more data available
+        this.hasMoreData = this.currentPage < this.totalPages;
+
+        this.calculateBloodGroupStats();
+        this.isLoading = false;
+        this.isLoadingMore = false;
+      },
+      error: (err) => {
+        this.error = 'ডোনার তালিকা লোড করা যায়নি। আবার চেষ্টা করুন।';
+        this.isLoading = false;
+        this.isLoadingMore = false;
+        console.error('Error loading donors:', err);
+        
+        // Clear problematic cache entry
+        const cacheKey = this.generateCacheKey();
+        this.donorCache.delete(cacheKey);
+      }
     });
   }
 
-  getDonors(): void {
-    this.isLoading = true;
-    const params: any = {};
-    const { search, donorId, bloodGroup, city, location } = this.filterForm.value;
-    if (search) params.search = search;
-    if (donorId) params.donorId = donorId;
-    if (bloodGroup) params.bloodGroup = bloodGroup;
-    if (city) params.city = city;
-    if (location) params.location = location;
-    this.donorService.getPublicDonors(params).subscribe({
-      next: (res) => {
-        this.donors = res.data?.donors || [];
-        this.calculateBloodGroupStats();
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.error = 'ডোনার তালিকা লোড করা যায়নি';
-        this.isLoading = false;
-      }
-    });
+  loadMoreDonors(): void {
+    if (this.hasMoreData && !this.isLoadingMore) {
+      this.currentPage++;
+      this.getDonors(false);
+    }
+  }
+
+  generateCacheKey(): string {
+    const search = this.searchControl.value || '';
+    const donorId = this.donorIdControl.value || '';
+    const bloodGroup = this.bloodGroupControl.value || '';
+    const city = this.cityControl.value || '';
+    const location = this.locationControl.value || '';
+    return `${search}-${donorId}-${bloodGroup}-${city}-${location}-page-${this.currentPage}`;
   }
 
   calculateBloodGroupStats(): void {
@@ -95,8 +229,24 @@ export class DonorListComponent implements OnInit {
   }
 
   resetFilters(): void {
-    this.filterForm.reset();
-    this.getDonors();
+    // Admin style clear with FormControl (explicit reset)
+    this.searchControl.setValue('');
+    this.donorIdControl.setValue('');
+    this.bloodGroupControl.setValue('');
+    this.cityControl.setValue('');
+    this.locationControl.setValue('');
+    
+    // Clear error message
+    this.error = null;
+    
+    // Clear cache and reset pagination
+    this.donorCache.clear();
+    this.currentPage = 1;
+    this.hasMoreData = true;
+    this.donors = [];
+    
+    // Reload data
+    this.getDonors(true);
   }
 
   trackByDonorId(index: number, donor: PublicDonorResponse): string {

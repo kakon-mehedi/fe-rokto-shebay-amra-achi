@@ -19,17 +19,21 @@
   </header>
 
   <!-- Compact Filter Bar -->
-  <form [formGroup]="filterForm" class="filter-bar">
+  <div class="filter-bar">
     <div class="filter-row">
       <mat-form-field appearance="outline" class="search-field">
         <mat-label>খুঁজুন</mat-label>
-        <input matInput formControlName="search" placeholder="নাম বা ঠিকানা" />
+        <input
+          matInput
+          [formControl]="searchControl"
+          placeholder="নাম বা ঠিকানা"
+        />
         <mat-icon matPrefix>search</mat-icon>
         <button
           mat-icon-button
           matSuffix
-          *ngIf="filterForm.value.search"
-          (click)="filterForm.get('search')?.setValue('')"
+          *ngIf="searchControl.value"
+          (click)="searchControl.setValue('')"
           type="button"
         >
           <mat-icon>clear</mat-icon>
@@ -40,15 +44,15 @@
         <mat-label>ডোনার আইডি</mat-label>
         <input
           matInput
-          formControlName="donorId"
+          [formControl]="donorIdControl"
           placeholder="যেমন: D05072501"
         />
         <mat-icon matPrefix>badge</mat-icon>
         <button
           mat-icon-button
           matSuffix
-          *ngIf="filterForm.value.donorId"
-          (click)="filterForm.get('donorId')?.setValue('')"
+          *ngIf="donorIdControl.value"
+          (click)="donorIdControl.setValue('')"
           type="button"
         >
           <mat-icon>clear</mat-icon>
@@ -57,7 +61,7 @@
 
       <mat-form-field appearance="outline" class="filter-field">
         <mat-label>রক্তের গ্রুপ</mat-label>
-        <mat-select formControlName="bloodGroup">
+        <mat-select [formControl]="bloodGroupControl">
           <mat-option value="">সব গ্রুপ</mat-option>
           <mat-option *ngFor="let bg of BLOOD_GROUPS" [value]="bg.value">
             {{ bg.label }}
@@ -67,7 +71,7 @@
 
       <mat-form-field appearance="outline" class="filter-field">
         <mat-label>জেলা</mat-label>
-        <mat-select formControlName="city">
+        <mat-select [formControl]="cityControl">
           <mat-option value="">সব জেলা</mat-option>
           <mat-option *ngFor="let d of BANGLADESH_DISTRICTS" [value]="d.name">
             {{ d.name }}
@@ -81,7 +85,7 @@
         *ngIf="upazilas.length > 0"
       >
         <mat-label>উপজেলা</mat-label>
-        <mat-select formControlName="location">
+        <mat-select [formControl]="locationControl">
           <mat-option value="">সব উপজেলা</mat-option>
           <mat-option *ngFor="let u of upazilas" [value]="u.name">
             {{ u.name }}
@@ -99,7 +103,7 @@
         <mat-icon>refresh</mat-icon>
       </button>
     </div>
-  </form>
+  </div>
 
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-state">
@@ -243,8 +247,20 @@
       </div>
     </div>
 
+    <!-- Loading More Indicator -->
+    <div *ngIf="isLoadingMore" class="loading-more">
+      <mat-spinner diameter="30"></mat-spinner>
+      <p>আরো রক্তদাতা লোড হচ্ছে...</p>
+    </div>
+
+    <!-- End of Results -->
+    <div *ngIf="!hasMoreData && donors.length > 0" class="end-of-results">
+      <mat-icon>check_circle</mat-icon>
+      <p>সকল রক্তদাতার তালিকা দেখানো হয়েছে</p>
+    </div>
+
     <!-- No Results -->
-    <div *ngIf="donors.length === 0" class="no-results">
+    <div *ngIf="donors.length === 0 && !isLoading" class="no-results">
       <mat-icon>search_off</mat-icon>
       <h3>কোনো রক্তদাতা পাওয়া যায়নি</h3>
       <p>অনুসন্ধানের শর্ত পরিবর্তন করে আবার চেষ্টা করুন</p>

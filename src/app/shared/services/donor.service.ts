@@ -137,14 +137,28 @@ export class DonorService {
   }
 
   // Public Methods (No authentication required)
-  getPublicDonors(params?: any): Observable<any> {
-    let queryString = '';
+  getPublicDonors(params?: {
+    page?: number;
+    limit?: number;
+    bloodGroup?: string;
+    city?: string;
+    location?: string;
+    gender?: string;
+    search?: string;
+    donorId?: string;
+  }): Observable<any> {
+    let queryParams = '';
     if (params) {
-      const queryParams = new URLSearchParams(params).toString();
-      queryString = queryParams ? `?${queryParams}` : '';
+      const searchParams = new URLSearchParams();
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          searchParams.append(key, value.toString());
+        }
+      });
+      queryParams = searchParams.toString() ? '?' + searchParams.toString() : '';
     }
     
-    return this.http.get(`${this.API_BASE_URL}/donors${queryString}`);
+    return this.http.get(`${this.API_BASE_URL}/donors${queryParams}`);
   }
 
   getPublicDonorDetails(donorId: string): Observable<PublicDonorResponse> {
