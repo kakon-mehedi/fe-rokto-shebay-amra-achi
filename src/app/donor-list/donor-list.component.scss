@@ -261,10 +261,28 @@
         padding: 16px;
       }
 
+      // Mobile compact list view
+      @media (max-width: 480px) {
+        padding: 12px;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        
+        &:hover {
+          transform: none; // Disable hover animation on mobile
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+      }
+
       &:hover {
         transform: translateY(-4px);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
         border-color: #d32f2f;
+        
+        @media (max-width: 480px) {
+          transform: none;
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+          border-color: transparent;
+        }
       }
 
       &::before {
@@ -286,9 +304,18 @@
         margin-bottom: 16px;
         gap: 16px;
 
+        // Mobile compact layout
+        @media (max-width: 480px) {
+          margin-bottom: 8px;
+          gap: 12px;
+        }
+
         .avatar-section {
           position: relative;
           flex-shrink: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
 
           .donor-avatar {
             width: 60px;
@@ -303,6 +330,12 @@
               width: 50px;
               height: 50px;
             }
+
+            @media (max-width: 480px) {
+              width: 40px;
+              height: 40px;
+              border: 2px solid #e0e0e0;
+            }
           }
 
           .status-indicator {
@@ -314,6 +347,13 @@
             border-radius: 50%;
             border: 2px solid white;
 
+            @media (max-width: 480px) {
+              bottom: 20px; // Adjust position since blood group badge will be below
+              right: 2px;
+              width: 12px;
+              height: 12px;
+            }
+
             &.online {
               background: #4caf50;
             }
@@ -324,6 +364,32 @@
 
             &.not-eligible {
               background: #f44336;
+            }
+          }
+
+          // Mobile blood group badge under avatar
+          .mobile-avatar-badge {
+            display: none;
+
+            @media (max-width: 480px) {
+              display: inline-block;
+              padding: 2px 6px;
+              border-radius: 10px;
+              font-size: 10px;
+              font-weight: 700;
+              text-align: center;
+              min-width: 25px;
+              margin-top: 4px;
+
+              // Blood group colors (same as desktop)
+              &.bg-Apos { background: linear-gradient(135deg, #e91e63, #c2185b); color: white; }
+              &.bg-Aneg { background: linear-gradient(135deg, #9c27b0, #7b1fa2); color: white; }
+              &.bg-Bpos { background: linear-gradient(135deg, #3f51b5, #303f9f); color: white; }
+              &.bg-Bneg { background: linear-gradient(135deg, #2196f3, #1976d2); color: white; }
+              &.bg-ABpos { background: linear-gradient(135deg, #00bcd4, #0097a7); color: white; }
+              &.bg-ABneg { background: linear-gradient(135deg, #009688, #00695c); color: white; }
+              &.bg-Opos { background: linear-gradient(135deg, #4caf50, #388e3c); color: white; }
+              &.bg-Oneg { background: linear-gradient(135deg, #8bc34a, #689f38); color: white; }
             }
           }
         }
@@ -398,10 +464,11 @@
             }
 
             @media (max-width: 480px) {
-              font-size: 9px;
-              padding: 2px 5px;
-              height: 16px;
-              gap: 2px;
+              font-size: 14px;
+              padding: 3px 7px;
+              height: 20px;
+              gap: 3px;
+              border-radius: 12px;
             }
 
             mat-icon {
@@ -456,10 +523,10 @@
               }
 
               @media (max-width: 480px) {
-                width: 12px;
-                height: 12px;
-                min-width: 12px;
-                margin-left: 1px;
+                width: 14px;
+                height: 14px;
+                min-width: 14px;
+                margin-left: 2px;
               }
 
               mat-icon {
@@ -477,9 +544,9 @@
                 }
 
                 @media (max-width: 480px) {
-                  font-size: 7px;
-                  width: 7px;
-                  height: 7px;
+                  font-size: 9px;
+                  width: 9px;
+                  height: 9px;
                 }
               }
 
@@ -503,6 +570,99 @@
               margin-top: 6px;
               gap: 8px;
             }
+
+            // Mobile: Since blood group is now under avatar, mobile-location-info takes full width
+            @media (max-width: 480px) {
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 6px;
+              
+              // Mobile location info takes full width
+              .mobile-location-info {
+                width: 100%;
+                margin-top: 2px;
+              }
+            }
+          }
+
+          // Mobile compact location info (hidden on desktop)
+          .mobile-location-info {
+            display: none;
+
+            @media (max-width: 480px) {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: 8px;
+              font-size: 11px;
+              color: #666;
+              width: 100%;
+
+              .location-info {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                flex: 1;
+                min-width: 0;
+
+                .location-icon {
+                  font-size: 14px;
+                  width: 14px;
+                  height: 14px;
+                  color: #999;
+                  flex-shrink: 0;
+                }
+
+                .location-text {
+                  flex: 1;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                  white-space: nowrap;
+                }
+              }
+
+              .eligibility-badge.mobile-only {
+                display: inline-flex;
+                align-items: center;
+                gap: 3px;
+                padding: 3px 6px;
+                border-radius: 12px;
+                font-size: 9px;
+                font-weight: 600;
+                flex-shrink: 0;
+
+                mat-icon {
+                  font-size: 12px;
+                  width: 12px;
+                  height: 12px;
+                }
+
+                &.eligible {
+                  background: rgba(76, 175, 80, 0.1);
+                  color: #2e7d32;
+                  border: 1px solid rgba(76, 175, 80, 0.3);
+                }
+
+                &.not-eligible {
+                  background: rgba(244, 67, 54, 0.1);
+                  color: #c62828;
+                  border: 1px solid rgba(244, 67, 54, 0.3);
+                }
+
+                &.pending {
+                  background: rgba(255, 152, 0, 0.1);
+                  color: #e65100;
+                  border: 1px solid rgba(255, 152, 0, 0.3);
+                }
+              }
+            }
+
+            // Hide mobile eligibility badge on desktop
+            @media (min-width: 481px) {
+              .eligibility-badge.mobile-only {
+                display: none;
+              }
+            }
           }
 
           .blood-group-badge {
@@ -523,12 +683,22 @@
             &.bg-ABneg { background: linear-gradient(135deg, #009688, #00695c); color: white; }
             &.bg-Opos { background: linear-gradient(135deg, #4caf50, #388e3c); color: white; }
             &.bg-Oneg { background: linear-gradient(135deg, #8bc34a, #689f38); color: white; }
+
+            // Hide desktop blood group badge on mobile (it's now under avatar)
+            @media (max-width: 480px) {
+              display: none;
+            }
           }
         }
 
         .quick-actions {
           display: flex;
           gap: 4px;
+
+          // Hide desktop quick-actions on mobile
+          @media (max-width: 480px) {
+            display: none;
+          }
 
           .eligibility-badge {
             display: inline-flex;
@@ -577,14 +747,20 @@
       .card-body {
         margin-bottom: 16px;
 
+        // Mobile compact layout
+        @media (max-width: 480px) {
+          margin-bottom: 0; // Remove bottom margin for compact list
+        }
+
         .info-grid {
           display: grid;
           grid-template-columns: 1fr 1fr 1fr 1fr;
           gap: 8px;
           margin-bottom: 12px;
 
+          // Hide info-grid on mobile for compact list view
           @media (max-width: 480px) {
-            gap: 6px;
+            display: none;
           }
 
           .info-item {
@@ -622,6 +798,11 @@
         gap: 12px;
         padding-top: 12px;
         border-top: 1px solid #e0e0e0;
+
+        // Hide card footer on mobile for compact list view
+        @media (max-width: 480px) {
+          display: none;
+        }
 
         .contact-info {
           flex: 1;

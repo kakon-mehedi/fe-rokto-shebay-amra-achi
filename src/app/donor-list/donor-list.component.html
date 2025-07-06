@@ -146,6 +146,15 @@
             class="status-indicator"
             [class]="getDonorStatusClass(donor)"
           ></div>
+          <!-- Mobile blood group badge under avatar -->
+          <div
+            class="blood-group-badge mobile-avatar-badge"
+            [class]="
+              'bg-' + donor.bloodGroup.replace('+', 'pos').replace('-', 'neg')
+            "
+          >
+            {{ donor.bloodGroup }}
+          </div>
         </div>
 
         <div class="basic-info">
@@ -177,6 +186,24 @@
               <!-- Donation Eligibility -->
               <div
                 class="eligibility-badge"
+                [class]="getEligibilityClass(donor)"
+              >
+                <mat-icon>{{ getEligibilityIcon(donor) }}</mat-icon>
+                <span>{{ getEligibilityText(donor) }}</span>
+              </div>
+            </div>
+            <!-- Mobile compact location info with eligibility badge -->
+            <div class="mobile-location-info">
+              <!-- Location info comes first (left side) -->
+              <div class="location-info">
+                <mat-icon class="location-icon">location_on</mat-icon>
+                <span class="location-text"
+                  >{{ donor.city }}, {{ donor.location }}</span
+                >
+              </div>
+              <!-- Eligibility badge comes after (right side) -->
+              <div
+                class="eligibility-badge mobile-only"
                 [class]="getEligibilityClass(donor)"
               >
                 <mat-icon>{{ getEligibilityIcon(donor) }}</mat-icon>
@@ -218,7 +245,7 @@
         </div>
       </div>
 
-      <!-- Card Footer -->
+      <!-- Card Footer - Hidden on mobile for compact view -->
       <div class="card-footer">
         <div class="contact-info">
           <mat-icon class="info-icon">location_on</mat-icon>
