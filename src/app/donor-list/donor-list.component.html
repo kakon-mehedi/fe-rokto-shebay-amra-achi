@@ -149,62 +149,57 @@
         </div>
 
         <div class="basic-info">
-          <h3 class="donor-name">{{ donor.name }}</h3>
-          <p class="donor-id" *ngIf="donor.donorId">
-            <mat-icon>badge</mat-icon>
-            <span class="donor-id-text">{{ donor.donorId }}</span>
-            <button
-              mat-icon-button
-              class="copy-id-btn"
-              (click)="copyDonorId(donor.donorId, $event)"
-              matTooltip="ডোনার আইডি কপি করুন"
-            >
-              <mat-icon>content_copy</mat-icon>
-            </button>
-          </p>
-          <div
-            class="blood-group-badge"
-            [class]="
-              'bg-' + donor.bloodGroup.replace('+', 'pos').replace('-', 'neg')
-            "
-          >
-            {{ donor.bloodGroup }}
+          <div class="name-id-row">
+            <h3 class="donor-name">{{ donor.name }}</h3>
+            <div class="donor-id" *ngIf="donor.donorId">
+              <mat-icon>badge</mat-icon>
+              <span class="donor-id-text">{{ donor.donorId }}</span>
+              <button
+                mat-icon-button
+                class="copy-id-btn"
+                (click)="copyDonorId(donor.donorId, $event)"
+                matTooltip="ডোনার আইডি কপি করুন"
+              >
+                <mat-icon>content_copy</mat-icon>
+              </button>
+            </div>
           </div>
-        </div>
-
-        <div class="quick-actions">
-          <button
-            mat-icon-button
-            class="call-btn"
-            (click)="callDonor(donor, $event)"
-            matTooltip="কল করুন"
-          >
-            <mat-icon>call</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            class="info-btn"
-            (click)="openDonorDetails(donor, $event)"
-            matTooltip="বিস্তারিত"
-          >
-            <mat-icon>info</mat-icon>
-          </button>
+          <div class="badge-actions-row">
+            <div
+              class="blood-group-badge"
+              [class]="
+                'bg-' + donor.bloodGroup.replace('+', 'pos').replace('-', 'neg')
+              "
+            >
+              {{ donor.bloodGroup }}
+            </div>
+            <div class="quick-actions">
+              <!-- Donation Eligibility -->
+              <div
+                class="eligibility-badge"
+                [class]="getEligibilityClass(donor)"
+              >
+                <mat-icon>{{ getEligibilityIcon(donor) }}</mat-icon>
+                <span>{{ getEligibilityText(donor) }}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Card Body -->
       <div class="card-body">
         <div class="info-grid">
-          <div class="info-item">
+          <!-- <div class="info-item">
             <mat-icon class="info-icon">location_on</mat-icon>
             <span class="info-text"
               >{{ donor.city }}, {{ donor.location }}</span
             >
-          </div>
+          </div> -->
 
-          <div class="info-item" *ngIf="donor.profession">
-            <mat-icon class="info-icon">work</mat-icon>
-            <span class="info-text">{{ donor.profession }}</span>
+          <div class="info-item" *ngIf="donor.gender">
+            <mat-icon class="info-icon">person</mat-icon>
+            <span class="info-text">{{ donor.gender }}</span>
           </div>
 
           <div class="info-item">
@@ -221,17 +216,12 @@
             }}</span>
           </div>
         </div>
-
-        <!-- Donation Eligibility -->
-        <div class="eligibility-badge" [class]="getEligibilityClass(donor)">
-          <mat-icon>{{ getEligibilityIcon(donor) }}</mat-icon>
-          <span>{{ getEligibilityText(donor) }}</span>
-        </div>
       </div>
 
       <!-- Card Footer -->
       <div class="card-footer">
         <div class="contact-info">
+          <mat-icon class="info-icon">location_on</mat-icon>
           <span class="location-text"
             >{{ donor.city }}, {{ donor.location }}</span
           >
