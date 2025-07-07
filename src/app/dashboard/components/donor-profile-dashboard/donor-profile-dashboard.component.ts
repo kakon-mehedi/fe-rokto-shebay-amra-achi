@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { DonorService } from '../../../shared/services/donor.service';
+import { AddDonationComponent } from '../add-donation/add-donation.component';
 import { 
   DonorResponse, 
   DonationRecord, 
@@ -28,12 +30,12 @@ export class DonorProfileDashboardComponent implements OnInit {
   constructor(
     private donorService: DonorService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
     this.loadDonorProfile();
-    this.loadDonationHistory();
     this.checkEligibility();
   }
 
@@ -42,6 +44,20 @@ export class DonorProfileDashboardComponent implements OnInit {
     this.donorService.getCurrentProfile().subscribe({
       next: (response: any) => {
         this.donorProfile = response.data;
+        
+        // যদি donorProfile এ donationHistory থাকে তাহলে সেটা ব্যবহার করি
+        if (this.donorProfile?.donationHistory) {
+          this.donationHistory = this.donorProfile.donationHistory;
+          this.totalDonations = this.donationHistory.length;
+          if (this.donationHistory.length > 0) {
+            // Sort by donation date (latest first) and get the latest one
+            const sortedHistory = this.donationHistory.sort((a, b) => 
+              new Date(b.donationDate).getTime() - new Date(a.donationDate).getTime()
+            );
+            this.lastDonationDate = new Date(sortedHistory[0].donationDate);
+          }
+        }
+        
         this.isLoading = false;
       },
       error: (error: any) => {
@@ -52,26 +68,6 @@ export class DonorProfileDashboardComponent implements OnInit {
           verticalPosition: 'top'
         });
         this.isLoading = false;
-      }
-    });
-  }
-
-  loadDonationHistory(): void {
-    this.donorService.getDonationHistory().subscribe({
-      next: (response: any) => {
-        this.donationHistory = response.data || [];
-        this.totalDonations = this.donationHistory.length;
-        if (this.donationHistory.length > 0) {
-          this.lastDonationDate = new Date(this.donationHistory[0].donationDate);
-        }
-      },
-      error: (error: any) => {
-        console.error('Error loading donation history:', error);
-        this.snackBar.open('দান ইতিহাস লোড করতে সমস্যা হয়েছে', 'বন্ধ করুন', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
       }
     });
   }
@@ -217,5 +213,38 @@ export class DonorProfileDashboardComponent implements OnInit {
       month: 'long',
       day: 'numeric'
     });
+  }
+
+  // নতুন রক্তদান রেকর্ড করার জন্য dialog খোলা
+  addNewDonation(): void {
+    const dialogRef = this.dialog.open(AddDonationComponent, {
+      width: '650px',
+      maxWidth: '90vw'
+      // data parameter এর প্রয়োজন নেই কারণ auth token থেকে donor ID পাওয়া যাবে
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Dialog থেকে success response পেলে profile reload করি
+        this.snackBar.open('রক্তদান সফলভাবে রেকর্ড করা হয়েছে!', 'বন্ধ করুন', {
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
+        
+        // Profile এবং data reload করি
+        this.loadDonorProfile();
+        this.checkEligibility();
+      }
+    });
+  }
+
+  // Donation history সবথেকে সাম্প্রতিক প্রথমে দেখানোর জন্য sort করা
+  getSortedDonationHistory(): DonationRecord[] {
+    if (!this.donationHistory || this.donationHistory.length === 0) {
+      return [];
+    }
+    return [...this.donationHistory].sort((a, b) => 
+      new Date(b.donationDate).getTime() - new Date(a.donationDate).getTime()
+    );
   }
 }

@@ -425,6 +425,16 @@
               <div class="action-buttons">
                 <button
                   mat-icon-button
+                  (click)="addDonation(donor)"
+                  matTooltip="নতুন রক্তদান রেকর্ড করুন"
+                  class="donation-btn"
+                  color="accent"
+                >
+                  <mat-icon>favorite</mat-icon>
+                </button>
+
+                <button
+                  mat-icon-button
                   (click)="editDonor(donor)"
                   matTooltip="সম্পাদনা করুন"
                   class="edit-btn"

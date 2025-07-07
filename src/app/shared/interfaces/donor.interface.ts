@@ -72,6 +72,7 @@ export interface DonorResponse {
     showEmailToPublic: boolean;
     allowEmergencyContact: boolean;
   };
+  donationHistory?: DonationRecord[];
 }
 
 export interface PublicDonorResponse {

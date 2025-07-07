@@ -15,11 +15,20 @@
         <h1 class="hero-title">জরুরি রক্তের প্রয়োজন?</h1>
         <p class="hero-subtitle">আমরা ২৪/৭ এখানে আছি আপনার সেবায়</p>
         <div class="hero-actions">
-          <button mat-raised-button color="warn" class="emergency-hotline">
+          <button
+            mat-raised-button
+            color="warn"
+            class="emergency-hotline"
+            (click)="call999()"
+          >
             <mat-icon>phone</mat-icon>
             ৯৯৯ (জাতীয় জরুরি সেবা)
           </button>
-          <button mat-stroked-button class="blood-request-btn">
+          <button
+            mat-stroked-button
+            class="blood-request-btn"
+            (click)="makeBloodRequest()"
+          >
             <mat-icon>add</mat-icon>
             রক্তের অনুরোধ করুন
           </button>
@@ -29,7 +38,7 @@
   </div>
 
   <!-- Blood Availability Dashboard -->
-  <div class="blood-dashboard">
+  <!-- <div class="blood-dashboard">
     <div class="container">
       <div class="dashboard-header">
         <h2 class="section-title">
@@ -69,7 +78,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- Emergency Contacts Section -->
   <div class="contacts-section">
     <div class="container">
@@ -202,7 +211,7 @@
               mat-raised-button
               color="primary"
               class="emergency-action"
-              routerLink="/donors"
+              routerLink="/donor-list"
             >
               <div class="action-icon">
                 <mat-icon>search</mat-icon>
@@ -217,7 +226,7 @@
               mat-raised-button
               color="accent"
               class="emergency-action"
-              routerLink="/donors/add"
+              routerLink="/auth/donor-register"
             >
               <div class="action-icon">
                 <mat-icon>volunteer_activism</mat-icon>
@@ -286,7 +295,7 @@
           <div class="help-actions">
             <button mat-raised-button color="primary" class="help-btn">
               <mat-icon>support_agent</mat-icon>
-              হেল্পলাইন: ১৬২৬৩
+              হেল্পলাইন: 01914193676
             </button>
             <button mat-stroked-button class="help-btn">
               <mat-icon>get_app</mat-icon>

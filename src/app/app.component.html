@@ -1,9 +1,11 @@
 <!-- Scroll Progress Indicator -->
 <div class="scroll-progress"></div>
 
-<app-navigation [hidden]="!showNavigation"></app-navigation>
+<!-- <app-navigation></app-navigation> -->
+<app-navigation-new *ngIf="showNavigation"></app-navigation-new>
 <router-outlet></router-outlet>
-<app-mobile-nav ></app-mobile-nav>
+<app-footer *ngIf="showFooter"></app-footer>
+<app-mobile-nav></app-mobile-nav>
 
 <!-- Scroll to Top Button -->
 <app-scroll-to-top></app-scroll-to-top>

@@ -10,6 +10,7 @@ import * as XLSX from 'xlsx';
 import { DonorService } from '../../../shared/services/donor.service';
 import { DonorDetailsModalComponent } from '../donor-details-modal/donor-details-modal.component';
 import { AddEditDonorDialogComponent } from '../add-edit-donor-dialog/add-edit-donor-dialog.component';
+import { AddDonationComponent } from '../../../dashboard/components/add-donation/add-donation.component';
 import { 
   AdminDonorResponse, 
   AdminDonorsListResponse, 
@@ -80,7 +81,7 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
   ];
   eligibilityStatuses = [
     { value: 'ELIGIBLE', label: 'যোগ্য' },
-    { value: 'NOT_ELIGIBLE', label: 'অযোগ্য' },
+    { value: 'TEMPORARILY_INELIGIBLE', label: 'অযোগ্য' },
     { value: 'UNKNOWN', label: 'অজানা' }
   ];
 
@@ -397,6 +398,35 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
           panelClass: ['success-snackbar']
         });
         this.loadDonors(); // Refresh the table
+      }
+    });
+  }
+
+  // নতুন রক্তদান রেকর্ড করার জন্য dialog খোলা
+  addDonation(donor: DonorAdmin) {
+    if (!donor || !donor._id) {
+      this.snackBar.open('রক্তদাতার তথ্যে সমস্যা রয়েছে', 'বন্ধ করুন', {
+        duration: 3000,
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
+    
+    const dialogRef = this.dialog.open(AddDonationComponent, {
+      width: '500px',
+      data: { donorId: donor._id }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.snackBar.open('রক্তদান সফলভাবে রেকর্ড করা হয়েছে!', 'বন্ধ করুন', {
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
+        
+        // Donor list reload করি
+        this.loadDonors();
+        this.loadStatistics();
       }
     });
   }

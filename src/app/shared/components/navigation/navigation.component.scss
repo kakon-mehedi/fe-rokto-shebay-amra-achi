@@ -249,6 +249,53 @@
   }
 }
 
+/* Legal Menu Trigger Styles */
+.legal-menu-trigger {
+  position: relative;
+  
+  .dropdown-icon {
+    margin-left: 5px;
+    font-size: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  &.mat-menu-trigger-for {
+    .dropdown-icon {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+/* Legal Menu Styles */
+.legal-menu {
+  margin-top: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', 'Roboto', sans-serif;
+
+  .mat-menu-item {
+    padding: 12px 16px;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+
+    &:hover {
+      background: rgba(211, 47, 47, 0.1);
+      transform: translateX(3px);
+    }
+
+    mat-icon {
+      margin-right: 12px;
+      color: #d32f2f;
+      font-size: 20px;
+    }
+
+    span {
+      font-weight: 500;
+      color: #333;
+    }
+  }
+}
+
 /* Enhanced Notification Panel */
 .notification-overlay {
   position: fixed;

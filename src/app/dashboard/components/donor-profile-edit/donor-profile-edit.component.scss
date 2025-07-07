@@ -1,12 +1,28 @@
 .profile-edit-container {
   max-width: 1000px;
+  width: 60%;
   margin: 0 auto;
   padding: 20px;
   min-height: calc(100vh - 120px);
+  box-sizing: border-box;
+
+  @media (max-width: 1200px) {
+    width: 70%;
+  }
+
+  @media (max-width: 1024px) {
+    width: 80%;
+  }
 
   @media (max-width: 768px) {
+    width: 95%;
     padding: 10px;
     margin-top: 0;
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    padding: 8px;
   }
 }
 

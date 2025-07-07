@@ -44,6 +44,8 @@ import { TeamMemberManagementComponent } from './components/team-member-manageme
 
 // Shared Module
 import { SharedModule } from '../shared/shared.module';
+// Import AddDonationComponent directly
+import { AddDonationComponent } from '../dashboard/components/add-donation/add-donation.component';
 
 // Guards (temporarily removed until auth is properly implemented)
 // import { AdminGuard } from '../shared/guards/admin.guard';
@@ -74,7 +76,8 @@ const routes: Routes = [
     AddEditDonorDialogComponent,
     DonorDetailsModalComponent,
     AdminProfileComponent,
-    TeamMemberManagementComponent
+    TeamMemberManagementComponent,
+    AddDonationComponent
   ],
   imports: [
     CommonModule,

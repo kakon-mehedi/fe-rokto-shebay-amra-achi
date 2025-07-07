@@ -82,6 +82,14 @@ const routes: Routes = [
 			),
 		data: { title: 'ডোনার তালিকা' },
 	},
+	{
+		path: 'legal',
+		loadChildren: () =>
+			import('./legal/legal.module').then(
+				(m) => m.LegalModule
+			),
+		data: { title: 'আইনি তথ্য' },
+	},
 ];
 
 @NgModule({

@@ -146,9 +146,11 @@ export class DonorService {
 		});
 	}
 
-	updateDonationDate(id: string, lastDonationDate: string): Observable<ApiResponse<Donor>> {
-		return this.http.put<ApiResponse<Donor>>(`${this.apiUrl}/donors/${id}/update-donation-date`, 
-			{ lastDonationDate });
+	updateDonationDate(id: string, donationData: any): Observable<ApiResponse<Donor>> {
+		return this.http.put<ApiResponse<Donor>>(`${this.apiUrl}/donors/${id}/update-donation`, 
+			donationData, {
+			headers: this.getAuthHeaders()
+		});
 	}
 
 	// Mock data for fallback (when not authenticated)

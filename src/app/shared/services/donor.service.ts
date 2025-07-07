@@ -282,7 +282,9 @@ export class DonorService {
 
   // Helper Methods
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('donor_access_token') && !!this.currentDonorSubject.value;
+    const token = localStorage.getItem('donor_access_token');
+    const donor = this.currentDonorSubject.value;
+    return !!token && !!donor;
   }
 
   getCurrentDonor(): DonorResponse | null {
@@ -297,6 +299,40 @@ export class DonorService {
   private storeTokens(accessToken: string, refreshToken: string): void {
     localStorage.setItem('donor_access_token', accessToken);
     localStorage.setItem('donor_refresh_token', refreshToken);
+  }
+
+  // Update donation date and records (for donor's own profile)
+  updateOwnDonation(donationData: any): Observable<ApiResponse<DonorResponse>> {
+    return this.http.put<ApiResponse<DonorResponse>>(
+      `${this.API_BASE_URL}/donor-auth/update-donation`, 
+      donationData,
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
+  // Update donation date and records (for admin updating specific donor)
+  updateDonationAsAdmin(donorId: string, donationData: any): Observable<any> {
+    const token = localStorage.getItem('access_token'); // Admin token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.put(
+      `${this.API_BASE_URL}/donors/${donorId}/update-donation`, 
+      donationData,
+      { headers }
+    );
+  }
+
+  // Legacy method for backward compatibility - determines context automatically
+  updateDonationDate(donorId: string, donationData: any): Observable<any> {
+    // If donorId is provided and we have admin token, use admin endpoint
+    if (donorId && localStorage.getItem('access_token')) {
+      return this.updateDonationAsAdmin(donorId, donationData);
+    } else {
+      // Otherwise use donor's own endpoint
+      return this.updateOwnDonation(donationData);
+    }
   }
 
   private clearDonorData(): void {

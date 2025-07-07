@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FooterComponent } from './components/footer/footer.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
+import { NavigationNewComponent } from './components/navigation-new/navigation-new.component';
 import { MobileNavComponent } from './components/mobile-nav/mobile-nav.component';
 import { ScrollToTopComponent } from './components/scroll-to-top/scroll-to-top.component';
 import { SocialChatHeadComponent } from './components/social-chat-head/social-chat-head.component';
@@ -17,6 +18,7 @@ import { MaterialModule } from './modules/material.module';
 @NgModule({
   declarations: [
     NavigationComponent,
+    NavigationNewComponent,
     FooterComponent,
     MobileNavComponent,
     ScrollToTopComponent,
@@ -37,6 +39,7 @@ import { MaterialModule } from './modules/material.module';
     MatRippleModule,
     FlexLayoutModule,
     NavigationComponent,
+    NavigationNewComponent,
     FooterComponent,
     MobileNavComponent,
     ScrollToTopComponent,

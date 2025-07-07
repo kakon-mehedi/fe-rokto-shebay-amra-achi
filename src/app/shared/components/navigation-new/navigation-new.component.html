@@ -1,0 +1,218 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- Logo -->
+    <div class="navbar-brand" routerLink="/" (click)="navigateTo('/')">
+      <img
+        src="assets/images/roktosebajpg.jpg"
+        alt="রক্তসেবায় আমরা আছি"
+        class="logo"
+      />
+      <span class="brand-text">রক্তসেবায় আমরা আছি</span>
+    </div>
+
+    <!-- Desktop Menu -->
+    <div class="navbar-menu desktop-menu">
+      <a
+        routerLink="/home"
+        class="nav-link"
+        [class.active]="isActiveRoute('/home')"
+        (click)="navigateTo('/home')"
+        >হোম</a
+      >
+      <a
+        routerLink="/donor-list"
+        class="nav-link"
+        [class.active]="isActiveRoute('/donor-list')"
+        (click)="navigateTo('/donor-list')"
+        >ডোনার তালিকা</a
+      >
+      <a
+        routerLink="/emergency"
+        class="nav-link"
+        [class.active]="isActiveRoute('/emergency')"
+        (click)="navigateTo('/emergency')"
+        >জরুরি যোগাযোগ</a
+      >
+      <a
+        routerLink="/blood-donation-guide"
+        class="nav-link"
+        [class.active]="isActiveRoute('/blood-donation-guide')"
+        (click)="navigateTo('/blood-donation-guide')"
+        >রক্তদান গাইড</a
+      >
+      <a
+        routerLink="/about"
+        class="nav-link"
+        [class.active]="isActiveRoute('/about')"
+        (click)="navigateTo('/about')"
+        >আমাদের সম্পর্কে</a
+      >
+
+      <!-- Legal Dropdown -->
+      <div class="dropdown" (click)="toggleLegalDropdown()">
+        <span
+          class="nav-link dropdown-toggle"
+          [class.active]="isActiveRoute('/terms') || isActiveRoute('/privacy')"
+        >
+          নীতিমালা
+          <span class="dropdown-arrow" [class.rotated]="isLegalDropdownOpen"
+            >▼</span
+          >
+        </span>
+        <div class="dropdown-menu" [class.show]="isLegalDropdownOpen">
+          <a
+            routerLink="/legal/terms"
+            class="dropdown-item"
+            (click)="navigateTo('/legal/terms')"
+            >শর্তাবলী ও নীতিমালা</a
+          >
+          <a
+            routerLink="/legal/privacy"
+            class="dropdown-item"
+            (click)="navigateTo('/legal/privacy')"
+            >গোপনীয়তা নীতি</a
+          >
+        </div>
+      </div>
+
+      <a
+        routerLink="/auth/donor-login"
+        class="nav-link"
+        [class.active]="isActiveRoute('/auth/donor-login')"
+        (click)="navigateTo('/auth/donor-login')"
+        >ডোনার লগইন</a
+      >
+      <a
+        routerLink="/auth/login"
+        class="nav-link"
+        [class.active]="isActiveRoute('/auth/login')"
+        (click)="navigateTo('/auth/login')"
+        >অ্যাডমিন লগইন</a
+      >
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button
+      class="mobile-menu-btn"
+      (click)="toggleMobileMenu()"
+      title="মেনু"
+      aria-label="মোবাইল মেনু খুলুন"
+    >
+      <span class="hamburger-line" [class.active]="isMobileMenuOpen"></span>
+      <span class="hamburger-line" [class.active]="isMobileMenuOpen"></span>
+      <span class="hamburger-line" [class.active]="isMobileMenuOpen"></span>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" [class.open]="isMobileMenuOpen">
+    <div class="mobile-menu-overlay" (click)="closeMobileMenu()"></div>
+    <div class="mobile-menu-content">
+      <div class="mobile-menu-header">
+        <div class="mobile-brand">
+          <img
+            src="assets/images/logo.png"
+            alt="রক্তসেবা"
+            class="mobile-logo"
+          />
+          <span class="mobile-brand-text">রক্তসেবা</span>
+        </div>
+        <button class="mobile-close-btn" (click)="closeMobileMenu()">×</button>
+      </div>
+
+      <div class="mobile-menu-items">
+        <a
+          routerLink="/"
+          class="mobile-nav-link"
+          [class.active]="isActiveRoute('/')"
+          (click)="navigateTo('/')"
+        >
+          <span class="mobile-icon">🏠</span>
+          হোম
+        </a>
+        <a
+          routerLink="/about"
+          class="mobile-nav-link"
+          [class.active]="isActiveRoute('/about')"
+          (click)="navigateTo('/about')"
+        >
+          <span class="mobile-icon">ℹ️</span>
+          আমাদের সম্পর্কে
+        </a>
+        <a
+          routerLink="/emergency"
+          class="mobile-nav-link"
+          [class.active]="isActiveRoute('/emergency')"
+          (click)="navigateTo('/emergency')"
+        >
+          <span class="mobile-icon">🚨</span>
+          জরুরি যোগাযোগ
+        </a>
+
+        <!-- Mobile Legal Section -->
+        <div class="mobile-legal-section">
+          <span
+            class="mobile-section-title"
+            [class.active]="
+              isActiveRoute('/terms') || isActiveRoute('/privacy')
+            "
+            (click)="toggleLegalDropdown()"
+          >
+            <span class="mobile-icon">📋</span>
+            নীতিমালা
+            <span
+              class="mobile-dropdown-arrow"
+              [class.rotated]="isLegalDropdownOpen"
+              >▼</span
+            >
+          </span>
+          <div class="mobile-legal-items" [class.show]="isLegalDropdownOpen">
+            <a
+              routerLink="/terms"
+              class="mobile-sub-link"
+              [class.active]="isActiveRoute('/terms')"
+              (click)="navigateTo('/terms')"
+              >শর্তাবলী ও নীতিমালা</a
+            >
+            <a
+              routerLink="/privacy"
+              class="mobile-sub-link"
+              [class.active]="isActiveRoute('/privacy')"
+              (click)="navigateTo('/privacy')"
+              >গোপনীয়তা নীতি</a
+            >
+          </div>
+        </div>
+
+        <a
+          routerLink="/donor/login"
+          class="mobile-nav-link"
+          [class.active]="isActiveRoute('/donor/login')"
+          (click)="navigateTo('/donor/login')"
+        >
+          <span class="mobile-icon">👤</span>
+          ডোনার লগইন
+        </a>
+        <a
+          routerLink="/admin/login"
+          class="mobile-nav-link"
+          [class.active]="isActiveRoute('/admin/login')"
+          (click)="navigateTo('/admin/login')"
+        >
+          <span class="mobile-icon">🔐</span>
+          অ্যাডমিন লগইন
+        </a>
+        <a
+          routerLink="/guide"
+          class="mobile-nav-link"
+          [class.active]="isActiveRoute('/guide')"
+          (click)="navigateTo('/guide')"
+        >
+          <span class="mobile-icon">📖</span>
+          রক্ত গাইড
+        </a>
+        <hr class="mobile-divider" />
+      </div>
+    </div>
+  </div>
+</nav>

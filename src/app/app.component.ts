@@ -10,17 +10,19 @@ import { filter } from 'rxjs/operators';
 export class AppComponent implements OnInit {
   title = 'fresh-angular-13';
   showNavigation = true;
+  showFooter = true;
 
   constructor(private router: Router) {}
 
   ngOnInit() {
-    // Listen to route changes to show/hide navigation
+    // Listen to route changes to show/hide navigation and footer
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event) => {
         const navigationEvent = event as NavigationEnd;
-        // Hide navigation on admin routes
+        // Hide navigation and footer on admin routes
         this.showNavigation = !navigationEvent.url.startsWith('/admin');
+        this.showFooter = !navigationEvent.url.startsWith('/admin');
       });
   }
 }

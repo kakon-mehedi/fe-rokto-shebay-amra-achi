@@ -51,6 +51,17 @@
       <span>আমাদের সম্পর্কে</span>
     </button>
 
+    <!-- Dropdown menu for legal pages -->
+    <button
+      mat-button
+      [matMenuTriggerFor]="legalMenu"
+      class="legal-menu-trigger"
+    >
+      <mat-icon>gavel</mat-icon>
+      <span>আইনি তথ্য</span>
+      <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+    </button>
+
     <!-- <button
       mat-button
       *ngIf="isLoggedIn"
@@ -174,6 +185,18 @@
   </button>
 </mat-menu>
 
+<!-- Legal Menu -->
+<mat-menu #legalMenu="matMenu" class="legal-menu">
+  <button mat-menu-item routerLink="/legal/terms">
+    <mat-icon>gavel</mat-icon>
+    <span>শর্তাবলী ও নীতিমালা</span>
+  </button>
+  <button mat-menu-item routerLink="/legal/privacy">
+    <mat-icon>privacy_tip</mat-icon>
+    <span>গোপনীয়তা নীতি</span>
+  </button>
+</mat-menu>
+
 <!-- Enhanced Notification Panel -->
 <div
   class="notification-overlay"
@@ -268,6 +291,16 @@
       <a mat-list-item routerLink="/about" (click)="closeSidenav()">
         <mat-icon matListIcon>info</mat-icon>
         <span>আমাদের সম্পর্কে</span>
+      </a>
+
+      <a mat-list-item routerLink="/legal/terms" (click)="closeSidenav()">
+        <mat-icon matListIcon>gavel</mat-icon>
+        <span>শর্তাবলী ও নীতিমালা</span>
+      </a>
+
+      <a mat-list-item routerLink="/legal/privacy" (click)="closeSidenav()">
+        <mat-icon matListIcon>privacy_tip</mat-icon>
+        <span>গোপনীয়তা নীতি</span>
       </a>
 
       <a

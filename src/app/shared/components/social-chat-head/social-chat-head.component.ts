@@ -62,26 +62,26 @@ export class SocialChatHeadComponent implements OnInit {
 
   makeCall(): void {
     // Updated with Bangladesh emergency blood donation helpline
-    window.open('tel:+8801911123456', '_self');
+    window.open('tel:+8801914193676', '_self');
     this.isExpanded = false;
   }
 
   openWhatsApp(): void {
     // Updated with proper WhatsApp number for blood donation support
-    const message = encodeURIComponent('হ্যালো! আমি রক্তদান সম্পর্কে জানতে চাই।');
-    window.open(`https://wa.me/8801911123456?text=${message}`, '_blank');
+    const message = encodeURIComponent('হ্যালো! আমি রক্তদান সম্পর্কে জানতে চাই। আমার রক্তের গ্রুপ [  ] এবং আমি [  ] থেকে যোগাযোগ করছি। আপনার সাহায্য প্রয়োজন। ধন্যবাদ!');
+    window.open(`https://wa.me/8801914193676?text=${message}`, '_blank');
     this.isExpanded = false;
   }
 
   openFacebook(): void {
     // Updated with blood donation Facebook page
-    window.open('https://facebook.com/roktosheba.bd', '_blank');
+    window.open('https://www.facebook.com/groups/1466772190444749', '_blank');
     this.isExpanded = false;
   }
 
   openSupport(): void {
     // Updated with support email
-    window.open('mailto:info@roktosheba.com?subject=রক্তদান সাহায্য প্রয়োজন&body=আমার রক্তদান সম্পর্কে সাহায্য প্রয়োজন।', '_blank');
+    window.open('mailto:roktosebabd@gmail.com?subject=রক্তদান সাহায্য প্রয়োজন&body=আমার রক্তদান সম্পর্কে সাহায্য প্রয়োজন।', '_blank');
     this.isExpanded = false;
   }
 

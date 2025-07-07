@@ -87,6 +87,9 @@ const routes:Routes = [
     RouterModule.forChild(routes),
     FormsModule,
     ReactiveFormsModule
+  ],
+  exports: [
+    // Export components if needed by other modules
   ]
 })
 export class DashboardModule { 
