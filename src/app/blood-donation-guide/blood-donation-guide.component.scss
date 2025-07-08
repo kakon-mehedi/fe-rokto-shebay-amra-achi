@@ -68,7 +68,7 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 20px 0;
   position: sticky;
-  top: 0;
+  top: 80px;
   z-index: 100;
 
   .menu-container {
@@ -104,6 +104,8 @@
       }
     }
   }
+
+    
 }
 
 /* Content Sections */
@@ -600,10 +602,98 @@
   50% { opacity: 0.7; }
 }
 
+/* Social Media Post Template Section */
+.social-post-section {
+  margin: 40px 0 0 0;
+  display: flex;
+  justify-content: center;
+
+  .social-post-card {
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(211, 47, 47, 0.08);
+    border: 1px solid #f0f0f0;
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+    
+    &:hover {
+      box-shadow: 0 12px 40px rgba(211, 47, 47, 0.15);
+    }
+
+    mat-card-header {
+      background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
+      color: white;
+      padding: 24px;
+      border-bottom: 1px solid #f0f0f0;
+      .mat-card-title {
+        font-weight: 700;
+        font-size: 1.5rem;
+      }
+      mat-icon {
+        background: white;
+        color: #d32f2f;
+        border-radius: 50%;
+        padding: 8px;
+      }
+    }
+
+    mat-card-content {
+      padding: 32px;
+      background: none;
+      pre.post-template {
+        background: #fff5f5;
+        color: #b71c1c;
+        font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+        font-size: 1.1rem;
+        border-radius: 10px;
+        padding: 20px;
+        white-space: pre-wrap;
+        word-break: break-word;
+        margin: 0;
+        box-shadow: 0 2px 8px rgba(211, 47, 47, 0.05);
+      }
+    }
+
+    mat-card-actions {
+      display: flex;
+      justify-content: flex-end;
+      padding: 16px 32px 24px 32px;
+      background: none;
+      button[mat-raised-button] {
+        font-weight: 600;
+        font-size: 1rem;
+        border-radius: 25px;
+        box-shadow: 0 2px 8px rgba(211, 47, 47, 0.08);
+        mat-icon {
+          margin-right: 6px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .social-post-section {
+    .social-post-card {
+      mat-card-header, mat-card-content, mat-card-actions {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      mat-card-content pre.post-template {
+        font-size: 1rem;
+        padding: 12px;
+      }
+    }
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .guide-header {
-    padding: 60px 20px 40px;
+    padding: 30px 20px 40px;
 
     .header-content {
       h1 {
@@ -617,9 +707,13 @@
   }
 
   .nav-menu .menu-container {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
+    top: 40px;
+
   }
+
+   
 
   .guide-section .section-header {
     flex-direction: column;
@@ -663,5 +757,11 @@
       width: 3rem;
       height: 3rem;
     }
+  }
+}
+
+@media (max-width: 600px) {
+  .nav-menu {
+    display: none !important;
   }
 }

@@ -621,6 +621,7 @@
   box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   animation: slideInRight 0.3s ease-out;
+  margin-top: -5px;
 
   .notification-header {
     padding: 20px;
@@ -774,6 +775,8 @@
   box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   animation: slideInRight 0.3s ease-out;
+  margin-top: -5px;
+  
 
   .user-header {
     padding: 20px;
@@ -896,6 +899,7 @@
     border-radius: 0;
     height: 100%;
     max-height: 100%;
+    
   }
 
   .notification-overlay,

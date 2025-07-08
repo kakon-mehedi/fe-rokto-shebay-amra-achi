@@ -195,7 +195,7 @@ export class TeamMemberManagementComponent implements OnInit, OnDestroy {
           'success'
         );
         this.dialog.closeAll();
-        this.loadTeamMembers();
+        setTimeout(() => this.loadTeamMembers(), 300); // Ensure data refresh after dialog closes
         this.isLoading = false;
       },
       error: (error) => {

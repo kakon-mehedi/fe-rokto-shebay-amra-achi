@@ -95,6 +95,21 @@ export class DonorDetailsModalComponent implements OnInit {
     window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
   }
 
+  // Donor ID copy action
+  copyDonorId(id: string) {
+    navigator.clipboard.writeText(id).then(() => {
+      this.snackBar.open('ডোনার আইডি কপি হয়েছে', 'বন্ধ করুন', {
+        duration: 3000,
+        panelClass: ['success-snackbar']
+      });
+    }).catch(() => {
+      this.snackBar.open('কপি করতে সমস্যা হয়েছে', 'বন্ধ করুন', {
+        duration: 3000,
+        panelClass: ['error-snackbar']
+      });
+    });
+  }
+
   // Helper methods
   getStatusClass(status: string): string {
     switch (status) {
@@ -108,7 +123,7 @@ export class DonorDetailsModalComponent implements OnInit {
   getEligibilityClass(status: string): string {
     switch (status) {
       case 'ELIGIBLE': return 'eligibility-eligible';
-      case 'NOT_ELIGIBLE': return 'eligibility-not-eligible';
+      case 'TEMPORARILY_INELIGIBLE': return 'eligibility-not-eligible';
       case 'UNKNOWN': return 'eligibility-unknown';
       default: return '';
     }
@@ -126,7 +141,7 @@ export class DonorDetailsModalComponent implements OnInit {
   getEligibilityLabel(status: string): string {
     const eligibilityMap = {
       'ELIGIBLE': 'যোগ্য',
-      'NOT_ELIGIBLE': 'অযোগ্য',
+      'TEMPORARILY_INELIGIBLE': 'অযোগ্য',
       'UNKNOWN': 'অজানা'
     };
     return eligibilityMap[status as keyof typeof eligibilityMap] || status;

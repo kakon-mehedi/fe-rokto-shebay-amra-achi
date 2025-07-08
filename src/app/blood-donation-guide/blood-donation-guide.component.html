@@ -102,22 +102,22 @@
           </mat-card-header>
           <mat-card-content>
             <ul>
-                <li>গর্ভবতী ও স্তন্যদানকারী মা</li>
-                <li>ডায়াবেটিস, হৃদরোগ, উচ্চ রক্তচাপের রোগী</li>
-                <li>হেপাটাইটিস বি/সি, এইচআইভি আক্রান্ত</li>
-                <li>মাদকাসক্ত ব্যক্তি</li>
-                <li>ক্যান্সার রোগী</li>
-                <li>কিডনি, লিভার বা হার্টের গুরুতর রোগী</li>
-                <li>থ্যালাসেমিয়া ও সিকেল সেল রোগী</li>
-                <li>মানসিক রোগে আক্রান্ত ব্যক্তি</li>
-                <li>অ্যাজমা বা শ্বাসকষ্টের রোগী</li>
-                <li>অ্যানিমিয়া বা রক্তস্বল্পতা রয়েছে যাদের</li>
-                <li>সাম্প্রতিক অস্ত্রোপচার হয়েছে (৬ মাসের মধ্যে)</li>
-                <li>জ্বর, সর্দি-কাশি বা অসুস্থতা রয়েছে</li>
-                <li>মদ্যপান বা ধূমপানে আসক্ত</li>
-                <li>রক্তবাহিত রোগের ঝুঁকিপূর্ণ আচরণকারী</li>
-                <li>আন্টিবায়টিক ওষুধ সেবনকারী</li>
-                <li>ভেকসিন গ্রহণকারী ২৮ দিনের মধ্যে রক্ত দান করতে পারবে না</li>
+              <li>গর্ভবতী ও স্তন্যদানকারী মা</li>
+              <li>ডায়াবেটিস, হৃদরোগ, উচ্চ রক্তচাপের রোগী</li>
+              <li>হেপাটাইটিস বি/সি, এইচআইভি আক্রান্ত</li>
+              <li>মাদকাসক্ত ব্যক্তি</li>
+              <li>ক্যান্সার রোগী</li>
+              <li>কিডনি, লিভার বা হার্টের গুরুতর রোগী</li>
+              <li>থ্যালাসেমিয়া ও সিকেল সেল রোগী</li>
+              <li>মানসিক রোগে আক্রান্ত ব্যক্তি</li>
+              <li>অ্যাজমা বা শ্বাসকষ্টের রোগী</li>
+              <li>অ্যানিমিয়া বা রক্তস্বল্পতা রয়েছে যাদের</li>
+              <li>সাম্প্রতিক অস্ত্রোপচার হয়েছে (৬ মাসের মধ্যে)</li>
+              <li>জ্বর, সর্দি-কাশি বা অসুস্থতা রয়েছে</li>
+              <li>মদ্যপান বা ধূমপানে আসক্ত</li>
+              <li>রক্তবাহিত রোগের ঝুঁকিপূর্ণ আচরণকারী</li>
+              <li>আন্টিবায়টিক ওষুধ সেবনকারী</li>
+              <li>ভেকসিন গ্রহণকারী ২৮ দিনের মধ্যে রক্ত দান করতে পারবে না</li>
             </ul>
           </mat-card-content>
         </mat-card>
@@ -408,6 +408,25 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <!-- Social Media Post Template Section -->
+    <section class="social-post-section">
+      <mat-card class="social-post-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar color="warn">share</mat-icon>
+          <mat-card-title>সোশ্যাল মিডিয়া পোস্ট টেমপ্লেট</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <pre class="post-template">{{ socialPostTemplate }}</pre>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" (click)="copySocialPost()">
+            <mat-icon>content_copy</mat-icon>
+            কপি করুন
+          </button>
+        </mat-card-actions>
+      </mat-card>
     </section>
 
     <!-- Emergency Contact -->

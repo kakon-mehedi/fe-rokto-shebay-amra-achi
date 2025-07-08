@@ -25,7 +25,11 @@
       <div class="blood-group">{{ donor.bloodGroup }} রক্তদাতা</div>
       <div class="donor-location">
         <mat-icon>place</mat-icon>
-        <span>{{ donor.city }}, {{ donor.location }}</span>
+        <span>{{ donor.city }}, {{ donor.location }} </span>
+      </div>
+      <div class="donor-address" *ngIf="donor.address">
+        <mat-icon>home</mat-icon>
+        <span>{{ donor.address }}</span>
       </div>
     </div>
   </div>
@@ -89,9 +93,9 @@
       target="_blank"
       rel="noopener"
       class="social-link messenger"
-      title="Messenger এ যোগাযোগ করুন"
+      title="Facebook Group এ যোগাযোগ করুন"
     >
-      <mat-icon>message</mat-icon>
+      <mat-icon>facebook</mat-icon>
     </a>
     <a
       href="https://wa.me/8801914193676?text=হ্যালো! আমি রক্তদান সম্পর্কে জানতে চাই।"

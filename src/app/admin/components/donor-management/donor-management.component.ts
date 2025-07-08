@@ -413,8 +413,11 @@ export class DonorManagementComponent implements OnInit, AfterViewInit {
     }
     
     const dialogRef = this.dialog.open(AddDonationComponent, {
-      width: '500px',
-      data: { donorId: donor._id }
+      width: '650px',
+      data: { donorId: donor._id },
+      
+      maxWidth: '90vw',
+      panelClass: 'responsive-dialog',
     });
 
     dialogRef.afterClosed().subscribe(result => {

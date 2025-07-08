@@ -438,8 +438,8 @@
         }
 
         .eligibility-cell {
-          display: flex;
-          flex-direction: column;
+          // display: flex;
+          // flex-direction: column;
           align-items: center;
         }
 
@@ -1004,4 +1004,28 @@ mat-form-field {
 .action-buttons {
   position: relative;
   z-index: 2;
+}
+
+// Responsive dialog styles for MatDialog
+.responsive-dialog .mat-dialog-container {
+  padding: 24px 32px;
+  border-radius: 16px;
+  max-width: 95vw;
+  box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+  .responsive-dialog .mat-dialog-container {
+    padding: 16px 8px;
+    border-radius: 12px;
+    max-width: 98vw;
+  }
+}
+
+@media (max-width: 600px) {
+  .responsive-dialog .mat-dialog-container {
+    padding: 8px 2vw;
+    border-radius: 8px;
+    max-width: 99vw;
+  }
 }

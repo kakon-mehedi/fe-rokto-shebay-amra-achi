@@ -177,6 +177,40 @@
       </mat-card-header>
       <mat-card-content>
         <div class="info-grid">
+          <!-- Donor ID -->
+          <div class="info-item">
+            <mat-icon>fingerprint</mat-icon>
+            <div class="info-content">
+              <label>ডোনার আইডি</label>
+              <span class="donor-id-value">{{ donor._id }}</span>
+              <button
+                mat-icon-button
+                (click)="copyDonorId(donor._id)"
+                matTooltip="আইডি কপি করুন"
+                class="copy-btn"
+              >
+                <mat-icon>content_copy</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Donor ID (Custom) -->
+          <div class="info-item" *ngIf="donor.donorId">
+            <mat-icon>badge</mat-icon>
+            <div class="info-content">
+              <label>কাস্টম ডোনার আইডি</label>
+              <span class="donor-id-value">{{ donor.donorId }}</span>
+              <button
+                mat-icon-button
+                (click)="copyDonorId(donor.donorId)"
+                matTooltip="কাস্টম আইডি কপি করুন"
+                class="copy-btn"
+              >
+                <mat-icon>content_copy</mat-icon>
+              </button>
+            </div>
+          </div>
+
           <div class="info-item">
             <mat-icon>cake</mat-icon>
             <div class="info-content">

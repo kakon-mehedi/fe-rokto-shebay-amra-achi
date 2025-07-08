@@ -1,30 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
-interface DashboardStats {
-  totalDonors: number;
-  activeDonors: number;
-  pendingDonors: number;
-  suspendedDonors: number;
-  totalUsers: number;
-  totalDonations: number;
-  thisMonthDonations: number;
-  emergencyRequests: number;
-}
-
-interface RecentActivity {
-  id: string;
-  type: 'registration' | 'donation' | 'emergency' | 'approval';
-  message: string;
-  time: string;
-  user?: string;
-  status?: string;
-}
-
-interface BloodGroupStats {
-  bloodGroup: string;
-  count: number;
-  percentage: number;
-}
+import { Router } from '@angular/router';
+import { AdminDashboardService, DashboardStats, RecentActivity, BloodGroupStats } from '../../../shared/services/admin-dashboard.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -53,7 +29,7 @@ export class AdminDashboardComponent implements OnInit {
   donationChartData: any[] = [];
   registrationChartData: any[] = [];
 
-  constructor() {}
+  constructor(private adminDashboardService: AdminDashboardService, private router: Router) {}
 
   ngOnInit() {
     this.loadDashboardData();
@@ -61,79 +37,18 @@ export class AdminDashboardComponent implements OnInit {
 
   loadDashboardData() {
     this.isLoading = true;
-    
-    // TODO: Replace with actual API calls
-    setTimeout(() => {
-      // Mock stats data
-      this.stats = {
-        totalDonors: 1250,
-        activeDonors: 1180,
-        pendingDonors: 45,
-        suspendedDonors: 25,
-        totalUsers: 850,
-        totalDonations: 3420,
-        thisMonthDonations: 145,
-        emergencyRequests: 8
-      };
-
-      // Mock recent activities
-      this.recentActivities = [
-        {
-          id: '1',
-          type: 'registration',
-          message: 'নতুন রক্তদাতা নিবন্ধন করেছেন',
-          time: '৫ মিনিট আগে',
-          user: 'মোঃ রহিম উদ্দিন',
-          status: 'pending'
-        },
-        {
-          id: '2',
-          type: 'donation',
-          message: 'রক্তদান সম্পন্ন হয়েছে',
-          time: '১৫ মিনিট আগে',
-          user: 'সালমা খাতুন',
-          status: 'completed'
-        },
-        {
-          id: '3',
-          type: 'emergency',
-          message: 'জরুরি রক্তের প্রয়োজন',
-          time: '৩০ মিনিট আগে',
-          user: 'ঢাকা মেডিকেল কলেজ',
-          status: 'urgent'
-        },
-        {
-          id: '4',
-          type: 'approval',
-          message: 'রক্তদাতা অনুমোদিত হয়েছে',
-          time: '১ ঘন্টা আগে',
-          user: 'করিম আহমেদ',
-          status: 'approved'
-        },
-        {
-          id: '5',
-          type: 'registration',
-          message: 'নতুন ব্যবহারকারী যোগ দিয়েছেন',
-          time: '২ ঘন্টা আগে',
-          user: 'ফাতেমা বেগম',
-          status: 'active'
-        }
-      ];
-
-      // Mock blood group statistics
-      this.bloodGroupStats = [
-        { bloodGroup: 'O+', count: 285, percentage: 22.8 },
-        { bloodGroup: 'A+', count: 275, percentage: 22.0 },
-        { bloodGroup: 'B+', count: 225, percentage: 18.0 },
-        { bloodGroup: 'AB+', count: 125, percentage: 10.0 },
-        { bloodGroup: 'O-', count: 115, percentage: 9.2 },
-        { bloodGroup: 'A-', count: 95, percentage: 7.6 },
-        { bloodGroup: 'B-', count: 85, percentage: 6.8 },
-        { bloodGroup: 'AB-', count: 45, percentage: 3.6 }
-      ];
-
-      this.isLoading = false;
-    }, 1000);
+    this.adminDashboardService.getDashboardStats().subscribe({
+      next: (res) => {
+        this.stats = res.stats;
+        this.bloodGroupStats = res.bloodGroupStats;
+        this.recentActivities = res.recentActivities;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.isLoading = false;
+        // Optionally show error message
+      }
+    });
   }
 
   getActivityIcon(type: string): string {
@@ -171,8 +86,11 @@ export class AdminDashboardComponent implements OnInit {
     this.loadDashboardData();
   }
 
-  navigateToSection(section: string) {
-    // TODO: Implement navigation to specific sections
-    console.log('Navigate to:', section);
+  navigateToSection(section?: string) {
+    if (!section) {
+      this.router.navigate(['/admin/donors']);
+    } else {
+      this.router.navigate([`/admin/${section}`]);
+    }
   }
 }
