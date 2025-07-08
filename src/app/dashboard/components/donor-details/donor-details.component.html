@@ -1,71 +1,161 @@
-<mat-card class="donor-details-container">
-    <!-- Back Button -->
+<div class="donor-details-container">
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>ডোনার তথ্য লোড হচ্ছে...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-container" *ngIf="!isLoading && !donor">
+    <mat-icon class="error-icon">error_outline</mat-icon>
+    <h3>ডোনার পাওয়া যায়নি</h3>
+    <p>দুঃখিত, এই ডোনারের তথ্য খুঁজে পাওয়া যায়নি।</p>
+    <button mat-raised-button color="primary" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+      ফিরে যান
+    </button>
+  </div>
+
+  <!-- Donor Details -->
+  <mat-card class="donor-details-card" *ngIf="!isLoading && donor">
+    <!-- Header Section -->
     <div class="header">
-      <button mat-icon-button color="primary" (click)="goBack()">
+      <button mat-icon-button class="back-button" (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <h2 class="donor-name">{{ donor?.name }}</h2>
-    </div>
-  
-    <!-- Donor Details -->
-    <div class="donor-info">
-      <mat-divider></mat-divider>
-  
-      <!-- Blood Group -->
-      <div class="detail-item">
-        <mat-icon class="detail-icon">bloodtype</mat-icon>
-        <div class="detail-content">
-          <div class="detail-label">Blood Group</div>
-          <div class="detail-value">{{ donor?.bloodGroup }}</div>
+      <div class="donor-header-info">
+        <h2 class="donor-name">{{ donor?.name }}</h2>
+        <div class="blood-group-badge">
+          <mat-icon>bloodtype</mat-icon>
+          <span>{{ donor?.bloodGroup }}</span>
         </div>
       </div>
-  
-      <!-- Mobile Number -->
-      <div class="detail-item">
-        <mat-icon class="detail-icon">phone</mat-icon>
-        <div class="detail-content">
-          <div class="detail-label">Mobile Number</div>
-          <div class="detail-value">{{ donor?.mobileNumber }}</div>
-        </div>
-      </div>
-  
-      <!-- Address -->
-      <div class="detail-item">
-        <mat-icon class="detail-icon">location_on</mat-icon>
-        <div class="detail-content">
-          <div class="detail-label">Address</div>
-          <div class="detail-value">{{ donor?.address }}</div>
-        </div>
-      </div>
-  
-      <!-- Last Donation Date -->
-      <div class="detail-item">
-        <mat-icon class="detail-icon">event</mat-icon>
-        <div class="detail-content">
-          <div class="detail-label">Last Donation Date</div>
-          <div class="detail-value">{{ donor?.lastDonationDate }}</div>
-        </div>
-      </div>
-  
-      <!-- Total Donations -->
-      <div class="detail-item">
-        <mat-icon class="detail-icon">favorite</mat-icon>
-        <div class="detail-content">
-          <div class="detail-label">Total Donations</div>
-          <div class="detail-value">{{ donor?.totalDonations }}</div>
-        </div>
+      <div class="availability-status">
+        <mat-chip
+          [color]="isDonorAvailable() ? 'primary' : 'warn'"
+          selected
+          [ngClass]="{
+            'status-eligible': isDonorAvailable(),
+            'status-not-eligible': !isDonorAvailable()
+          }"
+        >
+          {{ isDonorAvailable() ? "রক্তদানে সক্ষম" : "রক্তদানে অক্ষম" }}
+        </mat-chip>
       </div>
     </div>
-  
+
+    <mat-divider></mat-divider>
+
+    <!-- Donor Information Grid -->
+    <div class="donor-info-grid">
+      <!-- Personal Information Section -->
+      <div class="info-section">
+        <h3 class="section-title">
+          <mat-icon>person</mat-icon>
+          ব্যক্তিগত তথ্য
+        </h3>
+
+        <div class="detail-item">
+          <mat-icon class="detail-icon">phone</mat-icon>
+          <div class="detail-content">
+            <div class="detail-label">মোবাইল নম্বর</div>
+            <div class="detail-value">{{ donor?.mobileNumber }}</div>
+          </div>
+          <button mat-icon-button class="action-icon" (click)="callDonor()">
+            <mat-icon>call</mat-icon>
+          </button>
+        </div>
+
+        <div class="detail-item">
+          <mat-icon class="detail-icon">location_on</mat-icon>
+          <div class="detail-content">
+            <div class="detail-label">ঠিকানা</div>
+            <div class="detail-value">{{ donor?.address }}</div>
+          </div>
+          <button mat-icon-button class="action-icon" (click)="viewOnMap()">
+            <mat-icon>map</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Donation History Section -->
+      <div class="info-section">
+        <h3 class="section-title">
+          <mat-icon>favorite</mat-icon>
+          রক্তদানের ইতিহাস
+        </h3>
+
+        <div class="detail-item">
+          <mat-icon class="detail-icon">event</mat-icon>
+          <div class="detail-content">
+            <div class="detail-label">সর্বশেষ রক্তদান</div>
+            <div
+              class="detail-value last-donation"
+              [ngClass]="{
+                eligible: isDonorAvailable(),
+                'not-eligible': !isDonorAvailable()
+              }"
+            >
+              {{
+                donor?.lastDonationDate | date : "dd MMMM yyyy" || "তথ্য নেই"
+              }}
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <mat-icon class="detail-icon">analytics</mat-icon>
+          <div class="detail-content">
+            <div class="detail-label">মোট রক্তদান</div>
+            <div class="detail-value total-donations">
+              {{ donor?.totalNumberOfDonation || 0 }} বার
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-item" *ngIf="getNextDonationDate()">
+          <mat-icon class="detail-icon">schedule</mat-icon>
+          <div class="detail-content">
+            <div class="detail-label">পরবর্তী রক্তদানের তারিখ</div>
+            <div class="detail-value next-donation">
+              {{ getNextDonationDate() | date : "dd MMMM yyyy" }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Action Buttons -->
     <div class="action-buttons">
-      <button mat-raised-button color="primary" class="action-button" (click)="contactDonor()">
+      <button
+        mat-raised-button
+        color="primary"
+        class="action-button primary-action"
+        (click)="contactDonor()"
+      >
         <mat-icon>call</mat-icon>
-        Contact Donor
+        যোগাযোগ করুন
       </button>
-      <button mat-raised-button color="accent" class="action-button" (click)="requestDonation()">
+
+      <button
+        mat-raised-button
+        color="accent"
+        class="action-button secondary-action"
+        (click)="requestDonation()"
+        [disabled]="!isDonorAvailable()"
+      >
         <mat-icon>favorite</mat-icon>
-        Request Donation
+        রক্তদানের জন্য অনুরোধ
+      </button>
+
+      <button
+        mat-stroked-button
+        class="action-button tertiary-action"
+        (click)="shareDonorInfo()"
+      >
+        <mat-icon>share</mat-icon>
+        তথ্য শেয়ার করুন
       </button>
     </div>
   </mat-card>
+</div>

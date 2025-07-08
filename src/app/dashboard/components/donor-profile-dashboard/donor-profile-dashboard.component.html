@@ -1,0 +1,407 @@
+<div class="donor-profile-dashboard">
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>প্রোফাইল লোড হচ্ছে...</p>
+  </div>
+
+  <!-- Main content -->
+  <div *ngIf="!isLoading" class="dashboard-content">
+    <!-- Header -->
+    <div class="dashboard-header">
+      <div class="profile-section">
+        <div class="profile-avatar">
+          <img
+            [src]="
+              donorProfile?.profilePhoto ||
+              'assets/images/logo/profile_avatar.png'
+            "
+            alt="দাতার প্রোফাইল ছবি"
+            [alt]="
+              donorProfile?.name
+                ? donorProfile?.name + ' এর ছবি'
+                : 'দাতার প্রোফাইল ছবি'
+            "
+            [title]="
+              donorProfile?.name
+                ? donorProfile?.name + ' এর ছবি'
+                : 'দাতার প্রোফাইল ছবি'
+            "
+            class="avatar-image"
+          />
+        </div>
+        <div class="profile-info">
+          <h1>{{ donorProfile?.name }}</h1>
+          <p class="blood-group">{{ donorProfile?.bloodGroup }}</p>
+          <p class="donor-id" *ngIf="donorProfile?.donorId">
+            <mat-icon>badge</mat-icon>
+            ডোনার আইডি: {{ donorProfile?.donorId }}
+          </p>
+          <div
+            class="status-badge"
+            [ngClass]="getStatusClass(donorProfile?.accountStatus || '')"
+          >
+            {{ getStatusText(donorProfile?.accountStatus || "") }}
+          </div>
+          <div
+            class="eligibility-badge"
+            [ngClass]="
+              getEligibilityStatusClass(donorProfile?.eligibilityStatus || '')
+            "
+          >
+            {{
+              getEligibilityStatusText(donorProfile?.eligibilityStatus || "")
+            }}
+          </div>
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button mat-raised-button color="accent" (click)="addNewDonation()">
+          <mat-icon>favorite</mat-icon>
+          নতুন রক্তদান রেকর্ড করুন
+        </button>
+        <button mat-raised-button color="primary" (click)="updateProfile()">
+          <mat-icon>edit</mat-icon>
+          প্রোফাইল আপডেট
+        </button>
+        <button mat-stroked-button (click)="changePassword()">
+          <mat-icon>lock</mat-icon>
+          পাসওয়ার্ড পরিবর্তন
+        </button>
+        <button mat-stroked-button color="warn" (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          লগআউট
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-content">
+            <mat-icon class="stat-icon donations">favorite</mat-icon>
+            <div class="stat-info">
+              <h3>{{ donorProfile?.totalDonations }}</h3>
+              <p>মোট রক্তদান</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-content">
+            <mat-icon class="stat-icon last-donation">event</mat-icon>
+            <div class="stat-info">
+              <h3>
+                {{
+                  donorProfile?.lastDonationDate
+                    ? formatDate(donorProfile!.lastDonationDate!)
+                    : "কোনো রেকর্ড নেই"
+                }}
+              </h3>
+              <p>শেষ রক্তদান</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-content">
+            <mat-icon
+              class="stat-icon eligibility"
+              [ngClass]="
+                eligibilityResult?.eligible ? 'eligible' : 'not-eligible'
+              "
+            >
+              {{ eligibilityResult?.eligible ? "check_circle" : "cancel" }}
+            </mat-icon>
+            <div class="stat-info">
+              <h3>{{ eligibilityResult?.eligible ? "যোগ্য" : "অযোগ্য" }}</h3>
+              <p>দান যোগ্যতা</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card" *ngIf="nextEligibleDate">
+        <mat-card-content>
+          <div class="stat-content">
+            <mat-icon class="stat-icon next-eligible">schedule</mat-icon>
+            <div class="stat-info">
+              <h3>{{ formatDate(nextEligibleDate.toISOString()) }}</h3>
+              <p>পরবর্তী যোগ্যতার তারিখ</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Account Status Alert -->
+    <mat-card
+      *ngIf="donorProfile?.accountStatus === 'PENDING'"
+      class="status-alert pending"
+    >
+      <mat-card-content>
+        <div class="alert-content">
+          <mat-icon>info</mat-icon>
+          <div>
+            <h3>অনুমোদনের অপেক্ষায়</h3>
+            <p>
+              আপনার অ্যাকাউন্ট এখনও অনুমোদনের অপেক্ষায় আছে। অনুগ্রহ করে ধৈর্য
+              ধরুন, আমরা শীঘ্রই আপনার তথ্য যাচাই করব।
+            </p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card
+      *ngIf="donorProfile?.accountStatus === 'SUSPENDED'"
+      class="status-alert suspended"
+    >
+      <mat-card-content>
+        <div class="alert-content">
+          <mat-icon>warning</mat-icon>
+          <div>
+            <h3>অ্যাকাউন্ট স্থগিত</h3>
+            <p>
+              আপনার অ্যাকাউন্ট স্থগিত করা হয়েছে। আরো তথ্যের জন্য আমাদের সাথে
+              যোগাযোগ করুন।
+            </p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Profile Details -->
+    <div class="profile-details">
+      <div class="details-grid">
+        <!-- Personal Information -->
+        <mat-card class="details-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>person</mat-icon>
+              ব্যক্তিগত তথ্য
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="info-grid">
+              <div class="info-item">
+                <label>ফোন নম্বর:</label>
+                <span>{{ donorProfile?.phone || "N/A" }}</span>
+              </div>
+              <div class="info-item">
+                <label>ইমেইল:</label>
+                <span>{{ donorProfile?.email || "N/A" }}</span>
+              </div>
+              <div class="info-item">
+                <label>লিঙ্গ:</label>
+                <span>{{ getGenderText(donorProfile?.gender || "") }}</span>
+              </div>
+              <div class="info-item">
+                <label>ধর্ম:</label>
+                <span>{{ getReligionText(donorProfile?.religion || "") }}</span>
+              </div>
+              <div class="info-item">
+                <label>জন্ম তারিখ:</label>
+                <span>{{
+                  donorProfile?.dateOfBirth
+                    ? formatDate(donorProfile!.dateOfBirth!)
+                    : "N/A"
+                }}</span>
+              </div>
+              <div class="info-item">
+                <label>পেশা:</label>
+                <span>{{ donorProfile?.profession || "N/A" }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Contact Information -->
+        <mat-card class="details-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>location_on</mat-icon>
+              যোগাযোগের তথ্য
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="info-grid">
+              <div class="info-item">
+                <label>শহর:</label>
+                <span>{{ donorProfile?.city }}</span>
+              </div>
+              <div class="info-item">
+                <label>এলাকা:</label>
+                <span>{{ donorProfile?.location }}</span>
+              </div>
+              <div class="info-item full-width">
+                <label>সম্পূর্ণ ঠিকানা:</label>
+                <span>{{ donorProfile?.address }}</span>
+              </div>
+              <div
+                class="info-item"
+                *ngIf="donorProfile?.emergencyContact?.name"
+              >
+                <label>জরুরি যোগাযোগ:</label>
+                <span
+                  >{{ donorProfile?.emergencyContact?.name }} ({{
+                    donorProfile?.emergencyContact?.relation
+                  }})</span
+                >
+              </div>
+              <div
+                class="info-item"
+                *ngIf="donorProfile?.emergencyContact?.phone"
+              >
+                <label>জরুরি ফোন:</label>
+                <span>{{ donorProfile?.emergencyContact?.phone }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Medical Information -->
+        <mat-card class="details-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>medical_services</mat-icon>
+              চিকিৎসা সংক্রান্ত তথ্য
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="info-grid">
+              <div class="info-item">
+                <label>ওজন:</label>
+                <span>{{
+                  donorProfile?.weight != null
+                    ? donorProfile?.weight + " কেজি"
+                    : "N/A"
+                }}</span>
+              </div>
+              <div class="info-item">
+                <label>উচ্চতা:</label>
+                <span>{{
+                  donorProfile?.height != null
+                    ? donorProfile?.height + " সেমি"
+                    : "N/A"
+                }}</span>
+              </div>
+              <div class="info-item">
+                <label>জাতীয় পরিচয়পত্র:</label>
+                <span>{{ donorProfile?.nationalId || "N/A" }}</span>
+              </div>
+              <div class="info-item">
+                <label>নিবন্ধনের তারিখ:</label>
+                <span>{{
+                  donorProfile?.registrationDate
+                    ? formatDate(donorProfile!.registrationDate!)
+                    : "N/A"
+                }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Donation History -->
+    <mat-card
+      class="donation-history-card"
+      *ngIf="donationHistory && donationHistory.length > 0"
+    >
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>history</mat-icon>
+          রক্তদানের ইতিহাস
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="donation-list">
+          <div
+            *ngFor="let donation of getSortedDonationHistory()"
+            class="donation-item"
+          >
+            <div class="donation-info">
+              <div class="donation-date">
+                <mat-icon>event</mat-icon>
+                {{ formatDate(donation.donationDate) }}
+              </div>
+              <div class="donation-details">
+                <p><strong>স্থান:</strong> {{ donation.location }}</p>
+                <p><strong>রক্তব্যাংক:</strong> {{ donation.bloodBank }}</p>
+                <p><strong>ইউনিট:</strong> {{ donation.units }}</p>
+                <p *ngIf="donation.notes">
+                  <strong>নোট:</strong> {{ donation.notes }}
+                </p>
+              </div>
+            </div>
+            <div class="donation-verified" *ngIf="donation.verifiedBy">
+              <mat-icon>verified</mat-icon>
+              <span>যাচাইকৃত</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- No Donation History -->
+    <mat-card
+      class="no-donations-card"
+      *ngIf="!donationHistory || donationHistory.length === 0"
+    >
+      <mat-card-content>
+        <div class="no-donations-content">
+          <mat-icon>favorite_border</mat-icon>
+          <h3>এখনো কোনো রক্তদানের রেকর্ড নেই</h3>
+          <p>আপনার প্রথম রক্তদানের পর এখানে ইতিহাস দেখাবে।</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Eligibility Information -->
+    <mat-card class="eligibility-card" *ngIf="eligibilityResult">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon
+            [ngClass]="eligibilityResult.eligible ? 'eligible' : 'not-eligible'"
+          >
+            {{ eligibilityResult.eligible ? "check_circle" : "cancel" }}
+          </mat-icon>
+          দান যোগ্যতার তথ্য
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="eligibility-content">
+          <div
+            class="eligibility-status"
+            [ngClass]="eligibilityResult.eligible ? 'eligible' : 'not-eligible'"
+          >
+            <h3>
+              {{
+                eligibilityResult.eligible
+                  ? "আপনি রক্তদানের জন্য যোগ্য"
+                  : "আপনি বর্তমানে রক্তদানের জন্য যোগ্য নন"
+              }}
+            </h3>
+            <p>{{ eligibilityResult.reason }}</p>
+          </div>
+          <div
+            *ngIf="nextEligibleDate && !eligibilityResult.eligible"
+            class="next-eligible"
+          >
+            <p>
+              <strong>পরবর্তী যোগ্যতার তারিখ:</strong>
+              {{ formatDate(nextEligibleDate.toISOString()) }}
+            </p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <app-mobile-nav></app-mobile-nav>
+</div>

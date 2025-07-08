@@ -1,0 +1,304 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- Logo -->
+    <div class="navbar-brand" routerLink="/" (click)="navigateTo('/')">
+      <img
+        src="assets/images/roktosebajpg.jpg"
+        alt="রক্তসেবায় আমরা আছি"
+        class="logo"
+      />
+      <span class="brand-text">রক্তসেবায় আমরা আছি</span>
+    </div>
+
+    <!-- Desktop Menu -->
+    <div class="navbar-menu desktop-menu">
+      <a
+        routerLink="/home"
+        class="nav-link"
+        [class.active]="isActiveRoute('/home')"
+        (click)="navigateTo('/home')"
+        >হোম</a
+      >
+      <a
+        routerLink="/donor-list"
+        class="nav-link"
+        [class.active]="isActiveRoute('/donor-list')"
+        (click)="navigateTo('/donor-list')"
+        >ডোনার তালিকা</a
+      >
+      <a
+        routerLink="/emergency"
+        class="nav-link"
+        [class.active]="isActiveRoute('/emergency')"
+        (click)="navigateTo('/emergency')"
+        >জরুরি যোগাযোগ</a
+      >
+      <a
+        routerLink="/blood-donation-guide"
+        class="nav-link"
+        [class.active]="isActiveRoute('/blood-donation-guide')"
+        (click)="navigateTo('/blood-donation-guide')"
+        >রক্তদান গাইড</a
+      >
+      <a
+        routerLink="/about"
+        class="nav-link"
+        [class.active]="isActiveRoute('/about')"
+        (click)="navigateTo('/about')"
+        >আমাদের সম্পর্কে</a
+      >
+
+      <!-- Legal Dropdown -->
+      <div class="dropdown" (click)="toggleLegalDropdown()">
+        <span
+          class="nav-link dropdown-toggle"
+          [class.active]="isActiveRoute('/terms') || isActiveRoute('/privacy')"
+        >
+          নীতিমালা
+          <span class="dropdown-arrow" [class.rotated]="isLegalDropdownOpen"
+            >▼</span
+          >
+        </span>
+        <div class="dropdown-menu" [class.show]="isLegalDropdownOpen">
+          <a
+            routerLink="/legal/terms"
+            class="dropdown-item"
+            (click)="navigateTo('/legal/terms')"
+            >শর্তাবলী ও নীতিমালা</a
+          >
+          <a
+            routerLink="/legal/privacy"
+            class="dropdown-item"
+            (click)="navigateTo('/legal/privacy')"
+            >গোপনীয়তা নীতি</a
+          >
+        </div>
+      </div>
+
+      <!-- User/Login Dropdown Logic -->
+      <ng-container *ngIf="!isLoggedIn; else loggedInBlock">
+        <div class="dropdown" (click)="toggleLoginDropdown($event)">
+          <span class="nav-link dropdown-toggle">
+            লগইন
+            <span class="dropdown-arrow" [class.rotated]="isLoginDropdownOpen"
+              >▼</span
+            >
+          </span>
+          <div class="dropdown-menu" [class.show]="isLoginDropdownOpen">
+            <a
+              routerLink="/auth/donor-login"
+              class="dropdown-item"
+              (click)="navigateTo('/auth/donor-login')"
+              >ডোনার লগইন</a
+            >
+            <a
+              routerLink="/auth/login"
+              class="dropdown-item"
+              (click)="navigateTo('/auth/login')"
+              >অ্যাডমিন লগইন</a
+            >
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #loggedInBlock>
+        <div class="dropdown user-dropdown" (click)="toggleUserDropdown()">
+          <span class="nav-link user-info">
+            <img
+              *ngIf="userAvatar; else defaultAvatar"
+              [src]="userAvatar"
+              class="user-avatar"
+              alt="User"
+            />
+            <ng-template #defaultAvatar>
+              <!-- <span class="user-avatar default">👤</span> -->
+              <img
+                src="assets/images/logo/profile_avatar.png"
+                alt="User Avatar"
+                class="user-avatar default"
+              />
+            </ng-template>
+            <!-- <span class="user-name">{{
+              userName || (isAdmin ? "অ্যাডমিন" : "ডোনার")
+            }}</span> -->
+            <span class="dropdown-arrow" [class.rotated]="isUserDropdownOpen"
+              >▼</span
+            >
+          </span>
+          <div class="dropdown-menu" [class.show]="isUserDropdownOpen">
+            <span class="dropdown-item">{{
+              userName || (isAdmin ? "অ্যাডমিন" : "ডোনার")
+            }}</span>
+            <a
+              *ngIf="!isAdmin"
+              routerLink="/dashboard"
+              class="dropdown-item"
+              (click)="navigateTo('/dashboard')"
+              >প্রোফাইল</a
+            >
+            <a
+              *ngIf="isAdmin"
+              routerLink="/admin/dashboard"
+              class="dropdown-item"
+              (click)="navigateTo('/admin/dashboard')"
+              >ড্যাশবোর্ড</a
+            >
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" (click)="logout()">লগআউট</a>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button
+      class="mobile-menu-btn"
+      (click)="toggleMobileMenu()"
+      title="মেনু"
+      aria-label="মোবাইল মেনু খুলুন"
+    >
+      <span class="hamburger-line" [class.active]="isMobileMenuOpen"></span>
+      <span class="hamburger-line" [class.active]="isMobileMenuOpen"></span>
+      <span class="hamburger-line" [class.active]="isMobileMenuOpen"></span>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" [class.open]="isMobileMenuOpen">
+    <div class="mobile-menu-overlay" (click)="closeMobileMenu()"></div>
+    <div class="mobile-menu-content">
+      <div class="mobile-menu-header">
+        <div class="mobile-brand">
+          <img
+            src="assets/images/roktosebajpg.jpg"
+            alt="রক্তসেবায় আমরা আছি"
+            class="mobile-logo"
+          />
+          <span class="mobile-brand-text">রক্তসেবায় আমরা আছি</span>
+        </div>
+        <button class="mobile-close-btn" (click)="closeMobileMenu()">×</button>
+      </div>
+
+      <div class="mobile-menu-items">
+        <a
+          routerLink="/home"
+          class="mobile-nav-link"
+          [class.active]="isActiveRoute('/home')"
+          (click)="navigateTo('/home')"
+        >
+          <span class="mobile-icon">🏠</span>
+          হোম
+        </a>
+        <a
+          routerLink="/donor-list"
+          class="mobile-nav-link"
+          [class.active]="isActiveRoute('/donor-list')"
+          (click)="navigateTo('/donor-list')"
+        >
+          <span class="mobile-icon">🤵‍♂️</span>
+          ডোনার তালিকা
+        </a>
+        <a
+          routerLink="/emergency"
+          class="mobile-nav-link"
+          [class.active]="isActiveRoute('/emergency')"
+          (click)="navigateTo('/emergency')"
+        >
+          <span class="mobile-icon">🚨</span>
+          জরুরি যোগাযোগ
+        </a>
+        <a
+          routerLink="/blood-donation-guide"
+          class="mobile-nav-link"
+          [class.active]="isActiveRoute('/blood-donation-guide')"
+          (click)="navigateTo('/blood-donation-guide')"
+        >
+          <span class="mobile-icon">📖</span>
+          রক্তদান গাইড
+        </a>
+        <a
+          routerLink="/about"
+          class="mobile-nav-link"
+          [class.active]="isActiveRoute('/about')"
+          (click)="navigateTo('/about')"
+        >
+          <span class="mobile-icon">ℹ️</span>
+          আমাদের সম্পর্কে
+        </a>
+
+        <!-- Mobile Legal Section -->
+        <a
+          routerLink="/legal/terms"
+          class="mobile-nav-link"
+          [class.active]="isActiveRoute('/legal/terms')"
+          (click)="navigateTo('/legal/terms')"
+          ><span class="mobile-icon">⚖️</span>শর্তাবলী ও নীতিমালা</a
+        >
+        <a
+          routerLink="/legal/privacy"
+          class="mobile-nav-link"
+          [class.active]="isActiveRoute('/legal/privacy')"
+          (click)="navigateTo('/legal/privacy')"
+          ><span class="mobile-icon">🛡️</span>গোপনীয়তা নীতি</a
+        >
+
+        <!-- Mobile Login/User Section -->
+        <ng-container *ngIf="!isLoggedIn; else mobileLoggedInBlock">
+          <a
+            routerLink="/auth/donor-login"
+            class="mobile-nav-link"
+            (click)="navigateTo('/auth/donor-login')"
+            ><span class="mobile-icon">👨‍💼</span>ডোনার লগইন</a
+          >
+          <a
+            routerLink="/auth/login"
+            class="mobile-nav-link"
+            (click)="navigateTo('/auth/login')"
+            ><span class="mobile-icon">🔑</span>অ্যাডমিন লগইন</a
+          >
+        </ng-container>
+        <ng-template #mobileLoggedInBlock>
+          <div class="mobile-user-dropdown">
+            <span class="mobile-nav-link" (click)="toggleMobileUserDropdown()">
+              <span
+                *ngIf="userAvatar; else mobileDefaultAvatar"
+                class="user-avatar"
+                ><img [src]="userAvatar" alt="User"
+              /></span>
+              <ng-template #mobileDefaultAvatar
+                ><span class="user-avatar default">👤</span></ng-template
+              >
+              <span class="user-name">{{
+                userName || (isAdmin ? "অ্যাডমিন" : "ডোনার")
+              }}</span>
+              <span
+                class="dropdown-arrow"
+                [class.rotated]="isMobileUserDropdownOpen"
+                >▼</span
+              >
+            </span>
+            <div class="dropdown-menu" [class.show]="isMobileUserDropdownOpen">
+              <a
+                *ngIf="!isAdmin"
+                routerLink="/dashboard"
+                class="dropdown-item"
+                (click)="navigateTo('/dashboard')"
+                >প্রোফাইল</a
+              >
+              <a
+                *ngIf="isAdmin"
+                routerLink="/admin/dashboard"
+                class="dropdown-item"
+                (click)="navigateTo('/admin/dashboard')"
+                >ড্যাশবোর্ড</a
+              >
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" (click)="logout()">লগআউট</a>
+            </div>
+          </div>
+        </ng-template>
+
+        <hr class="mobile-divider" />
+      </div>
+    </div>
+  </div>
+</nav>

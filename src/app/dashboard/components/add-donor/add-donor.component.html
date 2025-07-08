@@ -1,0 +1,165 @@
+<div class="donor-form-container">
+  <mat-card class="donor-form-card">
+    <mat-card-header>
+      <mat-card-title>{{ pageTitle }}</mat-card-title>
+      <mat-card-subtitle>{{
+        isEditMode ? "Update Donor Information" : "Add New Blood Donor"
+      }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="donorForm" (ngSubmit)="onSubmit()">
+        <div class="form-fields">
+          <!-- Name Field -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>ডোনারের নাম *</mat-label>
+            <input
+              matInput
+              formControlName="name"
+              placeholder="ডোনারের পূর্ণ নাম"
+              maxlength="50"
+            />
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-hint>২-৫০ অক্ষরের মধ্যে হতে হবে</mat-hint>
+            <mat-error>{{ getErrorMessage("name") }}</mat-error>
+          </mat-form-field>
+
+          <!-- Address Field -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>ঠিকানা *</mat-label>
+            <textarea
+              matInput
+              formControlName="address"
+              placeholder="সম্পূর্ণ ঠিকানা (গ্রাম/এলাকা, উপজেলা, জেলা)"
+              rows="3"
+              maxlength="200"
+            ></textarea>
+            <mat-icon matSuffix>location_on</mat-icon>
+            <mat-hint>৫-২০০ অক্ষরের মধ্যে সম্পূর্ণ ঠিকানা দিন</mat-hint>
+            <mat-error>{{ getErrorMessage("address") }}</mat-error>
+          </mat-form-field>
+
+          <!-- Mobile Number Field -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>মোবাইল নাম্বার *</mat-label>
+            <input
+              matInput
+              formControlName="mobileNumber"
+              placeholder="01XXXXXXXXX"
+              maxlength="14"
+            />
+            <mat-icon matSuffix>phone</mat-icon>
+            <mat-hint>বাংলাদেশী মোবাইল নাম্বার (উদাহরণ: 01712345678)</mat-hint>
+            <mat-error>{{ getErrorMessage("mobileNumber") }}</mat-error>
+          </mat-form-field>
+          <!-- Blood Group Field -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>ব্লাড গ্রুপ *</mat-label>
+            <mat-select formControlName="bloodGroup">
+              <mat-option *ngFor="let bg of bloodGroups" [value]="bg">
+                {{ bg }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>bloodtype</mat-icon>
+            <mat-hint>আপনার রক্তের গ্রুপ নির্বাচন করুন</mat-hint>
+            <mat-error>{{ getErrorMessage("bloodGroup") }}</mat-error>
+          </mat-form-field>
+
+          <!-- Total Number of Donations Field -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>মোট রক্তদানের সংখ্যা</mat-label>
+            <input
+              matInput
+              formControlName="totalNumberOfDonation"
+              placeholder="0"
+              type="number"
+              min="0"
+              max="100"
+            />
+            <mat-icon matSuffix>analytics</mat-icon>
+            <mat-hint>আগে কতবার রক্তদান করেছেন (০-১০০)</mat-hint>
+            <mat-error>{{
+              getErrorMessage("totalNumberOfDonation")
+            }}</mat-error>
+          </mat-form-field>
+
+          <!-- Last Donation Date Field -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>সর্বশেষ রক্তদানের তারিখ (ঐচ্ছিক)</mat-label>
+            <input
+              matInput
+              formControlName="lastDonationDate"
+              placeholder="yyyy-mm-dd"
+              type="date"
+              [max]="getTodayDate()"
+            />
+            <mat-icon matSuffix>event</mat-icon>
+            <mat-hint
+              >যদি আগে রক্তদান করে থাকেন তাহলে সর্বশেষ তারিখ দিন</mat-hint
+            >
+            <mat-error>{{ getErrorMessage("lastDonationDate") }}</mat-error>
+          </mat-form-field>
+          <!-- Profile Photo Upload -->
+          <div class="file-upload-section">
+            <mat-label class="section-label">প্রোফাইল ফটো (ঐচ্ছিক)</mat-label>
+            <div class="file-upload-container">
+              <input
+                type="file"
+                accept="image/*"
+                (change)="onFileSelected($event)"
+                #fileInput
+                class="hidden-file-input"
+                aria-label="Profile photo upload"
+                title="Upload profile photo"
+              />
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="fileInput.click()"
+                class="upload-button"
+                color="primary"
+              >
+                <mat-icon>cloud_upload</mat-icon>
+                ফটো নির্বাচন করুন
+              </button>
+              <div class="file-info" *ngIf="selectedFile">
+                <mat-icon class="file-icon">image</mat-icon>
+                <span class="file-name">{{ selectedFile.name }}</span>
+                <span class="file-size"
+                  >({{ getFileSize(selectedFile.size) }})</span
+                >
+                <button
+                  mat-icon-button
+                  type="button"
+                  (click)="removeSelectedFile()"
+                  class="remove-file-button"
+                  title="ফটো সরান"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="file-upload-hint">
+              <mat-icon class="hint-icon">info</mat-icon>
+              <span>সর্বোচ্চ ৫ মেগাবাইট। JPEG, PNG, WebP ফরম্যাট সমর্থিত।</span>
+            </div>
+          </div>
+          <!-- Submit Button -->
+          <button
+            mat-raised-button
+            color="warn"
+            class="full-width submit-button"
+            type="submit"
+            [disabled]="donorForm.invalid || isLoading"
+          >
+            <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+            <span *ngIf="!isLoading">{{
+              isEditMode ? "আপডেট করুন" : "সাবমিট"
+            }}</span>
+            <span *ngIf="isLoading">অপেক্ষা করুন...</span>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

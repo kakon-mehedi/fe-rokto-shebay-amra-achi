@@ -1,0 +1,420 @@
+<div class="about-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">রক্তসেবায় আমরা আছি</h1>
+        <p class="hero-subtitle">মানবতার সেবায় নিবেদিত একটি অলাভজনক সংস্থা</p>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-number">৫,০০০+</span>
+            <span class="stat-label">রক্তদাতা</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">২,৫০০+</span>
+            <span class="stat-label">সফল দান</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">১,০০০+</span>
+            <span class="stat-label">জীবন রক্ষা</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img
+          src="assets/images/about/roktosebajpg.jpg"
+          alt="রক্তদান"
+          class="hero-img"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Navigation Menu -->
+  <nav class="about-nav">
+    <div class="nav-container">
+      <button mat-button (click)="scrollToSection('mission')" class="nav-item">
+        <mat-icon>flag</mat-icon>
+        <span>লক্ষ্য ও উদ্দেশ্য</span>
+      </button>
+      <button mat-button (click)="scrollToSection('vision')" class="nav-item">
+        <mat-icon>visibility</mat-icon>
+        <span>ভিশন ও মিশন</span>
+      </button>
+      <button mat-button (click)="scrollToSection('history')" class="nav-item">
+        <mat-icon>history</mat-icon>
+        <span>ইতিহাস</span>
+      </button>
+      <button mat-button (click)="scrollToSection('team')" class="nav-item">
+        <mat-icon>group</mat-icon>
+        <span>পরিচালনা পর্ষদ</span>
+      </button>
+      <button
+        mat-button
+        (click)="scrollToSection('achievements')"
+        class="nav-item"
+      >
+        <mat-icon>emoji_events</mat-icon>
+        <span>অর্জনসমূহ</span>
+      </button>
+      <button mat-button (click)="scrollToSection('partners')" class="nav-item">
+        <mat-icon>handshake</mat-icon>
+        <span>অংশীদার</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- About Organization -->
+    <section id="mission" class="content-section">
+      <div class="section-header">
+        <mat-icon>flag</mat-icon>
+        <h2 class="section-title">আমাদের সম্পর্কে</h2>
+      </div>
+
+      <div class="about-content">
+        <div class="about-text">
+          <p class="lead-text">
+            "রক্তসেবায় আমরা আছি" বাংলাদেশের একটি অগ্রণী অলাভজনক সংস্থা যা ২০১৯
+            সাল থেকে দেশব্যাপী রক্তদান কার্যক্রম পরিচালনা করে আসছে। আমাদের মূল
+            উদ্দেশ্য হলো নিরাপদ রক্তের সহজলভ্যতা নিশ্চিত করা এবং রক্তদানে
+            জনসচেতনতা বৃদ্ধি করা।
+          </p>
+          <p>
+            আমাদের আধুনিক প্রযুক্তিনির্ভর প্ল্যাটফর্মের মাধ্যমে রক্তদাতা এবং
+            রক্ত প্রয়োজনকারীদের মধ্যে দ্রুত এবং কার্যকর যোগাযোগ স্থাপন করা হয়।
+            আমরা বিশ্বাস করি যে প্রতিটি মানুষের জীবন মূল্যবান এবং সঠিক সময়ে
+            রক্তের সরবরাহ একটি জীবন বাঁচাতে পারে।
+          </p>
+          <div class="key-features">
+            <div class="feature-item">
+              <mat-icon>verified</mat-icon>
+              <span>যাচাইকৃত রক্তদাতা</span>
+            </div>
+            <div class="feature-item">
+              <mat-icon>security</mat-icon>
+              <span>নিরাপদ ও গোপনীয়</span>
+            </div>
+            <div class="feature-item">
+              <mat-icon>schedule</mat-icon>
+              <span>২৪/৭ সেবা</span>
+            </div>
+            <div class="feature-item">
+              <mat-icon>location_on</mat-icon>
+              <span>দেশব্যাপী নেটওয়ার্ক</span>
+            </div>
+          </div>
+        </div>
+        <div class="about-image">
+          <img
+            src="assets/images/about/organization.jpg"
+            alt="সংস্থার ছবি"
+            class="org-img"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission & Vision -->
+    <section id="vision" class="content-section">
+      <div class="section-header">
+        <mat-icon>visibility</mat-icon>
+        <h2 class="section-title">ভিশন ও মিশন</h2>
+      </div>
+
+      <div class="mission-vision-grid">
+        <div class="card">
+          <div class="card-icon mission-icon">
+            <mat-icon>flag</mat-icon>
+          </div>
+          <h3 class="card-title">আমাদের মিশন</h3>
+          <p class="card-content">
+            প্রযুক্তির সাহায্যে রক্তদান ব্যবস্থাকে আরও কার্যকর, নিরাপদ এবং
+            সহজলভ্য করে তোলা। আমাদের মিশন হলো প্রতিটি রক্ত প্রয়োজনকারী
+            ব্যক্তিকে সময়মতো উপযুক্ত রক্তদাতার সাথে সংযুক্ত করা。
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon vision-icon">
+            <mat-icon>visibility</mat-icon>
+          </div>
+          <h3 class="card-title">আমাদের ভিশন</h3>
+          <p class="card-content">
+            একটি স্বয়ংসম্পূর্ণ রক্তদান ব্যবস্থা গড়ে তোলা যেখানে কোনো মানুষকে
+            রক্তের অভাবে মৃত্যুবরণ করতে হবে না। আমরা বাংলাদেশকে একটি
+            রক্তদানবান্ধব দেশ হিসেবে গড়ে তুলতে চাই।
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- History Section -->
+    <section id="history" class="content-section">
+      <div class="section-header">
+        <mat-icon>history</mat-icon>
+        <h2 class="section-title">আমাদের ইতিহাস</h2>
+      </div>
+
+      <div class="history-container">
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-date">২০১৯</div>
+            <div class="timeline-content">
+              <h4>প্রতিষ্ঠা</h4>
+              <p>ঢাকায় ১০ জন স্বেচ্ছাসেবক নিয়ে রক্তসেবা কার্যক্রম শুরু</p>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">২০২১</div>
+            <div class="timeline-content">
+              <h4>অনলাইন যাত্রা</h4>
+              <p>ফেসবুকের মধ্যমে অনলাইন যাত্রা শুরু করেছি আমরা</p>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">২০২২</div>
+            <div class="timeline-content">
+              <h4>মেডিকেল ক্যাম্পেইন</h4>
+              <p>বিভিন্ন মেডিক্যাল ক্যাম্পেইন সফলভাবে সম্পন্ন করে আসছি</p>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">২০২১</div>
+            <div class="timeline-content">
+              <h4>কোভিড সেবা</h4>
+              <p>কোভিড-১৯ পরিস্থিতিতে বিশেষ রক্তদান ও প্লাজমা সেবা</p>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">২০২৪</div>
+            <div class="timeline-content">
+              <h4>বন্যার্তদের সাহায্য</h4>
+              <p>বন্যার্তদের সাহায্য ও বৃক্ষরোপণ কার্যক্রম</p>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">২০২৫</div>
+            <div class="timeline-content">
+              <h4>নতুন প্ল্যাটফর্ম</h4>
+              <p>সম্পূর্ণ নতুন ওয়েব প্ল্যাটফর্ম চালু</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="content-section">
+      <div class="section-header">
+        <mat-icon>group</mat-icon>
+        <h2 class="section-title">পরিচালনা পর্ষদ ও কর্মকর্তাবৃন্দ</h2>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoadingTeamMembers" class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>দল সদস্যদের তথ্য লোড হচ্ছে...</p>
+      </div>
+
+      <!-- Team Members Grid -->
+      <div
+        class="team-grid"
+        *ngIf="!isLoadingTeamMembers && teamMembers.length > 0"
+      >
+        <div class="team-card" *ngFor="let member of teamMembers">
+          <img
+            [src]="
+              member.image ||
+              'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDEyMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiBmaWxsPSIjRjVGNUY1Ii8+CjxjaXJjbGUgY3g9IjYwIiBjeT0iNDAiIHI9IjIwIiBmaWxsPSIjQ0NDIi8+CjxwYXRoIGQ9Ik0yNSA9NUw5NSA9NUw4NSA3NUwyNSA3NVoiIGZpbGw9IiNDQ0MiLz4KPC9zdmc+'
+            "
+            [alt]="member.name"
+            [title]="member.name"
+            class="team-image"
+            (error)="onImageError($event)"
+          />
+          <h3 class="team-name">{{ member.name }}</h3>
+          <p class="team-position">{{ member.position }}</p>
+          <p class="team-qualification" *ngIf="member.qualification">
+            {{ member.qualification }}
+          </p>
+          <div class="team-phone" *ngIf="member.phone">
+            <div class="phone-info">
+              <mat-icon>phone</mat-icon>
+              <span class="phone-number">{{ member.phone }}</span>
+            </div>
+            <div class="phone-actions">
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="copyPhoneNumber(member.phone)"
+                matTooltip="নম্বর কপি করুন"
+                class="phone-action-btn"
+              >
+                <mat-icon>content_copy</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="accent"
+                (click)="callPhoneNumber(member.phone)"
+                matTooltip="কল করুন"
+                class="phone-action-btn"
+              >
+                <mat-icon>call</mat-icon>
+              </button>
+            </div>
+          </div>
+          <p class="team-description">{{ member.description }}</p>
+        </div>
+      </div>
+
+      <!-- No Data Message -->
+      <div
+        *ngIf="!isLoadingTeamMembers && teamMembers.length === 0"
+        class="no-data-message"
+      >
+        <mat-icon>group_off</mat-icon>
+        <h3>কোন দল সদস্যের তথ্য পাওয়া যায়নি</h3>
+        <p>এই মুহূর্তে দল সদস্যদের তথ্য উপলব্ধ নেই।</p>
+      </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section id="achievements" class="achievements-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>আমাদের অর্জনসমূহ</h2>
+          <p>গত ৮ বছরে আমাদের যাত্রার পরিসংখ্যান</p>
+        </div>
+
+        <div class="achievements-grid">
+          <div
+            class="achievement-card"
+            *ngFor="let achievement of achievements"
+          >
+            <div class="achievement-icon">
+              <mat-icon>{{ achievement.icon }}</mat-icon>
+            </div>
+            <div class="achievement-number">{{ achievement.number }}</div>
+            <div class="achievement-title">{{ achievement.title }}</div>
+          </div>
+        </div>
+
+        <!-- <div class="awards-section">
+          <h3>পুরস্কার ও সম্মাননা</h3>
+          <div class="awards-grid">
+            <div class="award-item">
+              <mat-icon>emoji_events</mat-icon>
+              <div class="award-info">
+                <h4>জাতীয় সেবা পুরস্কার ২০২২</h4>
+                <p>স্বাস্থ্য মন্ত্রণালয়, বাংলাদেশ সরকার</p>
+              </div>
+            </div>
+            <div class="award-item">
+              <mat-icon>star</mat-icon>
+              <div class="award-info">
+                <h4>সেরা সামাজিক সংস্থা ২০২১</h4>
+                <p>বাংলাদেশ এনজিও ফাউন্ডেশন</p>
+              </div>
+            </div>
+            <div class="award-item">
+              <mat-icon>verified</mat-icon>
+              <div class="award-info">
+                <h4>ডিজিটাল ইনোভেশন অ্যাওয়ার্ড ২০২০</h4>
+                <p>তথ্য ও যোগাযোগ প্রযুক্তি বিভাগ</p>
+              </div>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </section>
+
+    <!-- Partners Section -->
+    <!-- <section id="partners" class="partners-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>আমাদের অংশীদার ও সহযোগী</h2>
+          <p>বিশ্বস্ত প্রতিষ্ঠানসমূহের সাথে আমাদের অংশীদারিত্ব</p>
+        </div>
+
+        <div class="partners-grid">
+          <div class="partner-card" *ngFor="let partner of partners">
+            <div class="partner-logo">
+              <img
+                [src]="partner.logo"
+                [alt]="partner.name"
+                class="partner-img"
+              />
+            </div>
+            <div class="partner-info">
+              <h4>{{ partner.name }}</h4>
+              <p>{{ partner.type }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section> -->
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+      <div class="container">
+        <div class="contact-content">
+          <div class="contact-info">
+            <h3>যোগাযোগ করুন</h3>
+            <div class="contact-item">
+              <mat-icon>location_on</mat-icon>
+              <div>
+                <h4>প্রধান কার্যালয়</h4>
+                <p>বরাব, তারবো, রূপগঞ্জ, নারায়নগঞ্জ।</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <mat-icon>phone</mat-icon>
+              <div>
+                <h4>ফোন</h4>
+                <p>+৮৮০ ১৯১৪১৯৩৬৭৬</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <mat-icon>email</mat-icon>
+              <div>
+                <h4>ইমেইল</h4>
+                <p>roktosebabd@gmail.com</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <mat-icon>language</mat-icon>
+              <div>
+                <h4>ওয়েবসাইট</h4>
+                <p>www.roktosebabd.org</p>
+              </div>
+            </div>
+          </div>
+          <div class="emergency-contact">
+            <h3>জরুরি যোগাযোগ</h3>
+            <div class="emergency-number">
+              <mat-icon>local_hospital</mat-icon>
+              <span>01914193676</span>
+            </div>
+            <p>২৪ ঘন্টা জরুরি রক্তের জন্য</p>
+            <a
+              mat-raised-button
+              color="warn"
+              class="emergency-btn"
+              href="tel:01914193676"
+            >
+              <mat-icon>call</mat-icon>
+              এখনই কল করুন
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<!-- Main Chat Head Button -->
+<div class="chat-head-container" [class.expanded]="isExpanded">
+  <!-- Social Action Buttons -->
+  <div class="social-buttons" [class.visible]="isExpanded">
+    <button
+      *ngFor="let link of socialLinks; let i = index"
+      class="social-btn"
+      [style.background]="link.bgColor"
+      [style.color]="link.color"
+      [style.animation-delay]="i * 0.1 + 's'"
+      (click)="link.action()"
+      [matTooltip]="link.label"
+      matTooltipPosition="left"
+      [attr.aria-label]="link.label"
+    >
+      <mat-icon>{{ link.icon }}</mat-icon>
+    </button>
+  </div>
+
+  <!-- Main Chat Head -->
+  <button
+    class="chat-head"
+    (click)="toggleChatHead()"
+    [matTooltip]="isExpanded ? 'বন্ধ করুন' : 'যোগাযোগ করুন'"
+    matTooltipPosition="left"
+    [attr.aria-label]="
+      isExpanded ? 'যোগাযোগ বিকল্প বন্ধ করুন' : 'যোগাযোগ বিকল্প দেখুন'
+    "
+    [attr.aria-expanded]="isExpanded"
+  >
+    <mat-icon class="chat-icon" [class.rotated]="isExpanded">
+      {{ isExpanded ? "close" : "chat" }}
+    </mat-icon>
+    <div class="pulse-ring" *ngIf="!isExpanded" aria-hidden="true"></div>
+  </button>
+</div>
+
+<!-- Invisible overlay to close chat head when clicking outside -->
+<div
+  *ngIf="isExpanded"
+  class="chat-overlay"
+  (click)="toggleChatHead()"
+  aria-hidden="true"
+></div>

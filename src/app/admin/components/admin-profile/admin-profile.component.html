@@ -1,0 +1,328 @@
+<div class="admin-profile-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-left">
+        <mat-icon class="header-icon">account_circle</mat-icon>
+        <div class="header-text">
+          <h1>অ্যাডমিন প্রোফাইল</h1>
+          <p>আপনার প্রোফাইল তথ্য দেখুন এবং আপডেট করুন</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="toggleEditMode()"
+          [disabled]="isLoading"
+          class="edit-btn"
+        >
+          <mat-icon>{{ isEditMode ? "cancel" : "edit" }}</mat-icon>
+          {{ isEditMode ? "বাতিল করুন" : "সম্পাদনা করুন" }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-content">
+    <div class="profile-layout">
+      <!-- Profile Summary Card -->
+      <mat-card class="profile-summary-card">
+        <mat-card-content>
+          <div class="profile-summary">
+            <div class="profile-photo-section">
+              <div class="profile-photo">
+                <img
+                  [src]="getProfileImageUrl()"
+                  [alt]="adminProfile.name + ' এর প্রোফাইল ছবি'"
+                  [title]="adminProfile.name + ' এর প্রোফাইল ছবি'"
+                  class="profile-img"
+                />
+                <div class="photo-overlay" *ngIf="isEditMode">
+                  <input
+                    type="file"
+                    #fileInput
+                    accept="image/*"
+                    (change)="onFileSelected($event)"
+                    class="hidden-file-input"
+                    title="প্রোফাইল ছবি নির্বাচন করুন"
+                    aria-label="প্রোফাইল ছবি নির্বাচন করুন"
+                  />
+                  <button
+                    mat-icon-button
+                    (click)="fileInput.click()"
+                    class="change-photo-btn"
+                    matTooltip="ছবি পরিবর্তন করুন"
+                  >
+                    <mat-icon>camera_alt</mat-icon>
+                  </button>
+                  <!-- Show selected file name -->
+                  <div class="selected-file-info" *ngIf="selectedFile">
+                    <small>{{ selectedFile.name }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="profile-basic-info">
+              <h2>{{ adminProfile.name }}</h2>
+              <p class="role">{{ getRoleLabel(adminProfile.role) }}</p>
+              <div class="contact-info">
+                <div class="contact-item">
+                  <mat-icon>email</mat-icon>
+                  <span>{{ adminProfile.email }}</span>
+                </div>
+                <div
+                  class="contact-item"
+                  *ngIf="adminProfile.address?.mobileNumber"
+                >
+                  <mat-icon>phone</mat-icon>
+                  <span>{{ adminProfile.address.mobileNumber }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Profile Details Section -->
+      <div class="profile-details-section">
+        <!-- Personal Information Card -->
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>person</mat-icon>
+              ব্যক্তিগত তথ্য
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()">
+              <div class="form-grid">
+                <mat-form-field appearance="outline">
+                  <mat-label>পূর্ণ নাম</mat-label>
+                  <input
+                    matInput
+                    formControlName="name"
+                    [readonly]="!isEditMode"
+                    placeholder="আপনার পূর্ণ নাম লিখুন"
+                  />
+                  <mat-error>{{ getErrorMessage("name") }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>ইমেইল ঠিকানা</mat-label>
+                  <input
+                    matInput
+                    type="email"
+                    formControlName="email"
+                    [readonly]="!isEditMode"
+                    placeholder="আপনার ইমেইল ঠিকানা"
+                  />
+                  <mat-error>{{ getErrorMessage("email") }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>মোবাইল নম্বর</mat-label>
+                  <input
+                    matInput
+                    formControlName="mobileNumber"
+                    [readonly]="!isEditMode"
+                    placeholder="01XXXXXXXXX"
+                  />
+                  <mat-error>{{ getErrorMessage("mobileNumber") }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>রাস্তার ঠিকানা</mat-label>
+                  <textarea
+                    matInput
+                    formControlName="street"
+                    [readonly]="!isEditMode"
+                    placeholder="রাস্তার ঠিকানা"
+                    rows="2"
+                  ></textarea>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>শহর</mat-label>
+                  <input
+                    matInput
+                    formControlName="city"
+                    [readonly]="!isEditMode"
+                    placeholder="শহর"
+                  />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>জেলা</mat-label>
+                  <input
+                    matInput
+                    formControlName="district"
+                    [readonly]="!isEditMode"
+                    placeholder="জেলা"
+                  />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>বিভাগ</mat-label>
+                  <input
+                    matInput
+                    formControlName="division"
+                    [readonly]="!isEditMode"
+                    placeholder="বিভাগ"
+                  />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>পোস্টাল কোড</mat-label>
+                  <input
+                    matInput
+                    formControlName="postalCode"
+                    [readonly]="!isEditMode"
+                    placeholder="পোস্টাল কোড"
+                  />
+                </mat-form-field>
+              </div>
+
+              <div class="form-actions" *ngIf="isEditMode">
+                <button
+                  type="button"
+                  mat-stroked-button
+                  (click)="toggleEditMode()"
+                  [disabled]="isLoading"
+                >
+                  বাতিল করুন
+                </button>
+                <button
+                  type="submit"
+                  mat-raised-button
+                  color="primary"
+                  [disabled]="isLoading || profileForm.invalid"
+                >
+                  <mat-icon *ngIf="isLoading">refresh</mat-icon>
+                  {{
+                    isLoading ? "সংরক্ষণ করা হচ্ছে..." : "পরিবর্তন সংরক্ষণ করুন"
+                  }}
+                </button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Account Information Card -->
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>admin_panel_settings</mat-icon>
+              অ্যাকাউন্ট তথ্য
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="account-info-grid">
+              <div class="info-item">
+                <label>ভূমিকা</label>
+                <span class="role-badge">{{
+                  getRoleLabel(adminProfile.role)
+                }}</span>
+              </div>
+              <div class="info-item">
+                <label>যোগদানের তারিখ</label>
+                <span>{{ formatDate(adminProfile.joinDate) }}</span>
+              </div>
+              <div class="info-item">
+                <label>শেষ লগইন</label>
+                <span>{{
+                  adminProfile.lastLoginDate
+                    ? formatDateTime(adminProfile.lastLoginDate)
+                    : "কখনো লগইন করেনি"
+                }}</span>
+              </div>
+              <div class="info-item full-width">
+                <label>অনুমতিসমূহ</label>
+                <div class="permissions-list">
+                  <mat-chip-list>
+                    <mat-chip
+                      *ngFor="let permission of adminProfile.permissions"
+                      class="permission-chip"
+                    >
+                      {{ getPermissionLabel(permission) }}
+                    </mat-chip>
+                  </mat-chip-list>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Password Change Card -->
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>lock</mat-icon>
+              পাসওয়ার্ড পরিবর্তন
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()">
+              <div class="password-form-grid">
+                <mat-form-field appearance="outline">
+                  <mat-label>বর্তমান পাসওয়ার্ড</mat-label>
+                  <input
+                    matInput
+                    type="password"
+                    formControlName="currentPassword"
+                    placeholder="বর্তমান পাসওয়ার্ড লিখুন"
+                  />
+                  <mat-error>{{
+                    getErrorMessage("currentPassword", passwordForm)
+                  }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>নতুন পাসওয়ার্ড</mat-label>
+                  <input
+                    matInput
+                    type="password"
+                    formControlName="newPassword"
+                    placeholder="নতুন পাসওয়ার্ড লিখুন"
+                  />
+                  <mat-error>{{
+                    getErrorMessage("newPassword", passwordForm)
+                  }}</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>পাসওয়ার্ড নিশ্চিত করুন</mat-label>
+                  <input
+                    matInput
+                    type="password"
+                    formControlName="confirmPassword"
+                    placeholder="নতুন পাসওয়ার্ড পুনরায় লিখুন"
+                  />
+                  <mat-error>{{
+                    getErrorMessage("confirmPassword", passwordForm)
+                  }}</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="password-form-actions">
+                <button
+                  type="submit"
+                  mat-raised-button
+                  color="accent"
+                  [disabled]="isChangingPassword || passwordForm.invalid"
+                >
+                  <mat-icon *ngIf="isChangingPassword">refresh</mat-icon>
+                  {{
+                    isChangingPassword
+                      ? "পরিবর্তন করা হচ্ছে..."
+                      : "পাসওয়ার্ড পরিবর্তন করুন"
+                  }}
+                </button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

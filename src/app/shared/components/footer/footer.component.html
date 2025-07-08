@@ -1,1 +1,74 @@
-<p>footer works!</p>
+<footer class="app-footer">
+  <div class="container">
+    <div class="footer-content">
+      <!-- Logo and Brand Section -->
+      <div class="footer-brand">
+        <img
+          src="assets/images/roktosebajpg.jpg"
+          alt="রক্তসেবা"
+          class="footer-logo"
+        />
+        <h3>রক্তসেবায় আমরা আছি</h3>
+        <p>বাংলাদেশের সবচেয়ে বিশ্বস্ত রক্তদান প্ল্যাটফর্ম</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-links">
+        <h4>দ্রুত লিংক</h4>
+        <ul>
+          <li><a routerLink="/">হোম</a></li>
+          <li><a routerLink="/donor-list">ডোনার তালিকা</a></li>
+          <li><a routerLink="/emergency">জরুরি যোগাযোগ</a></li>
+          <li><a routerLink="/about">আমাদের সম্পর্কে</a></li>
+        </ul>
+      </div>
+
+      <!-- Legal Links -->
+      <div class="footer-legal">
+        <h4>আইনি তথ্য</h4>
+        <ul>
+          <li><a routerLink="/legal/terms">শর্তাবলী ও নীতিমালা</a></li>
+          <li><a routerLink="/legal/privacy">গোপনীয়তা নীতি</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="footer-contact">
+        <h4>যোগাযোগ</h4>
+        <ul>
+          <li><mat-icon>phone</mat-icon> 01914193676</li>
+          <li><mat-icon>email</mat-icon> roktosebabd@gmail.com</li>
+          <li><mat-icon>location_on</mat-icon> ঢাকা, বাংলাদেশ</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Copyright Section -->
+    <div class="footer-bottom">
+      <mat-divider></mat-divider>
+      <div class="copyright">
+        <p>
+          &copy; {{ currentYear }} রক্তসেবায় আমরা আছি। সর্বস্বত্ব সংরক্ষিত।
+        </p>
+        <div class="social-links">
+          <a
+            mat-icon-button
+            href="https://www.facebook.com/groups/1466772190444749"
+            target="_blank"
+            rel="noopener"
+            aria-label="Facebook Group"
+          >
+            <mat-icon>facebook</mat-icon>
+          </a>
+          <a
+            mat-icon-button
+            href="tel:01914193676"
+            aria-label="Call 01914193676"
+          >
+            <mat-icon>phone</mat-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

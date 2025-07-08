@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { IModule } from '../../interfaces/module-properties.interface';
 
 @Component({
   selector: 'app-home',
@@ -11,31 +10,7 @@ export class HomeComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    // Add any initialization logic here
   }
-
-  modules:IModule[] = [
-    {
-      title: 'নতুন ডোনার ফর্ম ফিল আপ',
-      url: '/users/register',
-      icon: 'register'
-    },
-
-    {
-      title: 'এডমিন লগইন',
-      url: '/users/login',
-      icon: 'register'
-    },
-
-    {
-      title: 'ডোনার লিস্ট ',
-      url: '/donors',
-      icon: 'register'
-    },
-    {
-      title: 'ইমারজেন্সি যোগাযোগ',
-      url: '/dashboard',
-      icon: 'register'
-    }
-  ]
 
 }

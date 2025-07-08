@@ -1,0 +1,468 @@
+<div class="profile-edit-container">
+  <mat-card class="profile-edit-card">
+    <mat-card-header>
+      <mat-card-title>প্রোফাইল সম্পাদনা</mat-card-title>
+      <mat-card-subtitle>আপনার তথ্য আপডেট করুন</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div *ngIf="isLoading" class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>প্রোফাইল লোড হচ্ছে...</p>
+      </div>
+
+      <form
+        [formGroup]="profileForm"
+        (ngSubmit)="onSubmit()"
+        *ngIf="!isLoading"
+      >
+        <!-- Profile Photo Section -->
+        <div class="photo-upload-container">
+          <div class="photo-preview">
+            <img
+              *ngIf="profilePhotoPreview"
+              [src]="profilePhotoPreview"
+              alt="প্রোফাইল ছবি"
+              class="preview-image"
+            />
+            <div *ngIf="!profilePhotoPreview" class="no-photo">
+              <mat-icon>account_circle</mat-icon>
+              <p>ছবি নেই</p>
+            </div>
+          </div>
+          <div class="photo-actions">
+            <input
+              type="file"
+              id="profilePhotoInput"
+              accept="image/*"
+              title="প্রোফাইল ছবি আপলোড করুন"
+              (change)="onProfilePhotoSelected($event)"
+              class="hidden-file-input"
+            />
+            <button
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="triggerFileInput()"
+            >
+              <mat-icon>photo_camera</mat-icon>
+              ছবি আপলোড করুন
+            </button>
+            <button
+              type="button"
+              mat-stroked-button
+              color="warn"
+              *ngIf="profilePhotoPreview"
+              (click)="removeProfilePhoto()"
+            >
+              <mat-icon>delete</mat-icon>
+              ছবি সরান
+            </button>
+          </div>
+          <p class="photo-hint">
+            JPG, PNG ফরম্যাট সমর্থিত। সর্বোচ্চ ফাইল সাইজ: ৫MB
+          </p>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Personal Information -->
+        <div class="form-section">
+          <h3>ব্যক্তিগত তথ্য</h3>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>নাম *</mat-label>
+              <input
+                matInput
+                formControlName="name"
+                placeholder="পূর্ণ নাম লিখুন"
+              />
+              <mat-error
+                *ngIf="
+                  profileForm.get('name')?.touched &&
+                  profileForm.get('name')?.errors
+                "
+              >
+                {{ getErrorMessage("name") }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>মোবাইল নম্বর *</mat-label>
+              <input
+                matInput
+                formControlName="phone"
+                placeholder="01XXXXXXXXX"
+              />
+              <mat-error
+                *ngIf="
+                  profileForm.get('phone')?.touched &&
+                  profileForm.get('phone')?.errors
+                "
+              >
+                {{ getErrorMessage("phone") }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>ইমেইল</mat-label>
+              <input
+                matInput
+                type="email"
+                formControlName="email"
+                placeholder="example@email.com"
+              />
+              <mat-error
+                *ngIf="
+                  profileForm.get('email')?.touched &&
+                  profileForm.get('email')?.errors
+                "
+              >
+                {{ getErrorMessage("email") }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>লিঙ্গ *</mat-label>
+              <mat-select formControlName="gender">
+                <mat-option
+                  *ngFor="let gender of genders"
+                  [value]="gender.value"
+                >
+                  {{ gender.label }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  profileForm.get('gender')?.touched &&
+                  profileForm.get('gender')?.errors
+                "
+              >
+                {{ getErrorMessage("gender") }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>ধর্ম *</mat-label>
+              <mat-select formControlName="religion">
+                <mat-option
+                  *ngFor="let religion of religions"
+                  [value]="religion.value"
+                >
+                  {{ religion.label }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  profileForm.get('religion')?.touched &&
+                  profileForm.get('religion')?.errors
+                "
+              >
+                {{ getErrorMessage("religion") }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>জন্ম তারিখ *</mat-label>
+              <input
+                matInput
+                type="date"
+                formControlName="dateOfBirth"
+                title="জন্ম তারিখ নির্বাচন করুন"
+              />
+              <mat-error
+                *ngIf="
+                  profileForm.get('dateOfBirth')?.touched &&
+                  profileForm.get('dateOfBirth')?.errors
+                "
+              >
+                {{ getErrorMessage("dateOfBirth") }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>পেশা</mat-label>
+              <input
+                matInput
+                formControlName="profession"
+                placeholder="আপনার পেশা লিখুন"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>ওজন (কেজি)</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="weight"
+                placeholder="কেজিতে"
+              />
+              <mat-error
+                *ngIf="
+                  profileForm.get('weight')?.touched &&
+                  profileForm.get('weight')?.errors
+                "
+              >
+                {{ getErrorMessage("weight") }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>উচ্চতা (সেমি)</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="height"
+                placeholder="সেন্টিমিটারে"
+              />
+              <mat-error
+                *ngIf="
+                  profileForm.get('height')?.touched &&
+                  profileForm.get('height')?.errors
+                "
+              >
+                {{ getErrorMessage("height") }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Blood Donation Information -->
+        <div class="form-section">
+          <h3>রক্তদান তথ্য</h3>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>রক্তের গ্রুপ *</mat-label>
+              <mat-select formControlName="bloodGroup">
+                <mat-option
+                  *ngFor="let bloodGroup of bloodGroups"
+                  [value]="bloodGroup.value"
+                >
+                  {{ bloodGroup.label }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  profileForm.get('bloodGroup')?.touched &&
+                  profileForm.get('bloodGroup')?.errors
+                "
+              >
+                {{ getErrorMessage("bloodGroup") }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>মোট রক্তদান</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="totalDonations"
+                placeholder="0"
+                min="0"
+              />
+              <mat-error
+                *ngIf="
+                  profileForm.get('totalDonations')?.touched &&
+                  profileForm.get('totalDonations')?.errors
+                "
+              >
+                {{ getErrorMessage("totalDonations") }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>শেষ রক্তদানের তারিখ</mat-label>
+              <input
+                matInput
+                type="date"
+                formControlName="lastDonationDate"
+                title="শেষ রক্তদানের তারিখ নির্বাচন করুন"
+              />
+              <mat-error
+                *ngIf="
+                  profileForm.get('lastDonationDate')?.touched &&
+                  profileForm.get('lastDonationDate')?.errors
+                "
+              >
+                {{ getErrorMessage("lastDonationDate") }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Location Information -->
+        <div class="form-section">
+          <h3>ঠিকানা</h3>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>জেলা *</mat-label>
+              <mat-select
+                formControlName="city"
+                (selectionChange)="onDistrictChange($event.value)"
+              >
+                <mat-option
+                  *ngFor="let district of districts"
+                  [value]="district.name"
+                >
+                  {{ district.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  profileForm.get('city')?.touched &&
+                  profileForm.get('city')?.errors
+                "
+              >
+                {{ getErrorMessage("city") }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>উপজেলা/এলাকা *</mat-label>
+              <mat-select formControlName="location">
+                <mat-option
+                  *ngFor="let upazila of selectedUpazilas"
+                  [value]="upazila.name"
+                >
+                  {{ upazila.name }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  profileForm.get('location')?.touched &&
+                  profileForm.get('location')?.errors
+                "
+              >
+                {{ getErrorMessage("location") }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>বিস্তারিত ঠিকানা *</mat-label>
+              <textarea
+                matInput
+                formControlName="address"
+                rows="3"
+                placeholder="বাড়ি/রোড নম্বর, এলাকার নাম"
+              ></textarea>
+              <mat-error
+                *ngIf="
+                  profileForm.get('address')?.touched &&
+                  profileForm.get('address')?.errors
+                "
+              >
+                {{ getErrorMessage("address") }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Emergency Contact -->
+        <div class="form-section" formGroupName="emergencyContact">
+          <h3>জরুরি যোগাযোগ</h3>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>নাম *</mat-label>
+              <input
+                matInput
+                formControlName="name"
+                placeholder="জরুরি যোগাযোগের নাম"
+              />
+              <mat-error
+                *ngIf="
+                  profileForm.get('emergencyContact.name')?.touched &&
+                  profileForm.get('emergencyContact.name')?.errors
+                "
+              >
+                {{ getNestedErrorMessage("emergencyContact", "name") }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>মোবাইল নম্বর *</mat-label>
+              <input
+                matInput
+                formControlName="phone"
+                placeholder="01XXXXXXXXX"
+              />
+              <mat-error
+                *ngIf="
+                  profileForm.get('emergencyContact.phone')?.touched &&
+                  profileForm.get('emergencyContact.phone')?.errors
+                "
+              >
+                {{ getNestedErrorMessage("emergencyContact", "phone") }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>সম্পর্ক *</mat-label>
+              <input
+                matInput
+                formControlName="relation"
+                placeholder="পিতা/মাতা/ভাই/বোন"
+              />
+              <mat-error
+                *ngIf="
+                  profileForm.get('emergencyContact.relation')?.touched &&
+                  profileForm.get('emergencyContact.relation')?.errors
+                "
+              >
+                {{ getNestedErrorMessage("emergencyContact", "relation") }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="form-actions">
+          <button
+            type="button"
+            mat-stroked-button
+            color="primary"
+            (click)="goBack()"
+            [disabled]="isSubmitting"
+          >
+            <mat-icon>arrow_back</mat-icon>
+            ফিরে যান
+          </button>
+
+          <button
+            type="submit"
+            mat-raised-button
+            color="primary"
+            [disabled]="profileForm.invalid || isSubmitting"
+          >
+            <mat-icon *ngIf="!isSubmitting">save</mat-icon>
+            <mat-spinner *ngIf="isSubmitting" diameter="20"></mat-spinner>
+            {{ isSubmitting ? "সংরক্ষণ হচ্ছে..." : "প্রোফাইল আপডেট করুন" }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

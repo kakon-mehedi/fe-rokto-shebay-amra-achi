@@ -1,0 +1,522 @@
+<div class="donor-management-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-left">
+        <mat-icon class="header-icon">people</mat-icon>
+        <div class="header-text">
+          <h1>রক্তদাতা ব্যবস্থাপনা</h1>
+          <p>সকল রক্তদাতার তথ্য দেখুন, সম্পাদনা ও ব্যবস্থাপনা করুন</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="addDonor()"
+          class="add-btn"
+        >
+          <mat-icon>person_add</mat-icon>
+          নতুন রক্তদাতা
+        </button>
+        <button
+          mat-stroked-button
+          [matMenuTriggerFor]="exportMenu"
+          class="export-btn"
+          [disabled]="isLoading"
+        >
+          <mat-icon>download</mat-icon>
+          এক্সপোর্ট
+          <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+
+        <mat-menu #exportMenu="matMenu">
+          <button mat-menu-item (click)="exportData('excel')">
+            <mat-icon>table_view</mat-icon>
+            <span>Excel (.xlsx)</span>
+          </button>
+          <button mat-menu-item (click)="exportData('csv')">
+            <mat-icon>text_snippet</mat-icon>
+            <span>CSV (.csv)</span>
+          </button>
+        </mat-menu>
+        <button
+          mat-icon-button
+          (click)="refreshData()"
+          matTooltip="রিফ্রেশ করুন"
+        >
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <mat-card class="stat-card total">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon>people</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ statistics.totalDonors }}</h3>
+            <p>মোট রক্তদাতা</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card active">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ statistics.activeDonors }}</h3>
+            <p>সক্রিয় রক্তদাতা</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card pending">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon>schedule</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ statistics.pendingDonors }}</h3>
+            <p>অপেক্ষমাণ</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card eligible">
+      <mat-card-content>
+        <div class="stat-content">
+          <div class="stat-icon">
+            <mat-icon>verified_user</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>{{ statistics.eligibleDonors }}</h3>
+            <p>যোগ্য রক্তদাতা</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Filters Section -->
+  <mat-card class="filters-card">
+    <mat-card-content>
+      <div class="filters-header">
+        <h3>ফিল্টার ও অনুসন্ধান</h3>
+        <button
+          mat-stroked-button
+          (click)="clearFilters()"
+          class="clear-filters-btn"
+        >
+          <mat-icon>clear</mat-icon>
+          সব ক্লিয়ার করুন
+        </button>
+      </div>
+
+      <div class="filters-grid">
+        <!-- Search -->
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>অনুসন্ধান করুন</mat-label>
+          <input
+            matInput
+            [formControl]="searchControl"
+            placeholder="নাম, ফোন, ইমেইল বা ঠিকানা"
+          />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <!-- Donor ID Search -->
+        <mat-form-field appearance="outline" class="donor-id-search">
+          <mat-label>ডোনার আইডি</mat-label>
+          <input
+            matInput
+            [formControl]="donorIdFilter"
+            placeholder="যেমন: D01012501"
+          />
+          <mat-icon matSuffix>badge</mat-icon>
+        </mat-form-field>
+
+        <!-- Blood Group Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>রক্তের গ্রুপ</mat-label>
+          <mat-select [formControl]="bloodGroupFilter">
+            <mat-option value="">সব</mat-option>
+            <mat-option *ngFor="let group of bloodGroups" [value]="group">
+              {{ group }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Gender Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>লিঙ্গ</mat-label>
+          <mat-select [formControl]="genderFilter">
+            <mat-option value="">সব</mat-option>
+            <mat-option *ngFor="let gender of genders" [value]="gender.value">
+              {{ gender.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- City Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>শহর</mat-label>
+          <mat-select [formControl]="cityFilter">
+            <mat-option value="">সব শহর</mat-option>
+            <mat-option *ngFor="let city of cities" [value]="city.value">
+              {{ city.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Location Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>এলাকা</mat-label>
+          <mat-select [formControl]="locationFilter">
+            <mat-option value="">সব এলাকা</mat-option>
+            <mat-option
+              *ngFor="let location of locations"
+              [value]="location.value"
+            >
+              {{ location.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Status Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>অ্যাকাউন্ট স্ট্যাটাস</mat-label>
+          <mat-select [formControl]="statusFilter">
+            <mat-option value="">সব স্ট্যাটাস</mat-option>
+            <mat-option *ngFor="let status of statuses" [value]="status.value">
+              {{ status.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Eligibility Filter -->
+        <mat-form-field appearance="outline">
+          <mat-label>রক্তদানের যোগ্যতা</mat-label>
+          <mat-select [formControl]="eligibilityFilter">
+            <mat-option value="">সব</mat-option>
+            <mat-option
+              *ngFor="let eligibility of eligibilityStatuses"
+              [value]="eligibility.value"
+            >
+              {{ eligibility.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Data Table -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-container">
+        <mat-progress-spinner
+          color="primary"
+          mode="indeterminate"
+          diameter="50"
+        ></mat-progress-spinner>
+        <p>ডেটা লোড হচ্ছে...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error && !isLoading" class="error-container">
+        <mat-icon color="warn">error</mat-icon>
+        <p>{{ error }}</p>
+        <button mat-raised-button color="primary" (click)="loadDonors()">
+          পুনরায় চেষ্টা করুন
+        </button>
+      </div>
+
+      <!-- Data Table -->
+      <div class="table-container" *ngIf="!isLoading && !error">
+        <table mat-table [dataSource]="dataSource" matSort class="donors-table">
+          <!-- Profile Photo Column -->
+          <ng-container matColumnDef="profilePhoto">
+            <th mat-header-cell *matHeaderCellDef>ছবি</th>
+            <td
+              mat-cell
+              *matCellDef="let donor"
+              (click)="viewDonorDetails(donor)"
+              class="clickable-cell"
+            >
+              <div class="donor-avatar">
+                <img
+                  [src]="
+                    donor.profilePhoto ||
+                    'assets/images/logo/profile_avatar.png'
+                  "
+                  [alt]="donor.name + ' এর প্রোফাইল ছবি'"
+                  class="avatar-img"
+                />
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Donor ID Column -->
+          <ng-container matColumnDef="donorId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              ডোনার আইডি
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let donor"
+              (click)="viewDonorDetails(donor)"
+              class="clickable-cell"
+            >
+              <div class="donor-id-cell">
+                <span class="donor-id" *ngIf="donor.donorId">{{
+                  donor.donorId
+                }}</span>
+                <span class="no-id" *ngIf="!donor.donorId">-</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>নাম</th>
+            <td
+              mat-cell
+              *matCellDef="let donor"
+              (click)="viewDonorDetails(donor)"
+              class="clickable-cell"
+            >
+              <div class="donor-name-cell">
+                <span class="name">{{ donor.name }}</span>
+                <span class="email">{{ donor.email }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Phone Column -->
+          <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef>ফোন</th>
+            <td mat-cell *matCellDef="let donor">
+              <span class="phone-number">{{ donor.phone }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Blood Group Column -->
+          <ng-container matColumnDef="bloodGroup">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              রক্তের গ্রুপ
+            </th>
+            <td mat-cell *matCellDef="let donor">
+              <span class="blood-group-badge">{{ donor.bloodGroup }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Gender Column -->
+          <ng-container matColumnDef="gender">
+            <th mat-header-cell *matHeaderCellDef>লিঙ্গ</th>
+            <td mat-cell *matCellDef="let donor">
+              <span>{{ getGenderLabel(donor.gender) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- City Column -->
+          <ng-container matColumnDef="city">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>শহর</th>
+            <td mat-cell *matCellDef="let donor">
+              <div class="location-cell">
+                <span class="city">{{ donor.city }}</span>
+                <span class="area">{{ donor.location }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Total Donations Column -->
+          <ng-container matColumnDef="totalDonations">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>মোট দান</th>
+            <td mat-cell *matCellDef="let donor">
+              <span class="donation-count">{{ donor.totalDonations }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Last Donation Date Column -->
+          <ng-container matColumnDef="lastDonationDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>শেষ দান</th>
+            <td mat-cell *matCellDef="let donor">
+              <div
+                class="last-donation-cell"
+                *ngIf="donor.lastDonationDate; else noDonation"
+              >
+                <span class="date">{{
+                  formatDate(donor.lastDonationDate)
+                }}</span>
+                <span class="days-ago"
+                  >{{ getDaysSinceLastDonation(donor.lastDonationDate) }} দিন
+                  আগে</span
+                >
+              </div>
+              <ng-template #noDonation>
+                <span class="no-donation">কোনো দান নেই</span>
+              </ng-template>
+            </td>
+          </ng-container>
+
+          <!-- Account Status Column -->
+          <ng-container matColumnDef="accountStatus">
+            <th mat-header-cell *matHeaderCellDef>অ্যাকাউন্ট স্ট্যাটাস</th>
+            <td mat-cell *matCellDef="let donor">
+              <span
+                class="status-chip"
+                [ngClass]="getStatusClass(donor.accountStatus)"
+              >
+                {{ getStatusLabel(donor.accountStatus) }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Eligibility Status Column -->
+          <ng-container matColumnDef="eligibilityStatus">
+            <th mat-header-cell *matHeaderCellDef>রক্তদানের যোগ্যতা</th>
+            <td mat-cell *matCellDef="let donor" class="eligibility-cell">
+              <div class="eligibility-container">
+                <span
+                  class="eligibility-chip"
+                  [ngClass]="
+                    getEligibilityClass(getRealEligibilityStatus(donor))
+                  "
+                  [matTooltip]="
+                    donor.lastDonationDate
+                      ? 'শেষ রক্তদান: ' + formatDate(donor.lastDonationDate)
+                      : 'কোনো দান নেই'
+                  "
+                >
+                  {{ getEligibilityLabel(getRealEligibilityStatus(donor)) }}
+                </span>
+                <span
+                  *ngIf="
+                    donor.lastDonationDate &&
+                    getRealEligibilityStatus(donor) === 'TEMPORARILY_INELIGIBLE'
+                  "
+                  class="days-remaining"
+                >
+                  {{ 120 - getDaysSinceLastDonation(donor.lastDonationDate) }}
+                  দিন বাকি
+                </span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>অ্যাকশন</th>
+            <td mat-cell *matCellDef="let donor">
+              <div class="action-buttons">
+                <button
+                  mat-icon-button
+                  (click)="addDonation(donor)"
+                  matTooltip="নতুন রক্তদান রেকর্ড করুন"
+                  class="donation-btn"
+                  color="accent"
+                >
+                  <mat-icon>favorite</mat-icon>
+                </button>
+
+                <button
+                  mat-icon-button
+                  (click)="editDonor(donor)"
+                  matTooltip="সম্পাদনা করুন"
+                  class="edit-btn"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+
+                <button
+                  mat-icon-button
+                  [matMenuTriggerFor]="statusMenu"
+                  matTooltip="স্ট্যাটাস পরিবর্তন"
+                  class="status-btn"
+                >
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+
+                <mat-menu #statusMenu="matMenu">
+                  <button mat-menu-item (click)="updateStatus(donor, 'ACTIVE')">
+                    <mat-icon>check_circle</mat-icon>
+                    <span>সক্রিয় করুন</span>
+                  </button>
+                  <button
+                    mat-menu-item
+                    (click)="updateStatus(donor, 'SUSPENDED')"
+                  >
+                    <mat-icon>block</mat-icon>
+                    <span>স্থগিত করুন</span>
+                  </button>
+                  <mat-divider></mat-divider>
+                  <button
+                    mat-menu-item
+                    (click)="deleteDonor(donor)"
+                    class="delete-action"
+                  >
+                    <mat-icon>delete</mat-icon>
+                    <span>মুছে ফেলুন</span>
+                  </button>
+                </mat-menu>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            class="row-hover"
+          ></tr>
+        </table>
+
+        <!-- Loading State -->
+        <div class="loading-container" *ngIf="isLoading">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>তথ্য লোড হচ্ছে...</p>
+        </div>
+
+        <!-- No Data State -->
+        <div
+          class="no-data-container"
+          *ngIf="!isLoading && dataSource.data.length === 0"
+        >
+          <mat-icon>people_outline</mat-icon>
+          <h3>কোনো রক্তদাতা পাওয়া যায়নি</h3>
+          <p>আপনার ফিল্টার পরিবর্তন করুন বা নতুন রক্তদাতা যোগ করুন।</p>
+          <button mat-raised-button color="primary" (click)="addDonor()">
+            <mat-icon>person_add</mat-icon>
+            নতুন রক্তদাতা যোগ করুন
+          </button>
+        </div>
+      </div>
+
+      <!-- Paginator -->
+      <mat-paginator
+        #paginator
+        [length]="totalRecords"
+        [pageSize]="pageSize"
+        [pageIndex]="currentPage"
+        [pageSizeOptions]="[10, 25, 50, 100]"
+        showFirstLastButtons
+        class="table-paginator"
+      >
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</div>

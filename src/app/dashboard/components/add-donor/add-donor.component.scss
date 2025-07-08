@@ -1,0 +1,208 @@
+.donor-form-container {
+    padding: 20px;
+    max-width: 700px;
+    margin: 0 auto;
+    min-height: calc(100vh - 120px);
+}
+
+.donor-form-card {
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+    
+    mat-card-header {
+        margin-bottom: 24px;
+        
+        mat-card-title {
+            color: #d32f2f;
+            font-size: 28px; // 24px থেকে 28px
+            font-weight: 600;
+        }
+        
+        mat-card-subtitle {
+            color: #666;
+            font-size: 16px; // 14px থেকে 16px
+            margin-top: 4px;
+        }
+    }
+}
+
+.form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    
+    mat-form-field {
+        font-size: 16px; // নতুন যোগ করা
+        
+        &.mat-form-field-appearance-outline {
+            .mat-form-field-outline {
+                border-radius: 12px;
+            }
+            
+            &.mat-focused .mat-form-field-outline-thick {
+                border-color: #d32f2f;
+            }
+            
+            .mat-form-field-label {
+                color: #666;
+                font-weight: 500;
+                font-size: 16px; // নতুন যোগ করা
+            }
+            
+            &.mat-focused .mat-form-field-label {
+                color: #d32f2f;
+            }
+        }
+    }
+}
+
+.full-width {
+    width: 100%;
+}
+
+.file-upload-section {
+    margin: 16px 0;
+    
+    .section-label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: rgba(0, 0, 0, 0.87);
+        font-size: 16px; // নতুন যোগ করা
+    }
+}
+
+.file-upload-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.hidden-file-input {
+    display: none;
+}
+
+.upload-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 15px; // নতুন যোগ করা
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    
+    .file-icon {
+        color: #4caf50;
+        font-size: 18px;
+    }
+    
+    .file-name {
+        font-size: 15px; // 14px থেকে 15px
+        font-weight: 500;
+        color: #333;
+    }
+    
+    .file-size {
+        font-size: 13px; // 12px থেকে 13px
+        color: #666;
+    }
+    
+    .remove-file-button {
+        width: 24px;
+        height: 24px;
+        
+        mat-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+        }
+    }
+}
+
+.file-upload-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    font-size: 13px; // 12px থেকে 13px
+    color: #666;
+    
+    .hint-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+        color: #2196f3;
+    }
+}
+
+.submit-button {
+    margin-top: 24px;
+    padding: 14px;
+    font-size: 17px; // 16px থেকে 17px
+    font-weight: 600;
+    border-radius: 12px;
+    background: linear-gradient(45deg, #d32f2f 30%, #f44336 90%);
+    transition: all 0.3s ease;
+    
+    &:not(:disabled):hover {
+        background: linear-gradient(45deg, #b71c1c 30%, #d32f2f 90%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+    }
+    
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+    
+    mat-spinner {
+        margin-right: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .donor-form-container {
+        padding: 16px;
+        max-width: 100%;
+    }
+    
+    .donor-form-card {
+        padding: 16px;
+        margin: 0 8px;
+        
+        mat-card-header {
+            margin-bottom: 20px;
+            
+            mat-card-title {
+                font-size: 24px; // 20px থেকে 24px
+            }
+        }
+    }
+    
+    .form-fields {
+        gap: 16px;
+    }
+    
+    .file-upload-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .file-info {
+        width: 100%;
+        max-width: 300px;
+    }
+}

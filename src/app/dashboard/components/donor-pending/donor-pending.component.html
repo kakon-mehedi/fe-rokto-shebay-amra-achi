@@ -1,0 +1,157 @@
+<div class="donor-pending-container">
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>তথ্য লোড হচ্ছে...</p>
+  </div>
+
+  <!-- Main content -->
+  <div *ngIf="!isLoading" class="pending-content">
+    <div class="pending-card">
+      <mat-card>
+        <mat-card-content>
+          <div class="pending-header">
+            <div class="icon-container">
+              <mat-icon class="pending-icon">schedule</mat-icon>
+            </div>
+            <h1>অনুমোদনের অপেক্ষায়</h1>
+            <p class="subtitle">
+              আপনার দাতা অ্যাকাউন্ট যাচাইয়ের প্রক্রিয়াধীন
+            </p>
+          </div>
+
+          <div class="pending-info">
+            <div class="info-section">
+              <h3>আপনার তথ্য:</h3>
+              <div class="profile-summary" *ngIf="donorProfile">
+                <div class="profile-row">
+                  <span class="label">নাম:</span>
+                  <span class="value">{{ donorProfile.name }}</span>
+                </div>
+                <div class="profile-row">
+                  <span class="label">ফোন:</span>
+                  <span class="value">{{ donorProfile.phone }}</span>
+                </div>
+                <div class="profile-row">
+                  <span class="label">রক্তের গ্রুপ:</span>
+                  <span class="value">{{ donorProfile.bloodGroup }}</span>
+                </div>
+                <div class="profile-row">
+                  <span class="label">ঠিকানা:</span>
+                  <span class="value">{{ donorProfile.address }}</span>
+                </div>
+                <div class="profile-row">
+                  <span class="label">নিবন্ধনের তারিখ:</span>
+                  <span class="value">{{
+                    donorProfile.registrationDate
+                      ? formatDate(donorProfile.registrationDate)
+                      : "N/A"
+                  }}</span>
+                </div>
+                <div class="profile-row">
+                  <span class="label">অ্যাকাউন্টের অবস্থা:</span>
+                  <span class="value status-pending">{{
+                    getStatusText(donorProfile.accountStatus)
+                  }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-section">
+              <h3>পরবর্তী পদক্ষেপ:</h3>
+              <div class="steps">
+                <div class="step completed">
+                  <mat-icon>check_circle</mat-icon>
+                  <span>নিবন্ধন সম্পন্ন হয়েছে</span>
+                </div>
+                <div class="step active">
+                  <mat-icon>schedule</mat-icon>
+                  <span>প্রশাসনিক যাচাইয়ের অপেক্ষায়</span>
+                </div>
+                <div class="step pending">
+                  <mat-icon>radio_button_unchecked</mat-icon>
+                  <span>অ্যাকাউন্ট সক্রিয়করণ</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-section">
+              <div class="notice-box">
+                <mat-icon>info</mat-icon>
+                <div>
+                  <h4>গুরুত্বপূর্ণ তথ্য:</h4>
+                  <ul>
+                    <li>
+                      আপনার অ্যাকাউন্ট যাচাই সাধারণত ২৪-৪৮ ঘন্টার মধ্যে সম্পন্ন
+                      হয়
+                    </li>
+                    <li>
+                      যাচাই প্রক্রিয়া সম্পন্ন হলে আপনি ইমেইল/SMS এর মাধ্যমে
+                      জানানো হবে
+                    </li>
+                    <li>কোনো সমস্যা হলে আমাদের সাথে যোগাযোগ করুন</li>
+                    <li>
+                      ভুল তথ্য প্রদান করলে আপনার আবেদন প্রত্যাখ্যান হতে পারে
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="loadDonorProfile()"
+            >
+              <mat-icon>refresh</mat-icon>
+              অবস্থা পুনরায় চেক করুন
+            </button>
+            <button mat-stroked-button color="warn" (click)="logout()">
+              <mat-icon>logout</mat-icon>
+              লগআউট
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Contact Information -->
+    <div class="contact-card">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>support_agent</mat-icon>
+            সহায়তা প্রয়োজন?
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="contact-info">
+            <div class="contact-item">
+              <mat-icon>phone</mat-icon>
+              <div>
+                <h4>ফোন</h4>
+                <p>+৮৮০ ১৭১১ ১২৩৪৫৬</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <mat-icon>email</mat-icon>
+              <div>
+                <h4>ইমেইল</h4>
+                <p>support@roktoseba.com</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <mat-icon>schedule</mat-icon>
+              <div>
+                <h4>সময়সূচী</h4>
+                <p>রবিবার - বৃহস্পতিবার: ৯:০০ - ১৮:০০</p>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

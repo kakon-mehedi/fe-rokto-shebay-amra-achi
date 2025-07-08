@@ -1,0 +1,421 @@
+<div class="donor-details-modal">
+  <!-- Modal Header -->
+  <div class="modal-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">person</mat-icon>
+      <h2>রক্তদাতার বিস্তারিত তথ্য</h2>
+    </div>
+    <button mat-icon-button (click)="close()" class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-progress-spinner
+      color="primary"
+      mode="indeterminate"
+      diameter="50"
+    ></mat-progress-spinner>
+    <p>তথ্য লোড হচ্ছে...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="error-container">
+    <mat-icon color="warn">error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="loadDonorDetails()">
+      <mat-icon>refresh</mat-icon>
+      পুনরায় চেষ্টা করুন
+    </button>
+  </div>
+
+  <!-- Donor Details Content -->
+  <div *ngIf="donor && !isLoading && !error" class="modal-content">
+    <!-- Profile Section -->
+    <div class="profile-section">
+      <div class="profile-photo">
+        <img
+          [src]="donor.profilePhoto || 'assets/images/logo/profile_avatar.png'"
+          [alt]="donor.name + ' এর প্রোফাইল ছবি'"
+          class="profile-img"
+        />
+      </div>
+      <div class="profile-info">
+        <h3 class="donor-name">{{ donor.name }}</h3>
+        <div class="blood-group-badge">{{ donor.bloodGroup }}</div>
+        <div class="status-badges">
+          <span
+            class="status-chip"
+            [ngClass]="getStatusClass(donor.accountStatus)"
+          >
+            {{ getStatusLabel(donor.accountStatus) }}
+          </span>
+          <span
+            class="eligibility-chip"
+            [ngClass]="getEligibilityClass(donor.eligibilityStatus)"
+          >
+            {{ getEligibilityLabel(donor.eligibilityStatus) }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Information -->
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>contact_phone</mat-icon>
+        <mat-card-title>যোগাযোগের তথ্য</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-grid">
+          <!-- Phone -->
+          <div class="info-item clickable-info">
+            <mat-icon>phone</mat-icon>
+            <div class="info-content">
+              <label>ফোন নম্বর</label>
+              <div class="contact-actions">
+                <span class="contact-value">{{ donor.phone }}</span>
+                <div class="action-buttons">
+                  <button
+                    mat-icon-button
+                    (click)="copyPhoneNumber(donor.phone)"
+                    matTooltip="নম্বর কপি করুন"
+                    class="copy-btn"
+                  >
+                    <mat-icon>content_copy</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    (click)="callPhoneNumber(donor.phone)"
+                    matTooltip="কল করুন"
+                    class="call-btn"
+                  >
+                    <mat-icon>call</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="info-item clickable-info" *ngIf="donor.email">
+            <mat-icon>email</mat-icon>
+            <div class="info-content">
+              <label>ইমেইল</label>
+              <div class="contact-actions">
+                <span class="contact-value">{{ donor.email }}</span>
+                <div class="action-buttons">
+                  <button
+                    mat-icon-button
+                    (click)="copyEmail(donor.email!)"
+                    matTooltip="ইমেইল কপি করুন"
+                    class="copy-btn"
+                  >
+                    <mat-icon>content_copy</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    (click)="sendEmail(donor.email!)"
+                    matTooltip="ইমেইল পাঠান"
+                    class="email-btn"
+                  >
+                    <mat-icon>send</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Emergency Contact -->
+          <div class="info-item" *ngIf="donor.emergencyContact?.phone">
+            <mat-icon>emergency</mat-icon>
+            <div class="info-content">
+              <label>জরুরি যোগাযোগ</label>
+              <div class="emergency-contact">
+                <p>
+                  <strong>{{ donor.emergencyContact?.name }}</strong>
+                </p>
+                <div class="contact-actions">
+                  <span class="contact-value">{{
+                    donor.emergencyContact?.phone
+                  }}</span>
+                  <div class="action-buttons">
+                    <button
+                      mat-icon-button
+                      (click)="copyPhoneNumber(donor.emergencyContact?.phone!)"
+                      matTooltip="নম্বর কপি করুন"
+                      class="copy-btn"
+                    >
+                      <mat-icon>content_copy</mat-icon>
+                    </button>
+                    <button
+                      mat-icon-button
+                      (click)="callPhoneNumber(donor.emergencyContact?.phone!)"
+                      matTooltip="কল করুন"
+                      class="call-btn"
+                    >
+                      <mat-icon>call</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <p class="relation">
+                  সম্পর্ক: {{ donor.emergencyContact?.relation }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Personal Information -->
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>person_outline</mat-icon>
+        <mat-card-title>ব্যক্তিগত তথ্য</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-grid">
+          <!-- Donor ID -->
+          <div class="info-item">
+            <mat-icon>fingerprint</mat-icon>
+            <div class="info-content">
+              <label>ডোনার আইডি</label>
+              <span class="donor-id-value">{{ donor._id }}</span>
+              <button
+                mat-icon-button
+                (click)="copyDonorId(donor._id)"
+                matTooltip="আইডি কপি করুন"
+                class="copy-btn"
+              >
+                <mat-icon>content_copy</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Donor ID (Custom) -->
+          <div class="info-item" *ngIf="donor.donorId">
+            <mat-icon>badge</mat-icon>
+            <div class="info-content">
+              <label>কাস্টম ডোনার আইডি</label>
+              <span class="donor-id-value">{{ donor.donorId }}</span>
+              <button
+                mat-icon-button
+                (click)="copyDonorId(donor.donorId)"
+                matTooltip="কাস্টম আইডি কপি করুন"
+                class="copy-btn"
+              >
+                <mat-icon>content_copy</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <mat-icon>cake</mat-icon>
+            <div class="info-content">
+              <label>জন্ম তারিখ</label>
+              <span
+                >{{ formatDate(donor.dateOfBirth) }} ({{
+                  calculateAge(donor.dateOfBirth)
+                }}
+                বছর)</span
+              >
+            </div>
+          </div>
+
+          <div class="info-item">
+            <mat-icon>wc</mat-icon>
+            <div class="info-content">
+              <label>লিঙ্গ</label>
+              <span>{{ getGenderLabel(donor.gender) }}</span>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <mat-icon>account_balance</mat-icon>
+            <div class="info-content">
+              <label>ধর্ম</label>
+              <span>{{ donor.religion }}</span>
+            </div>
+          </div>
+
+          <div class="info-item" *ngIf="donor.profession">
+            <mat-icon>work</mat-icon>
+            <div class="info-content">
+              <label>পেশা</label>
+              <span>{{ donor.profession }}</span>
+            </div>
+          </div>
+
+          <div class="info-item" *ngIf="donor.weight">
+            <mat-icon>monitor_weight</mat-icon>
+            <div class="info-content">
+              <label>ওজন</label>
+              <span>{{ donor.weight }} কেজি</span>
+            </div>
+          </div>
+
+          <div class="info-item" *ngIf="donor.height">
+            <mat-icon>height</mat-icon>
+            <div class="info-content">
+              <label>উচ্চতা</label>
+              <span>{{ donor.height }} ইঞ্চি</span>
+            </div>
+          </div>
+
+          <div class="info-item" *ngIf="donor.nationalId">
+            <mat-icon>badge</mat-icon>
+            <div class="info-content">
+              <label>জাতীয় পরিচয়পত্র</label>
+              <span>{{ donor.nationalId }}</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Address Information -->
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>location_on</mat-icon>
+        <mat-card-title>ঠিকানা</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="address-info">
+          <div class="address-text">
+            <p>
+              <strong>{{ donor.city }}</strong
+              >, {{ donor.location }}
+            </p>
+            <p>{{ donor.address }}</p>
+          </div>
+          <div class="address-actions">
+            <button
+              mat-stroked-button
+              (click)="copyAddress(donor.address)"
+              class="copy-address-btn"
+            >
+              <mat-icon>content_copy</mat-icon>
+              ঠিকানা কপি করুন
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="openMaps(donor.address)"
+              class="maps-btn"
+            >
+              <mat-icon>map</mat-icon>
+              ম্যাপে দেখুন
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Donation History -->
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>favorite</mat-icon>
+        <mat-card-title>রক্তদানের ইতিহাস</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="donation-stats">
+          <div class="stat-item">
+            <span class="stat-number">{{ donor.totalDonations }}</span>
+            <span class="stat-label">মোট দান</span>
+          </div>
+          <div class="stat-item" *ngIf="donor.lastDonationDate">
+            <span class="stat-number">{{
+              getDaysSinceLastDonation(donor.lastDonationDate)
+            }}</span>
+            <span class="stat-label">দিন আগে শেষ দান</span>
+          </div>
+          <div class="stat-item" *ngIf="donor.lastDonationDate">
+            <span class="stat-date">{{
+              formatDate(donor.lastDonationDate)
+            }}</span>
+            <span class="stat-label">শেষ দানের তারিখ</span>
+          </div>
+        </div>
+
+        <!-- Donation History List -->
+        <div
+          class="donation-history"
+          *ngIf="donor.donationHistory && donor.donationHistory.length > 0"
+        >
+          <h4>দানের বিস্তারিত ইতিহাস</h4>
+          <div class="history-list">
+            <div
+              class="history-item"
+              *ngFor="let donation of donor.donationHistory.slice(0, 5)"
+            >
+              <div class="history-date">
+                <mat-icon>event</mat-icon>
+                <span>{{ formatDate(donation.donationDate) }}</span>
+              </div>
+              <div class="history-details">
+                <p *ngIf="donation.location">
+                  <strong>স্থান:</strong> {{ donation.location }}
+                </p>
+                <p *ngIf="donation.bloodBank">
+                  <strong>ব্লাড ব্যাংক:</strong> {{ donation.bloodBank }}
+                </p>
+                <p *ngIf="donation.units">
+                  <strong>ইউনিট:</strong> {{ donation.units }}
+                </p>
+                <p *ngIf="donation.notes">
+                  <strong>মন্তব্য:</strong> {{ donation.notes }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="no-donation"
+          *ngIf="!donor.donationHistory || donor.donationHistory.length === 0"
+        >
+          <mat-icon>info</mat-icon>
+          <p>এখনো কোনো দানের ইতিহাস নেই</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Account Information -->
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>account_circle</mat-icon>
+        <mat-card-title>অ্যাকাউন্টের তথ্য</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-grid">
+          <div class="info-item">
+            <mat-icon>date_range</mat-icon>
+            <div class="info-content">
+              <label>নিবন্ধনের তারিখ</label>
+              <span>{{ formatDate(donor.createdAt) }}</span>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <mat-icon>update</mat-icon>
+            <div class="info-content">
+              <label>সর্বশেষ আপডেট</label>
+              <span>{{ formatDate(donor.updatedAt) }}</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Modal Actions -->
+  <div class="modal-actions" *ngIf="donor && !isLoading && !error">
+    <button mat-stroked-button (click)="close()">বন্ধ করুন</button>
+    <button mat-raised-button color="primary" (click)="close()">
+      <mat-icon>edit</mat-icon>
+      সম্পাদনা করুন
+    </button>
+  </div>
+</div>

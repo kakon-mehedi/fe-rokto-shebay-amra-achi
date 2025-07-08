@@ -1,39 +1,170 @@
-<div class="login-container">
-    <mat-card class="login-card">
-      <mat-card-title>Login</mat-card-title>
-      
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        
-        <!-- Email Field -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" required>
-          <mat-error *ngIf="loginForm.controls['email'].hasError('required')">
-            Email is required
-          </mat-error>
-          <mat-error *ngIf="loginForm.controls['email'].hasError('email')">
-            Enter a valid email
-          </mat-error>
-        </mat-form-field>
-        
-        <!-- Password Field -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Password</mat-label>
-          <input matInput type="password" formControlName="password" required>
-          <mat-error *ngIf="loginForm.controls['password'].hasError('required')">
-            Password is required
-          </mat-error>
-          <mat-error *ngIf="loginForm.controls['password'].hasError('minlength')">
-            Minimum 6 characters required
-          </mat-error>
-        </mat-form-field>
-        
-        <!-- Submit Button -->
-        <button mat-raised-button color="primary" class="full-width" type="submit" [disabled]="loginForm.invalid">
-          Login
-        </button>
-        
-      </form>
-    </mat-card>
+<div class="auth-container">
+  <!-- Background Pattern -->
+  <div class="auth-background">
+    <div class="pattern-overlay"></div>
   </div>
-  
+
+  <!-- Main Content -->
+  <div class="auth-content">
+    <!-- Back Button -->
+    <button mat-icon-button routerLink="/" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <!-- Auth Card -->
+    <div class="auth-card">
+      <!-- Left Side: Branding -->
+      <div class="auth-branding">
+        <div class="brand-logo">
+          <img
+            src="assets/images/roktosebajpg.jpg"
+            alt="রক্তসেবা"
+            class="logo"
+          />
+        </div>
+        <h1 class="brand-title">রক্তসেবায় আমরা আছি</h1>
+        <p class="brand-subtitle">একটি জীবন বাঁচান, রক্তদান করুন</p>
+
+        <div class="features-list">
+          <div class="feature-item">
+            <mat-icon>security</mat-icon>
+            <span>নিরাপদ ও সুরক্ষিত</span>
+          </div>
+          <div class="feature-item">
+            <mat-icon>schedule</mat-icon>
+            <span>২৪/৭ সেবা</span>
+          </div>
+          <div class="feature-item">
+            <mat-icon>verified</mat-icon>
+            <span>যাচাইকৃত ডোনার</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side: Login Form -->
+      <div class="auth-form-section">
+        <div class="form-header">
+          <h2>এডমিন লগইন</h2>
+          <p>আপনার অ্যাকাউন্টে প্রবেশ করুন</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+          <!-- Email Field -->
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>ইমেইল ঠিকানা</mat-label>
+              <input
+                matInput
+                type="email"
+                formControlName="email"
+                required
+                placeholder="আপনার ইমেইল লিখুন"
+              />
+              <mat-icon matPrefix class="input-icon">email</mat-icon>
+              <mat-error>
+                {{ getErrorMessage("email") }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>পাসওয়ার্ড</mat-label>
+              <input
+                matInput
+                [type]="hidePassword ? 'password' : 'text'"
+                formControlName="password"
+                required
+                placeholder="আপনার পাসওয়ার্ড লিখুন"
+              />
+              <mat-icon matPrefix class="input-icon">lock</mat-icon>
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="togglePasswordVisibility()"
+                type="button"
+                class="password-toggle"
+              >
+                <mat-icon>{{
+                  hidePassword ? "visibility_off" : "visibility"
+                }}</mat-icon>
+              </button>
+              <mat-error>
+                {{ getErrorMessage("password") }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Remember Me & Forgot Password -->
+          <div class="form-options">
+            <mat-checkbox
+              formControlName="rememberMe"
+              class="remember-checkbox"
+            >
+              আমাকে মনে রাখুন
+            </mat-checkbox>
+            <a href="#" class="forgot-password">পাসওয়ার্ড ভুলে গেছেন?</a>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            mat-raised-button
+            color="primary"
+            class="full-width auth-submit-btn"
+            type="submit"
+            [disabled]="loginForm.invalid || isLoading"
+          >
+            <mat-spinner
+              diameter="20"
+              *ngIf="isLoading"
+              class="btn-spinner"
+            ></mat-spinner>
+            <mat-icon *ngIf="!isLoading" class="btn-icon">login</mat-icon>
+            <span *ngIf="!isLoading">লগইন করুন</span>
+            <span *ngIf="isLoading">লগইন হচ্ছে...</span>
+          </button>
+
+          <!-- Divider -->
+          <div class="auth-divider">
+            <span>অথবা</span>
+          </div>
+
+          <!-- Social Login (Optional) -->
+          <div class="social-login">
+            <button
+              mat-stroked-button
+              type="button"
+              class="social-btn google-btn"
+            >
+              <mat-icon>alternate_email</mat-icon>
+              <span>Google দিয়ে লগইন</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Register Link -->
+        <div class="auth-footer">
+          <p>
+            এখনো অ্যাকাউন্ট নেই?
+            <a routerLink="/users/register" class="register-link"
+              >নিবন্ধন করুন</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Info -->
+    <div class="auth-info">
+      <div class="info-item">
+        <mat-icon>phone</mat-icon>
+        <span>জরুরি সহায়তা: ১৬২৬৩</span>
+      </div>
+      <div class="info-item">
+        <mat-icon>help</mat-icon>
+        <span>সাহায্য কেন্দ্র</span>
+      </div>
+    </div>
+  </div>
+</div>

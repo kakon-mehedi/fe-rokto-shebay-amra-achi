@@ -1,4 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+/* Import Google Fonts for Bengali */
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap');
+
+/* Import Angular Material Theme */
+@import './styles/themes/theme-default.scss';
+
+/* Import Custom Scrollbar Theme */
+@import './styles/scrollbar-theme.scss';
+
 /* You can add global styles to this file, and also import other style files */
 html,
 body {
@@ -6,6 +14,395 @@ body {
 }
 body {
 	margin: 0;
-	font-family: Roboto, 'Helvetica Neue', sans-serif;
+	font-family: 'Hind Siliguri', 'Noto Sans Bengali', 'Roboto', 'Helvetica Neue', sans-serif;
+	// No global padding-top by default
 }
 
+body.has-navbar {
+  margin: 0;
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', 'Roboto', 'Helvetica Neue', sans-serif;
+  padding-top: 70px;
+
+  @media (max-width: 480px) {
+    padding-top: 60px;
+  }
+}
+
+/* Bengali Typography Utilities */
+.bengali-text {
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+}
+
+.bengali-title {
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.bengali-heading {
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.bengali-body {
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Enhanced Bengali text rendering */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Material Components Bengali Font Override */
+.mat-toolbar,
+.mat-button,
+.mat-raised-button,
+.mat-menu-item,
+.mat-form-field,
+.mat-input-element,
+.mat-select,
+.mat-option,
+.mat-card,
+.mat-dialog-container {
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', 'Roboto', sans-serif !important;
+}
+
+/* Global style overrides for profile avatars */
+.mat-icon-button img.profile-avatar {
+  width: 35px !important;
+  height: 35px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+}
+
+/* Profile Menu Styles */
+.profile-menu {
+  margin-top: 10px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+
+  .menu-header {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+    border-radius: 12px 12px 0 0;
+
+    .menu-avatar {
+      width: 50px !important;
+      height: 50px !important;
+      border-radius: 50% !important;
+      border: 3px solid #d32f2f;
+      object-fit: cover;
+      display: block;
+
+      img.menu-avatar {
+        width: 50px !important;
+        height: 50px !important;
+        border-radius: 50% !important;
+        border: 3px solid #d32f2f !important;
+        object-fit: cover !important;
+        display: block !important;
+        max-width: 50px !important;
+        max-height: 50px !important;
+      }
+    }
+
+    .user-info {
+      .user-name {
+        font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+        font-weight: 600;
+        margin: 0;
+        color: #333;
+        font-size: 1.1rem;
+      }
+
+      .user-role {
+        font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+        font-size: 0.9rem;
+        color: #666;
+        margin: 5px 0 0 0;
+      }
+    }
+  }
+
+  .mat-menu-item {
+    padding: 12px 20px;
+    transition: all 0.3s ease;
+    font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif !important;
+
+    &:hover {
+      background: rgba(211, 47, 47, 0.1);
+      transform: translateX(5px);
+    }
+
+    mat-icon {
+      margin-right: 15px;
+      color: #d32f2f;
+    }
+
+    span {
+      font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+    }
+
+    &.logout-btn:hover {
+      background: rgba(244, 67, 54, 0.1);
+      color: #f44336;
+    }
+
+    &.login-btn:hover {
+      background: rgba(76, 175, 80, 0.1);
+      color: #4caf50;
+    }
+  }
+}
+
+.mat-menu-panel img.menu-avatar {
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50% !important;
+  border: 3px solid #d32f2f;
+  object-fit: cover;
+  display: block;
+}
+
+/* Custom Scrollbar Theme - Blood Donation Theme */
+/* ============================================== */
+
+/* WebKit Scrollbar (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #d32f2f, #f44336);
+  border-radius: 10px;
+  border: 2px solid #f8f9fa;
+  box-shadow: 0 2px 6px rgba(211, 47, 47, 0.3);
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #b71c1c, #d32f2f);
+  box-shadow: 0 4px 8px rgba(183, 28, 28, 0.4);
+  transform: scale(1.1);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(135deg, #8d1515, #b71c1c);
+}
+
+::-webkit-scrollbar-corner {
+  background: #f8f9fa;
+}
+
+/* Firefox Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d32f2f #f8f9fa;
+}
+
+/* Enhanced scrollbar for specific containers */
+.custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(248, 249, 250, 0.8);
+    border-radius: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #e57373, #f44336);
+    border-radius: 6px;
+    border: 1px solid rgba(248, 249, 250, 0.5);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #d32f2f, #b71c1c);
+  }
+}
+
+/* Material Components Scrollbar Override */
+.mat-sidenav-content,
+.mat-drawer-content,
+.mat-dialog-container,
+.mat-select-panel,
+.mat-autocomplete-panel,
+.mat-menu-panel {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #ffcdd2, #f44336);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #e57373, #d32f2f);
+  }
+}
+
+/* Table scrollbar */
+.mat-table {
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #fafafa;
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #ef5350, #f44336);
+    border-radius: 8px;
+    border: 2px solid #fafafa;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #d32f2f, #b71c1c);
+  }
+}
+
+/* Admin Panel Custom Scrollbar */
+.admin-container {
+  .mat-sidenav-content::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .mat-sidenav-content::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 8px;
+  }
+
+  .mat-sidenav-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #1976d2, #2196f3);
+    border-radius: 8px;
+    border: 2px solid #f5f5f5;
+  }
+
+  .mat-sidenav-content::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #0d47a1, #1976d2);
+  }
+}
+
+/* Notification Panel Scrollbar */
+.notification-panel {
+  .notification-list::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .notification-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+  }
+
+  .notification-list::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+    border-radius: 4px;
+  }
+
+  .notification-list::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #f57c00, #ef6c00);
+  }
+}
+
+/* Mobile responsive scrollbar */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    border: 1px solid #f8f9fa;
+  }
+}
+
+/* Dark theme scrollbar (if needed in future) */
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-track {
+    background: #2c2c2c;
+    border: 1px solid #404040;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #f44336, #d32f2f);
+    border: 2px solid #2c2c2c;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #ef5350, #f44336);
+  }
+}
+
+/* ==================== */
+/* Donor Details Dialog Styles */
+/* ==================== */
+.donor-details-dialog {
+  .mat-mdc-dialog-container {
+    border-radius: 16px;
+    padding: 0;
+    overflow: hidden;
+    max-width: 95vw;
+    max-height: 90vh;
+  }
+  
+  .mat-mdc-dialog-content {
+    padding: 0;
+    margin: 0;
+    max-height: none;
+  }
+}
+
+/* ==================== */
+/* Success/Error Snackbar Styles */
+/* ==================== */
+.success-snackbar {
+  background: #4caf50 !important;
+  color: white !important;
+}
+
+.error-snackbar {
+  background: #f44336 !important;
+  color: white !important;
+}
+
+/* ============================================== */
+
+.mat-dialog-container {
+  padding: 0 0 0 0 !important     ;
+  // width: auto !important;
+}
+
+
+.mat-form-field-wrapper {
+  padding-bottom: 0 !important;
+}

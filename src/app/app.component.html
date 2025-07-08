@@ -1,1 +1,17 @@
-<app-navigation></app-navigation>
+<!-- Scroll Progress Indicator -->
+<div class="scroll-progress"></div>
+
+<!-- <app-navigation></app-navigation> -->
+<app-navigation-new *ngIf="showNavigation"></app-navigation-new>
+<router-outlet></router-outlet>
+<app-footer *ngIf="showFooter"></app-footer>
+<app-mobile-nav></app-mobile-nav>
+
+<!-- Scroll to Top Button -->
+<app-scroll-to-top></app-scroll-to-top>
+
+<!-- Social Chat Head -->
+<app-social-chat-head></app-social-chat-head>
+
+<!-- AI Chat Assistant -->
+<app-ai-chat-assistant></app-ai-chat-assistant>

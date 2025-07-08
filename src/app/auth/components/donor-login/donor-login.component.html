@@ -1,0 +1,169 @@
+<!-- Donor Login Form -->
+<div class="donor-login-container">
+  <div class="login-wrapper">
+    <!-- Header -->
+    <div class="login-header">
+      <div class="logo-section">
+        <img src="assets/images/roktosebajpg.jpg" alt="রক্তসেবা" class="logo" />
+        <h1 class="login-title">রক্তদাতা লগইন</h1>
+        <p class="login-subtitle">আপনার অ্যাকাউন্টে প্রবেশ করুন</p>
+      </div>
+    </div>
+
+    <!-- Login Methods Toggle -->
+    <div class="login-methods">
+      <button
+        mat-button
+        [class.active]="loginMethod === 'phone'"
+        (click)="switchLoginMethod('phone')"
+        class="method-btn"
+      >
+        <mat-icon>phone</mat-icon>
+        মোবাইল নম্বর
+      </button>
+      <button
+        mat-button
+        [class.active]="loginMethod === 'email'"
+        (click)="switchLoginMethod('email')"
+        class="method-btn"
+      >
+        <mat-icon>email</mat-icon>
+        ইমেইল
+      </button>
+    </div>
+
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <!-- Phone Number Field -->
+      <mat-form-field
+        appearance="outline"
+        class="full-width"
+        *ngIf="loginMethod === 'phone'"
+      >
+        <mat-label>মোবাইল নম্বর</mat-label>
+        <input matInput formControlName="phone" placeholder="01712345678" />
+        <mat-icon matSuffix>phone</mat-icon>
+        <mat-error>{{ getErrorMessage("phone") }}</mat-error>
+      </mat-form-field>
+
+      <!-- Email Field -->
+      <mat-form-field
+        appearance="outline"
+        class="full-width"
+        *ngIf="loginMethod === 'email'"
+      >
+        <mat-label>ইমেইল ঠিকানা</mat-label>
+        <input
+          matInput
+          formControlName="email"
+          type="email"
+          placeholder="example@email.com"
+        />
+        <mat-icon matSuffix>email</mat-icon>
+        <mat-error>{{ getErrorMessage("email") }}</mat-error>
+      </mat-form-field>
+
+      <!-- Password Field -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>পাসওয়ার্ড</mat-label>
+        <input
+          matInput
+          formControlName="password"
+          [type]="hidePassword ? 'password' : 'text'"
+          placeholder="আপনার পাসওয়ার্ড"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (click)="hidePassword = !hidePassword"
+        >
+          <mat-icon>{{
+            hidePassword ? "visibility" : "visibility_off"
+          }}</mat-icon>
+        </button>
+        <mat-error>{{ getErrorMessage("password") }}</mat-error>
+      </mat-form-field>
+
+      <!-- Remember Me & Forgot Password -->
+      <div class="login-options">
+        <mat-checkbox formControlName="rememberMe" class="remember-me">
+          আমাকে মনে রাখুন
+        </mat-checkbox>
+        <button
+          mat-button
+          type="button"
+          (click)="goToForgotPassword()"
+          class="forgot-password"
+        >
+          পাসওয়ার্ড ভুলে গেছেন?
+        </button>
+      </div>
+
+      <!-- Login Button -->
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="isLoading || loginForm.invalid"
+        class="login-btn"
+      >
+        <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        <span *ngIf="!isLoading">লগইন করুন</span>
+        <span *ngIf="isLoading">লগইন হচ্ছে...</span>
+      </button>
+
+      <!-- Divider -->
+      <div class="divider">
+        <span>অথবা</span>
+      </div>
+
+      <!-- Alternative Actions -->
+      <div class="alternative-actions">
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="goToRegister()"
+          class="register-btn"
+        >
+          <mat-icon>person_add</mat-icon>
+          নতুন রক্তদাতা নিবন্ধন
+        </button>
+
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="goToPublicDonors()"
+          class="public-btn"
+        >
+          <mat-icon>search</mat-icon>
+          রক্তদাতা খুঁজুন
+        </button>
+      </div>
+    </form>
+
+    <!-- Footer -->
+    <div class="login-footer">
+      <p class="help-text">
+        সাহায্য প্রয়োজন?
+        <a href="tel:+8801914193676" class="help-link">
+          <mat-icon>phone</mat-icon>
+          01914193676
+        </a>
+      </p>
+
+      <div class="app-info">
+        <p>&copy; ২০২৫ রক্তসেবায় আমরা আছি। সকল অধিকার সংরক্ষিত।</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Background Elements -->
+  <div class="background-elements">
+    <div class="blood-drop drop-1">🩸</div>
+    <div class="blood-drop drop-2">🩸</div>
+    <div class="blood-drop drop-3">🩸</div>
+    <div class="heart-icon heart-1">❤️</div>
+    <div class="heart-icon heart-2">❤️</div>
+  </div>
+</div>

@@ -1,0 +1,134 @@
+<div class="add-donation-dialog">
+  <!-- Dialog Header -->
+  <div class="dialog-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <mat-icon class="donation-icon">favorite</mat-icon>
+      </div>
+      <div class="header-text">
+        <h2 mat-dialog-title>নতুন রক্তদান রেকর্ড করুন</h2>
+        <p class="header-subtitle">আপনার রক্তদানের তথ্য সংরক্ষণ করুন</p>
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="donationForm" (ngSubmit)="onSubmit()">
+    <mat-dialog-content class="dialog-content">
+      <div class="form-container">
+        <!-- রক্তদানের তারিখ -->
+        <div class="form-section">
+          <div class="section-header">
+            <mat-icon class="section-icon">event</mat-icon>
+            <span class="section-title">দানের তারিখ</span>
+          </div>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>রক্তদানের তারিখ</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="lastDonationDate"
+              placeholder="তারিখ সিলেক্ট করুন"
+              required
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-icon matPrefix class="input-icon">event</mat-icon>
+            <mat-error
+              *ngIf="donationForm.get('lastDonationDate')?.hasError('required')"
+            >
+              অনুগ্রহ করে তারিখ সিলেক্ট করুন
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- রক্তদানের স্থান -->
+        <div class="form-section">
+          <div class="section-header">
+            <mat-icon class="section-icon">location_on</mat-icon>
+            <span class="section-title">দানের স্থান</span>
+          </div>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>রক্তদানের স্থান</mat-label>
+            <input
+              matInput
+              formControlName="location"
+              placeholder="যেমন: ঢাকা মেডিকেল কলেজ হাসপাতাল"
+              required
+            />
+            <mat-icon matPrefix class="input-icon">location_on</mat-icon>
+            <mat-error
+              *ngIf="donationForm.get('location')?.hasError('required')"
+            >
+              অনুগ্রহ করে রক্তদানের স্থান লিখুন
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- অতিরিক্ত নোট -->
+        <div class="form-section">
+          <div class="section-header">
+            <mat-icon class="section-icon">note</mat-icon>
+            <span class="section-title">অতিরিক্ত তথ্য</span>
+            <span class="optional-badge">ঐচ্ছিক</span>
+          </div>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>অতিরিক্ত তথ্য (ঐচ্ছিক)</mat-label>
+            <textarea
+              matInput
+              formControlName="notes"
+              rows="3"
+              placeholder="কোনো বিশেষ তথ্য থাকলে এখানে লিখুন (যেমন: ক্যাম্প, জরুরি অবস্থা ইত্যাদি)"
+            ></textarea>
+            <mat-icon matPrefix class="input-icon">note</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Information Card -->
+        <div class="info-card">
+          <mat-icon class="info-icon">info</mat-icon>
+          <div class="info-content">
+            <h4>গুরুত্বপূর্ণ তথ্য</h4>
+            <ul>
+              <li>সঠিক তারিখ এবং স্থানের নাম দিন</li>
+              <li>এই তথ্য আপনার পরবর্তী দানের যোগ্যতা নির্ধারণে ব্যবহৃত হবে</li>
+              <li>যদি কোনো ভুল হয় তাহলে পরে সংশোধন করা যাবে</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="dialog-actions">
+      <div class="actions-container">
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="onCancel()"
+          [disabled]="isLoading"
+          class="cancel-btn"
+        >
+          <mat-icon>close</mat-icon>
+          বাতিল
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="donationForm.invalid || isLoading"
+          class="submit-btn"
+        >
+          <mat-spinner
+            *ngIf="isLoading"
+            diameter="18"
+            class="btn-spinner"
+          ></mat-spinner>
+          <mat-icon *ngIf="!isLoading">favorite</mat-icon>
+          {{ isLoading ? "সেভ হচ্ছে..." : "রক্তদান রেকর্ড করুন" }}
+        </button>
+      </div>
+    </mat-dialog-actions>
+  </form>
+</div>
