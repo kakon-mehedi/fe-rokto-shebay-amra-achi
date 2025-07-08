@@ -110,21 +110,29 @@
               alt="User"
             />
             <ng-template #defaultAvatar>
-              <span class="user-avatar default">👤</span>
+              <!-- <span class="user-avatar default">👤</span> -->
+              <img
+                src="assets/images/logo/profile_avatar.png"
+                alt="User Avatar"
+                class="user-avatar default"
+              />
             </ng-template>
-            <span class="user-name">{{
+            <!-- <span class="user-name">{{
               userName || (isAdmin ? "অ্যাডমিন" : "ডোনার")
-            }}</span>
+            }}</span> -->
             <span class="dropdown-arrow" [class.rotated]="isUserDropdownOpen"
               >▼</span
             >
           </span>
           <div class="dropdown-menu" [class.show]="isUserDropdownOpen">
+            <span class="dropdown-item">{{
+              userName || (isAdmin ? "অ্যাডমিন" : "ডোনার")
+            }}</span>
             <a
               *ngIf="!isAdmin"
-              routerLink="/profile"
+              routerLink="/dashboard"
               class="dropdown-item"
-              (click)="navigateTo('/profile')"
+              (click)="navigateTo('/dashboard')"
               >প্রোফাইল</a
             >
             <a
@@ -271,9 +279,9 @@
             <div class="dropdown-menu" [class.show]="isMobileUserDropdownOpen">
               <a
                 *ngIf="!isAdmin"
-                routerLink="/profile"
+                routerLink="/dashboard"
                 class="dropdown-item"
-                (click)="navigateTo('/profile')"
+                (click)="navigateTo('/dashboard')"
                 >প্রোফাইল</a
               >
               <a

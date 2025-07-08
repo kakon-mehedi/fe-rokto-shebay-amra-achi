@@ -1,6 +1,10 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { AuthService } from '../../services/auth.service';
+import { DonorService } from '../../services/donor.service';
+import { User } from '../../interfaces/user.interface';
+import { DonorResponse } from '../../interfaces/donor.interface';
 
 @Component({
   selector: 'app-navigation-new',
@@ -12,9 +16,10 @@ export class NavigationNewComponent implements OnInit {
   isLegalDropdownOpen = false;
   currentRoute = '';
 
-  // Mock user state (replace with real auth logic)
+  // Real user state
   isLoggedIn = false;
   isAdmin = false;
+  isDonor = false;
   userName = '';
   userAvatar = '';
   isUserDropdownOpen = false;
@@ -22,7 +27,11 @@ export class NavigationNewComponent implements OnInit {
   isMobileLoginDropdownOpen = false;
   isMobileUserDropdownOpen = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private donorService: DonorService
+  ) {}
 
   ngOnInit() {
     // Track current route for active link highlighting
@@ -31,9 +40,28 @@ export class NavigationNewComponent implements OnInit {
       .subscribe((event) => {
         this.currentRoute = (event as NavigationEnd).url;
       });
-    
-    // Set initial route
     this.currentRoute = this.router.url;
+
+    // Subscribe to AuthService for admin/user
+    this.authService.currentUser$.subscribe((user: User | null) => {
+      this.isLoggedIn = this.authService.isAuthenticated();
+      this.isAdmin = this.authService.isAdmin();
+      if (user) {
+        this.userName = user.name || '';
+        this.userAvatar = user.profilePhoto || '';
+      }
+    });
+
+    // Subscribe to DonorService for donor
+    this.donorService.currentDonor$.subscribe((donor: DonorResponse | null) => {
+      this.isDonor = this.donorService.isAuthenticated();
+      if (this.isDonor && donor) {
+        this.isLoggedIn = true;
+        this.isAdmin = false;
+        this.userName = donor.name || '';
+        this.userAvatar = donor.profilePhoto || '';
+      }
+    });
   }
 
   // Close dropdowns when clicking outside
@@ -103,12 +131,17 @@ export class NavigationNewComponent implements OnInit {
   }
 
   logout() {
+    if (this.isAdmin) {
+      this.authService.logout();
+    } else if (this.isDonor) {
+      this.donorService.logout().subscribe();
+    }
     this.isLoggedIn = false;
     this.isAdmin = false;
+    this.isDonor = false;
     this.userName = '';
     this.userAvatar = '';
     this.isUserDropdownOpen = false;
-    // TODO: Add real logout logic
     this.router.navigate(['/']);
   }
 
