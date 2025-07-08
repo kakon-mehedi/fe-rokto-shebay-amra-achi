@@ -79,7 +79,7 @@ export class DonorLoginComponent implements OnInit {
         loginData.email = this.loginForm.value.email;
       }
 
-      console.log('🔐 Login attempt with data:', loginData);
+     
 
       this.donorService.login(loginData).subscribe({
         next: (response) => {

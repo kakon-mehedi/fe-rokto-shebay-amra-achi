@@ -12,6 +12,16 @@ export class NavigationNewComponent implements OnInit {
   isLegalDropdownOpen = false;
   currentRoute = '';
 
+  // Mock user state (replace with real auth logic)
+  isLoggedIn = false;
+  isAdmin = false;
+  userName = '';
+  userAvatar = '';
+  isUserDropdownOpen = false;
+  isLoginDropdownOpen = false;
+  isMobileLoginDropdownOpen = false;
+  isMobileUserDropdownOpen = false;
+
   constructor(private router: Router) {}
 
   ngOnInit() {
@@ -32,6 +42,14 @@ export class NavigationNewComponent implements OnInit {
     const target = event.target as HTMLElement;
     if (!target.closest('.dropdown')) {
       this.isLegalDropdownOpen = false;
+      this.closeUserDropdown();
+      this.closeLoginDropdown();
+    }
+    if (!target.closest('.mobile-login-dropdown')) {
+      this.isMobileLoginDropdownOpen = false;
+    }
+    if (!target.closest('.mobile-user-dropdown')) {
+      this.isMobileUserDropdownOpen = false;
     }
   }
 
@@ -40,6 +58,7 @@ export class NavigationNewComponent implements OnInit {
   onEscapeKey() {
     this.closeMobileMenu();
     this.closeLegalDropdown();
+    this.closeUserDropdown();
   }
 
   toggleMobileMenu() {
@@ -73,5 +92,61 @@ export class NavigationNewComponent implements OnInit {
     this.router.navigate([route]);
     this.closeMobileMenu();
     this.closeLegalDropdown();
+  }
+
+  // Example: call this after login
+  setUser(type: 'donor' | 'admin', name: string, avatar: string) {
+    this.isLoggedIn = true;
+    this.isAdmin = type === 'admin';
+    this.userName = name;
+    this.userAvatar = avatar;
+  }
+
+  logout() {
+    this.isLoggedIn = false;
+    this.isAdmin = false;
+    this.userName = '';
+    this.userAvatar = '';
+    this.isUserDropdownOpen = false;
+    // TODO: Add real logout logic
+    this.router.navigate(['/']);
+  }
+
+  toggleLoginDropdown(event: Event) {
+    event.stopPropagation();
+    this.isLoginDropdownOpen = !this.isLoginDropdownOpen;
+    if (this.isLoginDropdownOpen) {
+      this.isUserDropdownOpen = false;
+    }
+  }
+
+  closeLoginDropdown() {
+    this.isLoginDropdownOpen = false;
+  }
+
+  toggleUserDropdown() {
+    this.isUserDropdownOpen = !this.isUserDropdownOpen;
+    if (this.isUserDropdownOpen) {
+      this.isLoginDropdownOpen = false;
+    }
+  }
+
+  closeUserDropdown() {
+    this.isUserDropdownOpen = false;
+  }
+
+  toggleMobileLoginDropdown(event: Event) {
+    event.stopPropagation();
+    this.isMobileLoginDropdownOpen = !this.isMobileLoginDropdownOpen;
+    if (this.isMobileLoginDropdownOpen) {
+      this.isMobileUserDropdownOpen = false;
+    }
+  }
+
+  toggleMobileUserDropdown() {
+    this.isMobileUserDropdownOpen = !this.isMobileUserDropdownOpen;
+    if (this.isMobileUserDropdownOpen) {
+      this.isMobileLoginDropdownOpen = false;
+    }
   }
 }

@@ -388,6 +388,6 @@ export class DonorRegisterComponent implements OnInit {
   }
 
   goToLogin(): void {
-    this.router.navigate(['/donor-login']);
+    this.router.navigate(['/auth/donor-login']);
   }
 }

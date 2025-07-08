@@ -15,6 +15,11 @@ body {
 body {
 	margin: 0;
 	font-family: 'Hind Siliguri', 'Noto Sans Bengali', 'Roboto', 'Helvetica Neue', sans-serif;
+	padding-top: 70px;
+  
+  @media (max-width: 480px) {
+    padding-top: 60px;
+  }// Adjusted for fixed navbar
 }
 
 /* Bengali Typography Utilities */

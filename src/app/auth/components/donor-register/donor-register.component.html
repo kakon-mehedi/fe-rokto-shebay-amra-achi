@@ -333,7 +333,7 @@
                 }}</mat-error>
               </mat-form-field>
 
-              <mat-form-field appearance="outline" class="half-width">
+              <!-- <mat-form-field appearance="outline" class="half-width">
                 <mat-label>সর্বশেষ রক্তদানের তারিখ</mat-label>
                 <input
                   matInput
@@ -343,12 +343,12 @@
                 />
                 <mat-icon matSuffix>calendar_today</mat-icon>
                 <mat-hint>শেষ কবে রক্তদান করেছেন</mat-hint>
-              </mat-form-field>
+              </mat-form-field> -->
             </div>
           </div>
 
           <!-- Emergency Contact Section -->
-          <div class="emergency-contact-section full-width">
+          <!-- <div class="emergency-contact-section full-width">
             <h3>জরুরি যোগাযোগ (ঐচ্ছিক)</h3>
             <div class="form-grid">
               <mat-form-field appearance="outline" class="full-width">
@@ -384,7 +384,7 @@
                 <mat-icon matSuffix>family_restroom</mat-icon>
               </mat-form-field>
             </div>
-          </div>
+          </div> -->
 
           <!-- Password Section -->
           <div class="password-section full-width">
@@ -440,8 +440,9 @@
               formControlName="termsAccepted"
               class="terms-checkbox"
             >
-              আমি <a href="#" target="_blank">শর্তাবলী ও নীতিমালা</a> পড়েছি এবং
-              সম্মত আছি *
+              আমি
+              <a href="/legal/terms" target="_blank">শর্তাবলী ও নীতিমালা</a>
+              পড়েছি এবং সম্মত আছি *
             </mat-checkbox>
             <mat-error
               *ngIf="
@@ -456,8 +457,9 @@
               formControlName="privacyAccepted"
               class="terms-checkbox"
             >
-              আমি <a href="#" target="_blank">গোপনীয়তা নীতি</a> পড়েছি এবং
-              সম্মত আছি *
+              আমি
+              <a href="/legal/privacy" target="_blank">গোপনীয়তা নীতি</a> পড়েছি
+              এবং সম্মত আছি *
             </mat-checkbox>
             <mat-error
               *ngIf="

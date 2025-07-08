@@ -75,20 +75,70 @@
         </div>
       </div>
 
-      <a
-        routerLink="/auth/donor-login"
-        class="nav-link"
-        [class.active]="isActiveRoute('/auth/donor-login')"
-        (click)="navigateTo('/auth/donor-login')"
-        >ডোনার লগইন</a
-      >
-      <a
-        routerLink="/auth/login"
-        class="nav-link"
-        [class.active]="isActiveRoute('/auth/login')"
-        (click)="navigateTo('/auth/login')"
-        >অ্যাডমিন লগইন</a
-      >
+      <!-- User/Login Dropdown Logic -->
+      <ng-container *ngIf="!isLoggedIn; else loggedInBlock">
+        <div class="dropdown" (click)="toggleLoginDropdown($event)">
+          <span class="nav-link dropdown-toggle">
+            লগইন
+            <span class="dropdown-arrow" [class.rotated]="isLoginDropdownOpen"
+              >▼</span
+            >
+          </span>
+          <div class="dropdown-menu" [class.show]="isLoginDropdownOpen">
+            <a
+              routerLink="/auth/donor-login"
+              class="dropdown-item"
+              (click)="navigateTo('/auth/donor-login')"
+              >ডোনার লগইন</a
+            >
+            <a
+              routerLink="/auth/login"
+              class="dropdown-item"
+              (click)="navigateTo('/auth/login')"
+              >অ্যাডমিন লগইন</a
+            >
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #loggedInBlock>
+        <div class="dropdown user-dropdown" (click)="toggleUserDropdown()">
+          <span class="nav-link user-info">
+            <img
+              *ngIf="userAvatar; else defaultAvatar"
+              [src]="userAvatar"
+              class="user-avatar"
+              alt="User"
+            />
+            <ng-template #defaultAvatar>
+              <span class="user-avatar default">👤</span>
+            </ng-template>
+            <span class="user-name">{{
+              userName || (isAdmin ? "অ্যাডমিন" : "ডোনার")
+            }}</span>
+            <span class="dropdown-arrow" [class.rotated]="isUserDropdownOpen"
+              >▼</span
+            >
+          </span>
+          <div class="dropdown-menu" [class.show]="isUserDropdownOpen">
+            <a
+              *ngIf="!isAdmin"
+              routerLink="/profile"
+              class="dropdown-item"
+              (click)="navigateTo('/profile')"
+              >প্রোফাইল</a
+            >
+            <a
+              *ngIf="isAdmin"
+              routerLink="/admin/dashboard"
+              class="dropdown-item"
+              (click)="navigateTo('/admin/dashboard')"
+              >ড্যাশবোর্ড</a
+            >
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" (click)="logout()">লগআউট</a>
+          </div>
+        </div>
+      </ng-template>
     </div>
 
     <!-- Mobile Menu Button -->
@@ -168,7 +218,6 @@
         </a>
 
         <!-- Mobile Legal Section -->
-
         <a
           routerLink="/legal/terms"
           class="mobile-nav-link"
@@ -184,24 +233,61 @@
           ><span class="mobile-icon">🛡️</span>গোপনীয়তা নীতি</a
         >
 
-        <a
-          routerLink="/auth/donor-login"
-          class="mobile-nav-link"
-          [class.active]="isActiveRoute('/auth/donor-login')"
-          (click)="navigateTo('/auth/donor-login')"
-        >
-          <span class="mobile-icon">👤</span>
-          ডোনার লগইন
-        </a>
-        <a
-          routerLink="/auth/login"
-          class="mobile-nav-link"
-          [class.active]="isActiveRoute('/auth/login')"
-          (click)="navigateTo('/auth/login')"
-        >
-          <span class="mobile-icon">🔐</span>
-          অ্যাডমিন লগইন
-        </a>
+        <!-- Mobile Login/User Section -->
+        <ng-container *ngIf="!isLoggedIn; else mobileLoggedInBlock">
+          <a
+            routerLink="/auth/donor-login"
+            class="mobile-nav-link"
+            (click)="navigateTo('/auth/donor-login')"
+            ><span class="mobile-icon">👨‍💼</span>ডোনার লগইন</a
+          >
+          <a
+            routerLink="/auth/login"
+            class="mobile-nav-link"
+            (click)="navigateTo('/auth/login')"
+            ><span class="mobile-icon">🔑</span>অ্যাডমিন লগইন</a
+          >
+        </ng-container>
+        <ng-template #mobileLoggedInBlock>
+          <div class="mobile-user-dropdown">
+            <span class="mobile-nav-link" (click)="toggleMobileUserDropdown()">
+              <span
+                *ngIf="userAvatar; else mobileDefaultAvatar"
+                class="user-avatar"
+                ><img [src]="userAvatar" alt="User"
+              /></span>
+              <ng-template #mobileDefaultAvatar
+                ><span class="user-avatar default">👤</span></ng-template
+              >
+              <span class="user-name">{{
+                userName || (isAdmin ? "অ্যাডমিন" : "ডোনার")
+              }}</span>
+              <span
+                class="dropdown-arrow"
+                [class.rotated]="isMobileUserDropdownOpen"
+                >▼</span
+              >
+            </span>
+            <div class="dropdown-menu" [class.show]="isMobileUserDropdownOpen">
+              <a
+                *ngIf="!isAdmin"
+                routerLink="/profile"
+                class="dropdown-item"
+                (click)="navigateTo('/profile')"
+                >প্রোফাইল</a
+              >
+              <a
+                *ngIf="isAdmin"
+                routerLink="/admin/dashboard"
+                class="dropdown-item"
+                (click)="navigateTo('/admin/dashboard')"
+                >ড্যাশবোর্ড</a
+              >
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" (click)="logout()">লগআউট</a>
+            </div>
+          </div>
+        </ng-template>
 
         <hr class="mobile-divider" />
       </div>
