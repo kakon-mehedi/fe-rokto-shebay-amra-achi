@@ -104,8 +104,10 @@ export class TeamMemberManagementComponent implements OnInit, OnDestroy {
     this.teamMemberForm.patchValue({ isActive: true, displayOrder: 0 });
     this.selectedFile = null;
     this.imagePreview = null;
+    const isMobile = window.innerWidth <= 600;
     this.dialog.open(this.addEditDialog, {
-      width: '600px',
+      width: isMobile ? '96vw' : '600px',
+      maxWidth: isMobile ? '98vw' : '90vw',
       disableClose: true
     });
   }
@@ -124,8 +126,10 @@ export class TeamMemberManagementComponent implements OnInit, OnDestroy {
     });
     this.selectedFile = null;
     this.imagePreview = teamMember.image || null;
+    const isMobile = window.innerWidth <= 600;
     this.dialog.open(this.addEditDialog, {
-      width: '600px',
+      width: isMobile ? '96vw' : '600px',
+      maxWidth: isMobile ? '98vw' : '90vw',
       disableClose: true
     });
   }

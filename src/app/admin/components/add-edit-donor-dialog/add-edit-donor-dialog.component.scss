@@ -7,6 +7,7 @@
   max-height: 95vh;
   overflow: hidden;
   font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+  padding: 30px;
 }
 
 .dialog-title {
@@ -333,6 +334,7 @@
   .dialog-actions {
     flex-direction: column-reverse;
     padding: 16px 20px;
+    gap: 0;
 
     button {
       width: 100%;

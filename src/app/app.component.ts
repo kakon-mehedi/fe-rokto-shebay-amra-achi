@@ -21,8 +21,22 @@ export class AppComponent implements OnInit {
       .subscribe((event) => {
         const navigationEvent = event as NavigationEnd;
         // Hide navigation and footer on admin routes
-        this.showNavigation = !navigationEvent.url.startsWith('/admin');
-        this.showFooter = !navigationEvent.url.startsWith('/admin');
+        const isAdminRoute = navigationEvent.url.startsWith('/admin');
+        this.showNavigation = !isAdminRoute;
+        this.showFooter = !isAdminRoute;
+        // Toggle has-navbar class on body for correct padding
+        if (isAdminRoute) {
+          document.body.classList.remove('has-navbar');
+        } else {
+          document.body.classList.add('has-navbar');
+        }
       });
+    // Set initial state on load
+    const isAdminRoute = this.router.url.startsWith('/admin');
+    if (isAdminRoute) {
+      document.body.classList.remove('has-navbar');
+    } else {
+      document.body.classList.add('has-navbar');
+    }
   }
 }

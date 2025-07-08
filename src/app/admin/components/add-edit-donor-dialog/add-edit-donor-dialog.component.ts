@@ -67,6 +67,11 @@ export class AddEditDonorDialogComponent implements OnInit {
     this.loadBangladeshData();
     this.initializeForm();
     this.setupCityLocationFilter();
+
+    // Disable initialLastDonationDate field in add mode
+    if (!this.isEdit) {
+      this.donorForm.get('initialLastDonationDate')?.disable();
+    }
   }
 
   private loadBangladeshData() {
