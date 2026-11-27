@@ -53,4 +53,4 @@ Thumbs.db
 
 # Ignore cache created with the Angular CLI.
 .angular/
-config.bat
+.env*
